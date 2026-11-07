@@ -205,7 +205,11 @@
       lab.textContent = TXT.latest;
       $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); $$('.badge, .badge-txt', c).forEach(function (bd) { bd.parentNode.removeChild(bd); }); });
     }
-    else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.until(hhmm(end)); lab.textContent = TXT.onNow; }
+    else if (now >= start) {
+      num.textContent = TXT.now; unit.textContent = TXT.until(hhmm(end)); lab.textContent = TXT.onNow;
+      $$('.card.is-next .badge').forEach(function (bd) { bd.textContent = TXT.onNow; });
+      $$('.card.is-next .badge-txt').forEach(function (bd) { bd.textContent = ' · ' + TXT.onNow; });
+    }
     else if (days <= 0) { num.textContent = TXT.today; unit.textContent = hhmm(start); }
     else { num.textContent = String(days); unit.textContent = days === 1 ? TXT.day : TXT.days; }
     num.classList.toggle('is-word', /^[^0-9]+$/.test(num.textContent.trim()));
