@@ -90,6 +90,12 @@
   if (toast) $$('[data-toast-done]', toast).forEach(function (b) {
     b.addEventListener('click', function () { toast.hidden = true; document.body.classList.remove('has-toast'); store.set(toastKey, '1'); });
   });
+  // any feedback tap counts: no toast later for someone who already went to the form
+  var retireToast = function () {
+    if (toastKey) store.set(toastKey, '1');
+    if (toast) { toast.hidden = true; document.body.classList.toggle('has-toast', false); }
+  };
+  $$('a[data-fb-window], [data-fb-window] a, [data-toast-done]').forEach(function (a) { a.addEventListener('click', retireToast); });
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
     var tNow = new Date();
