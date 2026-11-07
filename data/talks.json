@@ -41,7 +41,7 @@
         "title": "ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al.)",
         "url": "https://arxiv.org/abs/2210.03629",
         "note": "The paper behind the Reason + Act loop.",
-        "note_pt": "O artigo por trás do ciclo Reason + Act."
+        "note_pt": "O artigo por trás do loop Reason + Act."
       },
       {
         "title": "Inner Monologue: Embodied Reasoning through Planning with Language Models (Huang et al.)",
@@ -59,13 +59,13 @@
         "title": "The Five Levels: from Spicy Autocomplete to the Dark Factory (Dan Shapiro)",
         "url": "https://www.danshapiro.com/blog/2026/01/the-five-levels-from-spicy-autocomplete-to-the-software-factory/",
         "note": "A ladder of AI coding autonomy, up to the lights-out software factory.",
-        "note_pt": "Uma escada de autonomia na programação com IA, até à fábrica de software às escuras."
+        "note_pt": "Uma escada de autonomia na programação com IA, até à dark software factory."
       },
       {
         "title": "Loop Engineering (Addy Osmani)",
         "url": "https://addyosmani.com/blog/loop-engineering/",
         "note": "Designing the loops that prompt coding agents.",
-        "note_pt": "Desenhar os ciclos que dão instruções aos agentes de programação."
+        "note_pt": "Desenhar os loops que dão prompts aos coding agents."
       },
       {
         "title": "The Factory Model: How Coding Agents Changed Software Engineering (Addy Osmani)",
@@ -77,12 +77,12 @@
     "language": "EN",
     "feedback": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=3RrCHav0MkuqaBpocTNSjC5tqu1Ng7FHko5vGSfZQG9UN1EzSFM2MURHUFo4T1MxNlhOWVZOUklGTy4u",
     "pt": {
-      "title": "Os ciclos agênticos que todos os programadores devem conhecer",
-      "short": "Ciclos agênticos",
+      "title": "Os loops agênticos que todos os programadores devem conhecer",
+      "short": "Loops agênticos",
       "abstract": [
-        "Os ciclos (loops) são uma primitiva fundamental dos agentes de IA autónomos e do agora amplamente usado \"Agent Mode\".",
-        "Esta sessão percorre o caminho desde o ciclo base Reason + Act até à engenharia de ciclos (loop engineering) — a passagem de dar instruções aos agentes para desenhar os sistemas que lhes dão as instruções.",
-        "E enquanto os ciclos correm — e as luzes se apagam em Dark Software Factories totalmente automatizadas — em que nos devemos focar?"
+        "Os loops são uma primitiva fundamental dos agentes de IA autónomos e do agora amplamente usado \"Agent Mode\".",
+        "Esta sessão percorre o caminho desde o loop base Reason + Act até ao loop engineering — a passagem de escrever prompts para os agentes para desenhar os sistemas que escrevem esses prompts.",
+        "E enquanto os loops correm — e as luzes se apagam em Dark Software Factories totalmente automatizadas — em que nos devemos focar?"
       ],
       "abstractTranslated": true
     }
@@ -128,10 +128,10 @@
     "language": "EN",
     "slides": "https://learn.agentia.pt/public/talks/isep-genai-to-software-factories/",
     "pt": {
-      "title": "Da GenAI às fábricas de software",
-      "short": "Fábricas de software",
+      "title": "Da GenAI às software factories",
+      "short": "Software factories",
       "event": "ISEP · Mestrado em Engenharia Informática (MEI)",
-      "summary": "Uma sessão de duas horas para os alunos do mestrado em engenharia de software do ISEP. Mostra o que os agentes de programação já fazem hoje, como o machine learning levou à IA generativa e depois aos agentes, como trabalhar com agentes de programação no dia a dia, onde falham e o que as fábricas de software significam para a engenharia de software."
+      "summary": "Uma sessão de duas horas para os alunos do mestrado em engenharia de software do ISEP. Mostra o que os coding agents já fazem hoje, como o machine learning levou à IA generativa e depois aos agentes, como trabalhar com coding agents no dia a dia, onde falham e o que as software factories significam para a engenharia de software."
     }
   },
   {
@@ -225,7 +225,7 @@
       "title": "Como ligar modelos de IA a qualquer fonte de dados",
       "short": "IA + qualquer fonte de dados",
       "event": "Magma Studio · Escola da Inteligência Artificial (Summer School 2026)",
-      "summary": "Como ligar modelos de IA aos teus dados: RAG, uso de ferramentas, agentes autónomos e o ciclo planear-agir-observar, casos de uso do Model Context Protocol e boas práticas de segurança, como defesas contra prompt injection e o princípio do mínimo privilégio."
+      "summary": "Como ligar modelos de IA aos teus dados: RAG, uso de ferramentas, agentes autónomos e o loop planear-agir-observar, casos de uso do Model Context Protocol e boas práticas de segurança, como defesas contra prompt injection e o princípio do mínimo privilégio."
     }
   },
   {
@@ -249,9 +249,9 @@
     "language": "EN",
     "slides": "https://learn.agentia.pt/public/talks/from-copilot-to-autopilot/",
     "pt": {
-      "title": "Do Copilot ao Autopilot: os dois ciclos de IA que todos os programadores devem conhecer",
+      "title": "Do Copilot ao Autopilot: os dois loops de IA que todos os programadores devem conhecer",
       "short": "Copilot → Autopilot",
-      "summary": "A maior parte da programação com IA ainda é autocomplete de um só passo. Os agentes trabalham em ciclos. A sessão mostra dois deles, o ReAct (o ciclo do agente) e o RALPH (planear, executar, verificar, recomeçar, repetir), com demos ao vivo, as formas como os agentes falham, onde entra a aprovação humana e um guia prático assente em engenharia de contexto e desenvolvimento orientado por especificações."
+      "summary": "A maior parte da programação com IA ainda é autocomplete de um só passo. Os agentes trabalham em loops. A sessão mostra dois deles, o ReAct (o loop do agente) e o RALPH (planear, executar, verificar, recomeçar, repetir), com demos ao vivo, as formas como os agentes falham, onde entra a aprovação humana e um guia prático assente em context engineering e spec-driven development."
     }
   },
   {
@@ -455,7 +455,7 @@
     ],
     "verified": false,
     "pt": {
-      "title": "Ciência de dados com o Azure Machine Learning Workbench e contentores Docker para a Data Platform",
+      "title": "Ciência de dados com o Azure Machine Learning Workbench e containers Docker para a Data Platform",
       "event": "SQLSaturday #685 Porto · workshop pré-conferência"
     }
   },
@@ -497,9 +497,9 @@
     "slides": "https://www.slideshare.net/slideshow/docker-containers-for-big-data-data-science-machine-learning-deep-learning/76380325",
     "summary": "Hands-on Docker and containers for big data, data science, machine learning and deep learning, including GPU deep learning and Hadoop and Spark workbenches.",
     "pt": {
-      "title": "Docker e contentores para big data, ciência de dados, ML e deep learning",
-      "short": "Contentores para ML",
-      "summary": "Docker e contentores na prática para big data, ciência de dados, machine learning e deep learning, incluindo deep learning em GPU e ambientes Hadoop e Spark.",
+      "title": "Docker e containers para big data, ciência de dados, ML e deep learning",
+      "short": "Containers para ML",
+      "summary": "Docker e containers na prática para big data, ciência de dados, machine learning e deep learning, incluindo deep learning em GPU e ambientes Hadoop e Spark.",
       "event": "Evento a confirmar"
     }
   },
