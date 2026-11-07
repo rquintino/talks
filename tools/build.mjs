@@ -190,7 +190,7 @@ function card(t, prefix) {
   return `<li class="card${isUpcoming(t) ? ' is-next' : ''}" ${dataAttrs(t)}>
     ${coverEl}
     <div class="card-body">
-      <p class="meta mono"><span class="meta-fmt">${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}${badge ? `<span class="badge-txt"> · ${badge.replace(/<[^>]+>/g, '')}</span>` : ''} · </span>${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
+      <p class="meta mono"><span class="meta-fmt">${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}${badge ? `<span class="badge-txt"> · ${badge.replace(/<[^>]+>/g, '')}</span>` : ''} · </span>${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified || !site.showUnverified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
       <h3 class="card-title">${titleEl}</h3>
       <p class="card-event">${esc(t.event)}</p>
       ${t.summary ? `<p class="card-sum">${esc(t.summary)}</p>` : ''}
@@ -206,7 +206,7 @@ function row(t, prefix) {
   const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}&nbsp;↗</a>`) : esc(t.title);
   return `<li class="row" ${dataAttrs(t)}>
       <span class="row-date mono">${esc(shortDate(t))}</span>
-      <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(city(t.city)) : ''} · ${esc(fmtLabel(t.format))}${t.verified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
+      <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(city(t.city)) : ''} · ${esc(fmtLabel(t.format))}${t.verified || !site.showUnverified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
       <div class="row-links">${linksHtml(t, prefix)}</div>
     </li>`;
 }
