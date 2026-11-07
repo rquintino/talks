@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//rquintino//talks//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:pth26@rquintino.github.io
+DTSTAMP:20261110T111000Z
+DTSTART:20261110T111000Z
+DTEND:20261110T120000Z
+SUMMARY:The Agentic Loops Every Developer Should Know (Rui Quintino)
+LOCATION:Alfândega do Porto\, Porto
+DESCRIPTION:Porto Tech Hub Conference 2026 · AWS / Darede track\\nhttps://rquintino.github.io/talks/pth26/
+URL:https://rquintino.github.io/talks/pth26/
+END:VEVENT
+END:VCALENDAR
