@@ -9,7 +9,7 @@
   var PT = (document.documentElement.lang || '').toLowerCase().indexOf('pt') === 0;
   var TXT = PT ? {
     dark: '☾ Escuro', light: '☀ Claro', switchTo: function (n) { return 'Mudar para o tema ' + (n === 'dark' ? 'escuro' : 'claro'); },
-    copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar link', share: 'Partilhar link',
+    copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar link da página', share: 'Partilhar esta página',
     showN: function (n) { return 'Ver ' + n + (n === 1 ? ' sessão' : ' sessões'); },
     upcoming: 'Em breve', startingSoon: 'Começa em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
     latest: 'Última palestra', now: 'Agora', onStage: 'EM PALCO', today: 'Hoje', day: 'DIA', days: 'DIAS',
@@ -17,7 +17,7 @@
     remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com slides', video: 'Com vídeo', audio: 'Com áudio' }
   } : {
     dark: '☾ Dark', light: '☀ Light', switchTo: function (n) { return 'Switch to ' + n + ' theme'; },
-    copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy link', share: 'Share link',
+    copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy page link', share: 'Share this page',
     showN: function (n) { return 'Show ' + n + (n === 1 ? ' session' : ' sessions'); },
     upcoming: 'Upcoming', startingSoon: 'Starting soon', onNow: 'On now', thanks: 'Thanks for joining',
     latest: 'Latest talk', now: 'Now', onStage: 'ON STAGE', today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
@@ -94,13 +94,18 @@
       statusLabel.textContent = over ? TXT.thanks : live ? TXT.onNow : soon ? TXT.startingSoon : TXT.upcoming;
       status.hidden = over && !recent;
       var dot = $('.pulse', status);
-      if (dot) dot.hidden = over;
+      if (dot) dot.hidden = over || !soon;
     }
     $$('[data-before]').forEach(function (e) { e.hidden = soon; });
+    $$('[data-after-start]').forEach(function (e) { e.hidden = !soon; });
     var note = $('[data-slides-note]');
     if (note && over) note.textContent = note.getAttribute('data-after-text');
     // two weeks on with no recording: stop promising one
-    if (over && tNow - tEnd > 14 * 864e5) $$('[data-rec]').forEach(function (e) { e.hidden = true; });
+    if (over && tNow - tEnd > 14 * 864e5 && $('[data-rec]')) {
+      $$('[data-rec]').forEach(function (e) { e.hidden = true; });
+      var mh = $('[data-only-slides]');
+      if (mh) mh.textContent = mh.getAttribute('data-only-slides');
+    }
   }
 
   // ---- stage mode (full-screen QR): Esc/Close return to where you were ----
@@ -114,9 +119,16 @@
         else document.documentElement.requestFullscreen().catch(function () {});
       });
     }
-    var savedY = null, openedHere = false;
+    var savedY = null, openedHere = false, opener = null;
+    var bg = function () { return $$('body > :not(#stage)'); };
+    var syncStage = function () {
+      var open = location.hash === '#stage';
+      bg().forEach(function (e) { if (open) e.setAttribute('inert', ''); else e.removeAttribute('inert'); });
+      if (open) { var c = $('[data-stage-close]', stage); if (c) c.focus(); }
+      else if (opener) { opener.focus({ preventScroll: true }); opener = null; }
+    };
     $$('a[href="#stage"]').forEach(function (a) {
-      a.addEventListener('click', function () { savedY = window.scrollY; openedHere = true; });
+      a.addEventListener('click', function () { savedY = window.scrollY; openedHere = true; opener = a; });
     });
     var closeStage = function () {
       if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
@@ -125,7 +137,9 @@
     };
     window.addEventListener('hashchange', function () {
       if (location.hash !== '#stage' && savedY !== null) { var y = savedY; savedY = null; window.scrollTo(0, y); }
+      syncStage();
     });
+    syncStage();
     var closer = $('[data-stage-close]', stage);
     if (closer) closer.addEventListener('click', function (e) { e.preventDefault(); closeStage(); });
     document.addEventListener('keydown', function (e) {
@@ -153,7 +167,8 @@
       $$('[data-ics], .pulse', next).forEach(function (e) { e.hidden = true; });
       $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); var b = $('.badge', c); if (b) b.remove(); });
     }
-    else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.onStage; lab.textContent = TXT.onNow; $$('[data-ics]', next).forEach(function (e) { e.hidden = true; }); }
+    if (now >= start) $$('[data-live-text]', next).forEach(function (a) { a.textContent = a.getAttribute('data-live-text'); });
+    if (now >= start && now <= end) { num.textContent = TXT.now; unit.textContent = TXT.onStage; lab.textContent = TXT.onNow; $$('[data-ics]', next).forEach(function (e) { e.hidden = true; }); }
     else if (days <= 0) { num.textContent = TXT.today; unit.textContent = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Lisbon' }); }
     else { num.textContent = String(days); unit.textContent = days === 1 ? TXT.day : TXT.days; }
   }
@@ -244,9 +259,10 @@
     if (!panel || !filtersBtn) return;
     panel.classList.toggle('is-open', open);
     filtersBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) $('.search').scrollIntoView({ block: 'start', behavior: calm ? 'auto' : 'smooth' });
   };
   if (filtersBtn) filtersBtn.addEventListener('click', function () { setPanel(!panel.classList.contains('is-open')); });
-  if (doneBtn) doneBtn.addEventListener('click', function () { setPanel(false); toResults(); });
+  if (doneBtn) doneBtn.addEventListener('click', function () { setPanel(false); toResults(); var c = $('.count'); if (c) c.focus({ preventScroll: true }); });
   var toggle = function (g, v) {
     var i = state[g].indexOf(v);
     if (i === -1) state[g].push(v); else state[g].splice(i, 1);
@@ -255,7 +271,8 @@
 
   var render = function () {
     var n = 0;
-    cards.forEach(function (it) { var ok = match(it); it.el.hidden = !ok; if (ok) n++; });
+    var plain = !state.q && GROUPS.every(function (g) { return !state[g].length; });
+    cards.forEach(function (it) { var ok = match(it); it.el.hidden = !ok || (plain && narrow.matches && it.el.classList.contains('is-next')); if (ok) n++; });
     rows.forEach(function (it) { it.el.hidden = !match(it); });
     $$('.year', list).forEach(function (y) { y.hidden = !$$('.row:not([hidden])', y).length; });
 

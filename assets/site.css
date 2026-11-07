@@ -136,13 +136,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .filters-btn { display: inline-flex; gap: 8px; min-height: 58px; border-radius: 14px; }
   .filters:not(.is-open) { display: none; }
   .filters.is-open { padding: 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line-2); }
-  .filters-done { display: inline-flex; width: 100%; }
+  .filters-done { display: inline-flex; width: 100%; position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 6px 24px rgba(10, 15, 28, 0.25); }
+  .filters-btn[aria-expanded="true"] { background: var(--chip-on); color: var(--on-chip); border-color: var(--chip-on); }
+  .chip-count { padding: 1px 8px; border-radius: 999px; background: var(--surface-2); }
+  .chip[aria-pressed="true"] .chip-count { background: transparent; }
 }
 @media (hover: none) { .search-box kbd { display: none; } }
 
 .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
 .status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .count { margin: 0; color: var(--fg-2); }
+.count:focus { outline: none; }
 .count strong { color: var(--fg); }
 .active { display: flex; flex-wrap: wrap; gap: 6px; }
 .active-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--chip-on); color: var(--on-chip); font-size: 14px; }
@@ -173,7 +177,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tone-early { background: var(--tone-early); }
 .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; }
 .meta { margin: 0; font-size: 14px; color: var(--muted); }
-.unverified { color: var(--muted); border-bottom: 1px dotted var(--muted); }
+.unverified { color: var(--muted); border-bottom: 1px dotted var(--muted); white-space: nowrap; }
 .card-title { margin: 0; font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.25; letter-spacing: -0.015em; text-wrap: balance; }
 .card-title a { text-decoration: none; }
 .card-title a:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -231,7 +235,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .crumb a:hover { color: var(--fg); text-decoration: underline; }
 .talk-head { display: flex; flex-direction: column; gap: 16px; }
 .talk-title { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(34px, 6.4vw, 80px); line-height: 1.03; letter-spacing: -0.04em; max-width: 18ch; text-wrap: balance; }
-.eyebrow-link { color: inherit; text-decoration: none; }
+.eyebrow-link { color: inherit; text-decoration: none; white-space: nowrap; }
 .eyebrow-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .orig-title { margin: -6px 0 0; color: var(--muted); font-size: 16px; }
 .orig-title .mono { font-size: 14px; }
