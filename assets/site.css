@@ -88,7 +88,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .next-title a { text-decoration: none; }
 .next-title a:hover { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 .next-sub { margin: 0; color: var(--fg-2); font-size: 16px; }
-.next-actions { flex: 1 1 220px; display: flex; flex-wrap: wrap; align-content: center; gap: 10px; }
+.next-actions { flex: 1 0 auto; display: flex; flex-wrap: wrap; align-content: center; gap: 10px; }
+.next-actions .btn { white-space: nowrap; }
 .eyebrow { margin: 0; font-size: 14px; color: var(--accent); letter-spacing: 0.02em; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 .pulse { display: inline-block; animation: pulse 2s ease-in-out infinite; }

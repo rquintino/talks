@@ -197,7 +197,7 @@
       // back to the build-time date in the tile
       num.textContent = orig.num; unit.textContent = orig.unit;
       lab.textContent = TXT.latest;
-      $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); var bd = $('.badge', c); if (bd) bd.remove(); });
+      $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); $$('.badge, .badge-txt', c).forEach(function (bd) { bd.parentNode.removeChild(bd); }); });
     }
     else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.until(hhmm(end)); lab.textContent = TXT.onNow; }
     else if (days <= 0) { num.textContent = TXT.today; unit.textContent = hhmm(start); }
@@ -229,7 +229,8 @@
       era: el.getAttribute('data-era'), format: el.getAttribute('data-format'),
       tag: (el.getAttribute('data-tags') || '').split('|').filter(Boolean),
       has: (el.getAttribute('data-has') || '').split(' ').filter(Boolean),
-      text: el.getAttribute('data-text') || ''
+      text: el.getAttribute('data-text') || '',
+      tokens: (el.getAttribute('data-text') || '').split(/[^a-z0-9]+/).filter(Boolean)
     };
   };
   var cards = $$('.card[data-item]', grid).map(parse);
@@ -255,7 +256,11 @@
   var words = function () { return fold(state.q.trim()).split(/\s+/).filter(Boolean); };
   var match = function (it, skip) {
     var w = words();
-    for (var i = 0; i < w.length; i++) if (it.text.indexOf(w[i]) === -1) return false;
+    // short words match the start of a word ("ai" must not hit "ajax"); longer ones match anywhere
+    for (var i = 0; i < w.length; i++) {
+      if (w[i].length >= 4) { if (it.text.indexOf(w[i]) === -1) return false; }
+      else if (!it.tokens.some(function (tk) { return tk.indexOf(w[i]) === 0; })) return false;
+    }
     for (var g = 0; g < GROUPS.length; g++) {
       var k = GROUPS[g], sel = state[k];
       if (k === skip || !sel.length) continue;
