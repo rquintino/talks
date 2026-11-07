@@ -662,5 +662,7 @@ setLang('en');
 ALT = { en: site.baseUrl, pt: `${site.baseUrl}pt/` };
 write('404.html', notFound());
 write('sitemap.xml', sitemap());
+// QR code for the README (standalone SVG, made by the encoder above)
+write('og/qr.svg', qrSvg(site.baseUrl, 'QR code for rquintino.github.io/talks').replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="328" height="328" ') + '\n');
 if (process.argv.includes('--og')) renderOg();
 }
