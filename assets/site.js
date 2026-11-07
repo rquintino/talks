@@ -88,7 +88,7 @@
   var openedEarly = null; // page opened before the feedback window: those visitors get the toast
   var toastKey = head ? 'fb-toast:' + head.getAttribute('data-id') : '';
   if (toast) $$('[data-toast-done]', toast).forEach(function (b) {
-    b.addEventListener('click', function () { toast.hidden = true; store.set(toastKey, '1'); });
+    b.addEventListener('click', function () { toast.hidden = true; document.body.classList.remove('has-toast'); store.set(toastKey, '1'); });
   });
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
@@ -111,7 +111,10 @@
     $$('[data-fb-window]').forEach(function (e) { e.hidden = !fbWin; });
     if (openedEarly === null) openedEarly = !fbWin;
     // toast only once the session has ended: nothing pulls attention to the phone during the talk
-    if (toast) toast.hidden = !(openedEarly && over && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
+    if (toast) {
+      toast.hidden = !(openedEarly && over && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
+      document.body.classList.toggle('has-toast', !toast.hidden);
+    }
     var note = $('[data-slides-note]');
     if (note && over) note.textContent = note.getAttribute('data-after-text');
     // two weeks on with no recording: stop promising one
