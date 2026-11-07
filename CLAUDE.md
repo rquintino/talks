@@ -135,7 +135,9 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   original wording in `pt`. Rui's own abstract text is never rewritten; a
   translation of it is marked `abstractTranslated` until he approves it.
   `"page": true` gives a talk its own `/<id>/` page; `"verified": false`
-  shows a "to confirm" marker.
+  marks data Rui hasn't confirmed. The "to confirm" marker on the site is
+  shown only when `data/site.json` has `"showUnverified": true` (Rui turned
+  it off; keep the `verified` flags accurate anyway).
 - Talk times: `start`/`end` are ISO timestamps with the venue's UTC offset
   (Portugal: `+00:00` in winter, `+01:00` from the last Sunday of March to
   the last Sunday of October). The page compares them as absolute instants,
