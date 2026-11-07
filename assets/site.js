@@ -10,14 +10,14 @@
   var TXT = PT ? {
     dark: '☾ Escuro', light: '☀ Claro', switchTo: function (n) { return 'Mudar para o tema ' + (n === 'dark' ? 'escuro' : 'claro'); },
     copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar ligação', share: 'Partilhar ligação',
-    upcoming: 'Em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
+    upcoming: 'Em breve', startingSoon: 'Começa em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
     latest: 'Última palestra', now: 'Agora', onStage: 'EM PALCO', today: 'Hoje', day: 'DIA', days: 'DIAS',
     session: 'sessão', sessions: 'sessões', newest: 'Mais recentes primeiro ↓', oldest: 'Mais antigas primeiro ↑',
     remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com diapositivos', video: 'Com vídeo', audio: 'Com áudio' }
   } : {
     dark: '☾ Dark', light: '☀ Light', switchTo: function (n) { return 'Switch to ' + n + ' theme'; },
     copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy link', share: 'Share link',
-    upcoming: 'Upcoming', onNow: 'On now', thanks: 'Thanks for joining',
+    upcoming: 'Upcoming', startingSoon: 'Starting soon', onNow: 'On now', thanks: 'Thanks for joining',
     latest: 'Latest talk', now: 'Now', onStage: 'ON STAGE', today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
     session: 'session', sessions: 'sessions', newest: 'Newest first ↓', oldest: 'Oldest first ↑',
     remove: 'Remove filter: ', clear: 'Clear all', has: { slides: 'Has slides', video: 'Has video', audio: 'Has audio' }
@@ -32,10 +32,12 @@
   var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
   var currentTheme = function () { return root.getAttribute('data-theme') || (mq && mq.matches ? 'dark' : 'light'); };
   $$('[data-theme-toggle]').forEach(function (btn) {
-    var label = $('[data-theme-label]', btn);
+    var label = $('[data-theme-label]', btn), icon = $('[data-theme-icon]', btn);
     var paint = function () {
       var other = currentTheme() === 'dark' ? 'light' : 'dark';
-      label.textContent = other === 'dark' ? TXT.dark : TXT.light;
+      var parts = (other === 'dark' ? TXT.dark : TXT.light).split(' ');
+      if (icon) { icon.textContent = parts[0]; label.textContent = parts.slice(1).join(' '); }
+      else { label.textContent = parts.join(' '); }
       btn.setAttribute('aria-label', TXT.switchTo(other));
     };
     btn.hidden = false;
@@ -84,9 +86,10 @@
     var status = $('[data-status]', head), statusLabel = $('[data-status-label]', head);
     var soon = tNow >= new Date(tStart.getTime() - 30 * 60000);
     var over = tNow > tEnd;
+    var live = tNow >= tStart && !over;
     var recent = over && tNow - tEnd < 7 * 864e5;
     if (status && statusLabel) {
-      statusLabel.textContent = over ? TXT.thanks : soon ? TXT.onNow : TXT.upcoming;
+      statusLabel.textContent = over ? TXT.thanks : live ? TXT.onNow : soon ? TXT.startingSoon : TXT.upcoming;
       status.hidden = over && !recent;
       var dot = $('.pulse', status);
       if (dot) dot.hidden = over;
@@ -94,6 +97,8 @@
     $$('[data-before]').forEach(function (e) { e.hidden = soon; });
     var note = $('[data-slides-note]');
     if (note && over) note.textContent = note.getAttribute('data-after-text');
+    // two weeks on with no recording: stop promising one
+    if (over && tNow - tEnd > 14 * 864e5) $$('[data-rec]').forEach(function (e) { e.hidden = true; });
   }
 
   // ---- stage mode (full-screen QR): Esc/Close return to where you were ----

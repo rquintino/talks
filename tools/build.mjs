@@ -128,7 +128,7 @@ function header(prefix) {
   <nav class="top-nav" aria-label="${T('profiles')}">
     ${site.links.map((l) => ext(l.url, `${esc(l.label)} ↗`)).join('\n    ')}
     <a class="lang-switch" href="${SWITCH}" hreflang="${T('otherLang')}" lang="${T('otherLang')}" aria-label="${T('switchAria')}">${T('switchLabel')}</a>
-    <button class="theme-btn" type="button" data-theme-toggle hidden aria-label="${T('themeAria')}"><span data-theme-label>${T('theme')}</span></button>
+    <button class="theme-btn" type="button" data-theme-toggle hidden aria-label="${T('themeAria')}"><span class="theme-ico" data-theme-icon aria-hidden="true"></span><span class="theme-txt" data-theme-label>${T('theme')}</span></button>
   </nav>
 </header>`;
 }
@@ -232,7 +232,7 @@ function homePage() {
   </div>
   <div class="next-actions">
     <a class="btn btn-primary" href="${prefix}${next.id}/">${T('talkPageBtn')}</a>
-    ${next.start && isUpcoming(next) ? `<a class="btn" href="${prefix}${next.id}/talk.ics" download>${T('addCal')}</a>` : ''}
+    ${next.start && isUpcoming(next) ? `<a class="btn" href="${prefix}${next.id}/talk.ics">${T('addCal')}</a>` : ''}
   </div>
   <a class="next-qr" href="${prefix}${next.id}/#stage" title="${T('qrFull')}">${qrSvg(`${LANGBASE}${next.id}/`, `${T('qrLabel')} ${next.title}`)}<span class="mono">${T('scanMe')}</span></a>
 </section></div>` : '';
@@ -336,7 +336,7 @@ ${header(prefix)}
 <div class="talk">
   <p class="crumb"><a href="${prefix}">${T('crumb')}</a></p>
   <header class="talk-head"${timeAttrs}>
-    <p class="eyebrow mono"><span data-status${upcoming ? '' : ' hidden'}><span class="pulse" aria-hidden="true">●</span> <span data-status-label>${T('upcoming')}</span> · </span>${t.eventUrl ? ext(t.eventUrl, esc(t.event), 'eyebrow-link') : esc(t.event)}</p>
+    <p class="eyebrow mono"><span data-status hidden><span class="pulse" aria-hidden="true">●</span> <span data-status-label>${T('upcoming')}</span> · </span>${t.eventUrl ? ext(t.eventUrl, esc(t.event), 'eyebrow-link') : esc(t.event)}</p>
     <h1 class="talk-title">${esc(t.title)}</h1>
     ${showOrig ? `<p class="orig-title"><span class="mono">${T('origTitle')}:</span> <span lang="en">${esc(orig.title)}</span></p>` : ''}
     <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
@@ -345,7 +345,7 @@ ${header(prefix)}
       ${slidesBtn}
       <a class="btn" href="#res">${T('qRes')}${nres ? ` <span class="q-count mono">${nres}</span>` : ''}</a>
     </nav>
-    ${upcoming && t.start ? `<p class="talk-actions" data-before><a class="btn btn-small" href="talk.ics" download>${T('addCal')}</a></p>` : ''}
+    ${upcoming && t.start ? `<p class="talk-actions" data-before><a class="btn btn-small" href="talk.ics">${T('addCal')}</a></p>` : ''}
   </header>
 
   <section class="talk-section materials" id="mat" aria-labelledby="mat-h">
@@ -353,9 +353,9 @@ ${header(prefix)}
     <div class="mat-grid">
       <div class="mat">
         <p class="mat-k mono">${T('slidesF')}</p>
-        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted" data-slides-note data-after-text="${esc(T('slidesSoon'))}">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p>`}
+        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted" data-slides-note data-after-text="${esc(T('slidesSoon'))}">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p><button type="button" class="btn btn-small" data-copy="${esc(url)}" data-share-title="${esc(t.title)}" hidden>${T('copy')}</button>`}
       </div>
-      <div class="mat">
+      <div class="mat"${t.video ? '' : ' data-rec'}>
         <p class="mat-k mono">${T('recording')}</p>
         ${t.video ? ext(t.video, T('watch'), 'btn') : `<p class="muted">${T('recNote')}</p>`}
       </div>
@@ -392,7 +392,7 @@ ${header(prefix)}
     <h2 id="rel" class="section-title">${T('related')}</h2>
     <ul class="rel">${related.map((o) => {
       const h = relHref(o);
-      const a = h ? (o.page ? `<a href="${h}">${esc(o.title)}</a>` : `<a href="${esc(h)}" rel="noopener noreferrer">${esc(o.title)}</a>`) : esc(o.title);
+      const a = h ? (o.page ? `<a href="${h}">${esc(o.title)}</a>` : `<a href="${esc(h)}" rel="noopener noreferrer">${esc(o.title)} ↗</a>`) : esc(o.title);
       return `<li><span class="rel-title">${a}</span><span class="rel-sub">${esc(o.event)} · ${esc(dateLabel(o))}</span></li>`;
     }).join('')}</ul>
   </section>` : ''}
