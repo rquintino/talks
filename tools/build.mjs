@@ -154,7 +154,7 @@ function tagButtons(t) {
 function dataAttrs(t) {
   const o = t._orig || t, p = o.pt || {};
   const MAT_WORDS = { slides: 'slides diapositivos', video: 'video vídeo', audio: 'audio áudio podcast' };
-  const text = [o.title, o.event, o.city, CITY_PT[o.city], o.venue, ...materials(o).map((m) => MAT_WORDS[m]), o.track, o.format, o.language, o.summary, ...(o.tags || []), ...(o.abstract || []),
+  const text = [o.id, o.title, o.event, o.city, CITY_PT[o.city], o.venue, ...materials(o).map((m) => MAT_WORDS[m]), o.track, o.format, o.language, o.summary, ...(o.tags || []), ...(o.abstract || []),
     p.title, p.event, p.summary, ...(p.abstract || []), fmtLabel(o.format), ...(o.tags || []).map(tagLabel)]
     .filter(Boolean).join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   return `data-item data-id="${esc(t.id)}" data-date="${esc(t.date)}" data-era="${eraOf(t)}" data-format="${esc(t.format)}" data-tags="${esc(t.tags.join('|'))}" data-has="${materials(t).join(' ')}" data-text="${esc(text)}"`;
@@ -200,7 +200,7 @@ function row(t, prefix) {
   const href = mainHref(t, prefix);
   const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}&nbsp;↗</a>`) : esc(t.title);
   return `<li class="row" ${dataAttrs(t)}>
-      <span class="row-date mono">${esc(shortDate(t)) || '—'}</span>
+      <span class="row-date mono">${esc(shortDate(t))}</span>
       <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(city(t.city)) : ''} · ${esc(fmtLabel(t.format))}${t.verified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
       <div class="row-links">${linksHtml(t, prefix)}</div>
     </li>`;

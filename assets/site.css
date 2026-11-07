@@ -66,7 +66,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .top-nav a:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 4px; }
 .lang-switch { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--surface); color: var(--fg); font-family: var(--mono); font-size: 14px; font-weight: 500; letter-spacing: 0.06em; text-decoration: none; }
 .top-nav a.lang-switch { color: var(--fg); }
-.lang-switch:hover { border-color: var(--fg-2); }
+@media (hover: hover) { .lang-switch:hover { border-color: var(--fg-2); } }
 .theme-ico + .theme-txt { margin-left: 6px; }
 .theme-btn { min-height: 44px; min-width: 44px; padding: 0 14px; white-space: nowrap; border-radius: 10px; border: 1px solid var(--line-2); background: var(--surface); font-size: 15px; }
 
@@ -101,9 +101,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: 12px; border: 1.5px solid var(--btn-line); background: var(--surface); color: var(--fg); font-weight: 500; text-decoration: none; font-size: 16px; }
-.btn:hover { border-color: var(--fg-2); }
+@media (hover: hover) { .btn:hover { border-color: var(--fg-2); } }
 .btn-primary { background: var(--btn); color: var(--on-btn); border-color: var(--btn); font-weight: 700; }
-.btn-primary:hover { opacity: 0.9; border-color: var(--btn); }
+@media (hover: hover) { .btn-primary:hover { opacity: 0.9; border-color: var(--btn); } }
 .btn-small { min-height: 44px; padding: 0 14px; font-size: 15px; border-radius: 10px; }
 .lnk { color: var(--accent); font-weight: 500; text-underline-offset: 3px; }
 
@@ -129,7 +129,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .fwrap { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { display: inline-flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 38px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface); color: var(--fg-2); font-size: 15px; text-align: left; }
 .fstack .chip { border-radius: 10px; min-height: 44px; }
-.chip:hover { border-color: var(--fg-2); color: var(--fg); }
+@media (hover: hover) { .chip:hover { border-color: var(--fg-2); color: var(--fg); } }
 .chip[aria-pressed="true"] { background: var(--chip-on); border-color: var(--chip-on); color: var(--on-chip); }
 .chip:disabled { opacity: 0.45; cursor: default; }
 .chip-count { font-size: 14px; opacity: 0.8; }
@@ -155,8 +155,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .count:focus { outline: none; }
 .count strong { color: var(--fg); }
 .active { display: flex; flex-wrap: wrap; gap: 6px; }
-.active-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--chip-on); color: var(--on-chip); font-size: 14px; }
-.clear { min-height: 32px; padding: 0 6px; border: 0; background: none; color: var(--accent); text-decoration: underline; font-size: 15px; }
+.active-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--chip-on); color: var(--on-chip); font-size: 14px; }
+.clear { min-height: 44px; padding: 0 6px; border: 0; background: none; color: var(--accent); text-decoration: underline; font-size: 15px; }
 .controls { display: flex; flex-wrap: wrap; gap: 8px; }
 .seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
 .seg-btn { min-height: 40px; padding: 0 14px; border: 0; background: var(--surface); color: var(--fg); font-size: 15px; }
@@ -168,7 +168,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* cards */
 .grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; align-items: start; }
 .card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; transition: border-color 0.15s, transform 0.15s; }
-.card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+@media (hover: hover) { .card:hover { border-color: var(--line-2); transform: translateY(-2px); } }
 .card.is-next { border-color: var(--next-ring); box-shadow: 0 0 0 1px var(--next-ring); }
 .cover { position: relative; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 16 / 9; padding: 16px; color: #FFFFFF; text-decoration: none; overflow: hidden; }
 .cover::after { content: ""; position: absolute; right: -48px; bottom: -78px; width: 64%; aspect-ratio: 1; border-radius: 50%;
@@ -197,7 +197,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .peek[open] ~ .card-sum, .card:has(.peek[open]) .card-sum { display: none; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface-2); color: var(--fg-2); font-size: 14px; text-decoration: none; }
-.tag:hover { border-color: var(--fg-2); color: var(--fg); }
+@media (hover: hover) { .tag:hover { border-color: var(--fg-2); color: var(--fg); } }
 .tag[aria-pressed="true"] { background: var(--chip-on); color: var(--on-chip); border-color: var(--chip-on); }
 .links { display: flex; flex-wrap: wrap; gap: 0 18px; font-size: 16px; }
 .links a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -294,7 +294,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .res li { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
 .res a { color: var(--accent); font-weight: 500; text-underline-offset: 3px; }
 .res a::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
-.res li:hover { border-color: var(--line-2); }
+@media (hover: hover) { .res li:hover { border-color: var(--line-2); } }
 .res span { color: var(--fg-2); font-size: 16px; }
 .feedback p { margin: 0; color: var(--fg-2); }
 .share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
