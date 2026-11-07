@@ -255,12 +255,12 @@
   var ANY = { era: true, format: true };            // OR within group
   var GROUPS = ['tag', 'era', 'format', 'has'];       // tag/has: AND within group
 
-  var state = { q: '', tag: [], era: [], format: [], has: [], sort: 'new', view: store.get('view') === 'list' ? 'list' : 'grid' };
+  var state = { q: '', tag: [], era: [], format: [], has: [], sort: 'new', view: store.get('view') === 'grid' ? 'grid' : 'list' };
   var params = new URLSearchParams(window.location.search);
   state.q = params.get('q') || '';
   GROUPS.forEach(function (g) { state[g] = params.getAll(g); });
   if (params.get('sort') === 'old') state.sort = 'old';
-  if (params.get('view')) state.view = params.get('view') === 'list' ? 'list' : 'grid';
+  if (params.get('view')) state.view = params.get('view') === 'grid' ? 'grid' : 'list';
   input.value = state.q;
 
   var fold = function (s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
@@ -287,7 +287,7 @@
     if (state.q) p.set('q', state.q);
     GROUPS.forEach(function (g) { state[g].forEach(function (v) { p.append(g, v); }); });
     if (state.sort === 'old') p.set('sort', 'old');
-    if (state.view === 'list') p.set('view', 'list');
+    if (state.view === 'grid') p.set('view', 'grid');
     var qs = p.toString();
     try { history.replaceState(null, '', qs ? '?' + qs : window.location.pathname); } catch (e) { /* ignore */ }
     $$('.lang-switch').forEach(function (a) {
@@ -336,7 +336,7 @@
     var n = 0;
     var plain = !state.q && GROUPS.every(function (g) { return !state[g].length; });
     cards.forEach(function (it) { var ok = match(it); it.el.hidden = !ok || (plain && narrow.matches && it.el.getAttribute('data-id') === bannerId); if (ok) n++; });
-    rows.forEach(function (it) { it.el.hidden = !match(it); });
+    rows.forEach(function (it) { it.el.hidden = !match(it) || (plain && narrow.matches && it.el.getAttribute('data-id') === bannerId); });
     $$('.year', list).forEach(function (y) { y.hidden = !$$('.row:not([hidden])', y).length; });
 
     chips.forEach(function (c) {

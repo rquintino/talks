@@ -72,6 +72,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* intro */
 .intro { padding-block: 32px 24px; display: flex; flex-direction: column; gap: 10px; }
+.intro-head { display: flex; align-items: center; gap: clamp(14px, 2vw, 22px); }
+.avatar { flex: 0 0 auto; width: clamp(64px, 8vw, 88px); height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--line-2); }
 .intro-title { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(44px, 7vw, 84px); line-height: 1; letter-spacing: -0.04em; }
 .intro-tagline { margin: 0; font-size: clamp(17px, 2vw, 20px); color: var(--fg-2); max-width: 70ch; text-wrap: balance; }
 .intro-stats { margin: 0; font-size: 14px; color: var(--muted); }
