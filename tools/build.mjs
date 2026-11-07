@@ -331,7 +331,7 @@ function talkPage(t) {
   const orig = t._orig || t;
   const showOrig = LANG === 'pt' && t.language && !/^pt/i.test(t.language) && orig.title !== t.title;
   // Time-aware bits: rendered for the build moment, then corrected in the browser (site.js) from data-start/data-end.
-  const timeAttrs = t.start && t.end ? ` data-start="${esc(t.start)}" data-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 15}" data-id="${esc(t.id)}"` : '';
+  const timeAttrs = t.start && t.end ? ` data-start="${esc(t.start)}" data-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 10}" data-id="${esc(t.id)}"` : '';
   const primary = t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary q-fb').replace('<a ', '<a data-fb-window ')
     : t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary q-fb') : '';
   const slidesBtn = t.slides ? ext(t.slides, `${T('qSlides')} ↗`, 'btn') : `<a class="btn" href="#mat">${T('qSlides')}</a>`;
