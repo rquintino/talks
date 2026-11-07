@@ -345,7 +345,7 @@ ${header(prefix)}
   <header class="talk-head"${timeAttrs}>
     <p class="eyebrow mono"><span data-status hidden><span class="pulse" aria-hidden="true">●</span> <span data-status-label>${T('upcoming')}</span> · </span>${t.eventUrl ? ext(t.eventUrl, esc(t.event), 'eyebrow-link') : esc(t.event)}</p>
     <h1 class="talk-title">${esc(t.title)}</h1>
-    ${showOrig ? `<p class="orig-title"><span class="mono">${T('origTitle')}:</span> <span lang="en">${esc(orig.title)}</span></p>` : ''}
+    ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · ${T('origTitle')}: <span lang="en">${esc(orig.title)}</span></p>` : ''}
     <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
     <nav class="quick" aria-label="${T('resources')}">
       ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before hidden>${T('addCal')}</a>` : ''}
