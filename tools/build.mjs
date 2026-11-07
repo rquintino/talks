@@ -90,9 +90,9 @@ function linksHtml(t, prefix) {
   return out.length ? out.join('') : isUpcoming(t) || recent ? `<span class="muted">${T('soon')}</span>` : '';
 }
 
-function head({ title, description, prefix, canonical, og }) {
+function head({ title, description, prefix, canonical, og, htmlAttrs = '' }) {
   return `<!doctype html>
-<html lang="${T('htmlLang')}">
+<html lang="${T('htmlLang')}"${htmlAttrs}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -336,7 +336,7 @@ function talkPage(t) {
     : t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary q-fb') : '';
   const slidesBtn = t.slides ? ext(t.slides, `${T('qSlides')} ↗`, 'btn') : `<a class="btn" href="#mat">${T('qSlides')}</a>`;
   const relHref = (o) => mainHref(o, prefix);
-  return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${LANG === 'pt' ? 'pt/' : ''}${t.id}.png` })}
+  return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${LANG === 'pt' ? 'pt/' : ''}${t.id}.png`, htmlAttrs: t.start && t.end ? ` data-talk-start="${esc(t.start)}" data-talk-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 10}"` : '' })}
 <body class="talk-page">
 ${header(prefix)}
 <main id="main" class="wrap talk-layout">
@@ -348,7 +348,7 @@ ${header(prefix)}
     ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · ${T('origTitle')}: <span lang="en">${esc(orig.title)}</span></p>` : ''}
     <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
     <nav class="quick" aria-label="${T('resources')}">
-      ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before hidden>${T('addCal')}</a>` : ''}
+      ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before>${T('addCal')}</a>` : ''}
       ${primary}
       ${slidesBtn}
       <a class="btn" href="#res">${T('qRes')}${nres ? ` <span class="q-count mono">${nres}</span>` : ''}</a>
@@ -380,7 +380,7 @@ ${header(prefix)}
     ${nres ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)}&nbsp;↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
   </section>
 
-  <section class="talk-section feedback" id="fb" aria-labelledby="fb-h"${t.feedback ? ' data-after-start' : ''}>
+  <section class="talk-section feedback" id="fb" aria-labelledby="fb-h"${t.feedback ? ' data-fb-window' : ''}>
     <div class="fb-card">
       <h2 id="fb-h" class="section-title">${T('fbH')}</h2>
       <p>${T('fbP')}</p>
