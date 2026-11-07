@@ -10,8 +10,13 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
+import { createHash } from 'node:crypto';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+// GitHub Pages lets browsers cache assets for ~10 minutes; a content hash in the URL
+// makes a new page always load the CSS/JS it was built with.
+const v = (rel) => createHash('sha256').update(readFileSync(join(ROOT, rel))).digest('hex').slice(0, 10);
+const VER = { css: v('assets/site.css'), theme: v('assets/theme.js'), js: v('assets/site.js'), photo: v('assets/rui.webp') };
 const site = JSON.parse(readFileSync(join(ROOT, 'data/site.json'), 'utf8'));
 const talks = JSON.parse(readFileSync(join(ROOT, 'data/talks.json'), 'utf8'));
 const NOW = new Date();
@@ -118,9 +123,9 @@ function head({ title, description, prefix, canonical, og, htmlAttrs = '' }) {
 <link rel="icon" href="${ASSET}assets/icon.svg" type="image/svg+xml">
 <link rel="preload" href="${ASSET}assets/fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${ASSET}assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="${ASSET}assets/site.css">
-<script src="${ASSET}assets/theme.js"></script>
-<script src="${ASSET}assets/site.js" defer></script>
+<link rel="stylesheet" href="${ASSET}assets/site.css?v=${VER.css}">
+<script src="${ASSET}assets/theme.js?v=${VER.theme}"></script>
+<script src="${ASSET}assets/site.js?v=${VER.js}" defer></script>
 </head>`;
 }
 
@@ -246,7 +251,7 @@ function homePage() {
 ${header(prefix)}
 <main id="main">
 <section class="intro wrap">
-  <div class="intro-head"><img class="avatar" src="${ASSET}assets/rui.webp" width="72" height="72" alt="${esc(site.name)}"><h1 class="intro-title">${T('titleHome')}</h1></div>
+  <div class="intro-head"><img class="avatar" src="${ASSET}assets/rui.webp?v=${VER.photo}" width="72" height="72" alt="${esc(site.name)}"><h1 class="intro-title">${T('titleHome')}</h1></div>
   <p class="intro-tagline"><span class="about-label">${T('about')}</span> ${esc(S.tagline)}</p>
   <p class="intro-stats mono">${esc(stats)}</p>
 </section>
