@@ -82,7 +82,7 @@
 
   // ---- talk page: live status (the HTML is built ahead of time) ----
   var head = $('.talk-head[data-start]');
-  if (head) {
+  var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
     var tNow = new Date();
     var status = $('[data-status]', head), statusLabel = $('[data-status-label]', head);
@@ -103,9 +103,15 @@
     // two weeks on with no recording: stop promising one
     if (over && tNow - tEnd > 14 * 864e5 && $('[data-rec]')) {
       $$('[data-rec]').forEach(function (e) { e.hidden = true; });
+      $$('.mat .mat-k').forEach(function (e) { e.hidden = true; });
       var mh = $('[data-only-slides]');
       if (mh) mh.textContent = mh.getAttribute('data-only-slides');
     }
+  };
+  if (head) {
+    applyPhase();
+    setInterval(applyPhase, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) applyPhase(); });
   }
 
   // ---- stage mode (full-screen QR): Esc/Close return to where you were ----

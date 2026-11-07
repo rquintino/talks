@@ -24,7 +24,7 @@
     "fbH": "Your two-minute take", "fbP": "Rate the session and share the one idea you’re taking with you.",
     "fbLink": "Leave quick feedback ↗", "liLink": "Message me on LinkedIn ↗",
     "related": "Related talks", "qrAside": "Open this talk on your phone", "qrK": "Scan to open this talk on your phone",
-    "showFull": "Show full screen", "stage": "Stage mode ⤢", "giveFb": "Give feedback ↗", "copy": "Copy page link", "share": "Share this page", "trackMeta": "{t} track", "liveBtn": "Slides, links and feedback →", "onNow": "On now", "thanks": "Thanks for joining", "qSlides": "Slides", "qRes": "Links", "fbBtn": "Give feedback · 2 min ↗", "aboutTalk": "About this session", "qrKMob": "Let the person next to you scan this.", "origTitle": "Original title", "translated": "Translated from the original English abstract.",
+    "showFull": "Show full screen", "stage": "Stage mode ⤢", "giveFb": "Give feedback ↗", "copy": "Copy page link", "share": "Share this page", "trackMeta": "{t} track", "liveBtn": "Slides, links and feedback →", "saveHint": "Save this page to come back for them.", "onNow": "On now", "thanks": "Thanks for joining", "qSlides": "Slides", "qRes": "Links", "fbBtn": "Give feedback · 2 min ↗", "aboutTalk": "About this session", "qrKMob": "Let the person next to you scan this.", "origTitle": "Original title", "translated": "Translated from the original English abstract.",
     "fullscreen": "Full screen", "close": "Close ✕", "stageSub": "Slides, links and feedback",
     "languages": { "EN": "English", "PT": "Portuguese" }
   },
@@ -53,7 +53,7 @@
     "fbH": "A tua opinião em dois minutos", "fbP": "Avalia a sessão e partilha a ideia que levas contigo.",
     "fbLink": "Deixar feedback rápido ↗", "liLink": "Enviar mensagem no LinkedIn ↗",
     "related": "Palestras relacionadas", "qrAside": "Abrir esta palestra no telemóvel", "qrK": "Lê o código para abrir esta palestra no telemóvel",
-    "showFull": "Mostrar em ecrã inteiro", "stage": "Modo apresentação ⤢", "giveFb": "Dar feedback ↗", "copy": "Copiar link da página", "share": "Partilhar esta página", "trackMeta": "track {t}", "liveBtn": "Slides, links e feedback →", "onNow": "A decorrer", "thanks": "Obrigado pela presença", "qSlides": "Slides", "qRes": "Links", "fbBtn": "Dar feedback · 2 min ↗", "aboutTalk": "Sobre esta sessão", "qrKMob": "Mostra este código a quem está ao teu lado.", "origTitle": "Título original", "translated": "Tradução do resumo original em inglês.",
+    "showFull": "Mostrar em ecrã inteiro", "stage": "Modo apresentação ⤢", "giveFb": "Dar feedback ↗", "copy": "Copiar link da página", "share": "Partilhar esta página", "trackMeta": "track {t}", "liveBtn": "Slides, links e feedback →", "saveHint": "Guarda esta página para voltares a eles.", "onNow": "A decorrer", "thanks": "Obrigado pela presença", "qSlides": "Slides", "qRes": "Links", "fbBtn": "Dar feedback · 2 min ↗", "aboutTalk": "Sobre esta sessão", "qrKMob": "Mostra este código a quem está ao teu lado.", "origTitle": "Título original", "translated": "Tradução do resumo original em inglês.",
     "fullscreen": "Ecrã inteiro", "close": "Fechar ✕", "stageSub": "Slides, links e feedback",
     "languages": { "EN": "Inglês", "PT": "Português" },
     "levels": { "Beginner": "Iniciante", "Intermediate": "Intermédio", "Advanced": "Avançado" },

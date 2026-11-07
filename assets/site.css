@@ -270,6 +270,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .prose p { margin: 0 0 1em; font-size: clamp(18px, 1.6vw, 20px); color: var(--fg-2); line-height: 1.6; }
 .mat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 .mat .btn-small { margin-top: 2px; }
+.save-hint { font-size: 16px; }
 .mat { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 20px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
 .mat p { margin: 0; }
 .mat-k { font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }

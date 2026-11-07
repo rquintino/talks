@@ -355,12 +355,18 @@ ${header(prefix)}
     </nav>
   </header>
 
+  <section class="talk-section" aria-labelledby="abs">
+    <h2 id="abs" class="section-title">${t.abstract ? T('abstract') : T('summary')}</h2>
+    <div class="prose">${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('\n      ')}</div>
+    ${LANG === 'pt' && t.abstractTranslated ? `<p class="note">${T('translated')}</p>` : ''}
+  </section>
+
   <section class="talk-section materials" id="mat" aria-labelledby="mat-h">
     <h2 id="mat-h" class="section-title" data-only-slides="${esc(T('slidesF'))}">${T('slidesRec')}</h2>
     <div class="mat-grid">
       <div class="mat">
         <p class="mat-k mono">${T('slidesF')}</p>
-        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted" data-slides-note data-after-text="${esc(T('slidesSoon'))}">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p><button type="button" class="btn btn-small" data-copy="${esc(url)}" data-share-title="${esc(t.title)}" hidden>${T('copy')}</button>`}
+        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted" data-slides-note data-after-text="${esc(T('slidesSoon'))}">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p><p class="muted save-hint">${T('saveHint')}</p><button type="button" class="btn btn-small" data-copy="${esc(url)}" data-share-title="${esc(t.title)}" hidden>${T('copy')}</button>`}
       </div>
       <div class="mat"${t.video ? '' : ' data-rec'}>
         <p class="mat-k mono">${T('recording')}</p>
@@ -380,12 +386,6 @@ ${header(prefix)}
       <p>${T('fbP')}</p>
       ${t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary') : ext(site.links[0].url, T('liLink'), 'btn')}
     </div>
-  </section>
-
-  <section class="talk-section" aria-labelledby="abs">
-    <h2 id="abs" class="section-title">${t.abstract ? T('abstract') : T('summary')}</h2>
-    <div class="prose">${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('\n      ')}</div>
-    ${LANG === 'pt' && t.abstractTranslated ? `<p class="note">${T('translated')}</p>` : ''}
   </section>
 
   <section class="talk-section" aria-labelledby="about-h">
