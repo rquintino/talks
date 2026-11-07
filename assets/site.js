@@ -104,11 +104,9 @@
       var dot = $('.pulse', status);
       if (dot) dot.hidden = over || !soon;
     }
-    $$('[data-before]').forEach(function (e) { e.hidden = soon; });
-    $$('[data-after-start]').forEach(function (e) { e.hidden = !soon; });
     var lead = parseInt(head.getAttribute('data-fb-lead'), 10) || 10;
     var fbWin = tNow >= new Date(tEnd.getTime() - lead * 60000);
-    $$('[data-fb-window]').forEach(function (e) { e.hidden = !fbWin; });
+    document.documentElement.setAttribute('data-phase', !soon ? 'before' : !fbWin ? 'live' : over ? 'over' : 'fb');
     if (openedEarly === null) openedEarly = !fbWin;
     // toast only once the session has ended: nothing pulls attention to the phone during the talk
     if (toast) {
