@@ -1,0 +1,852 @@
+[
+  {
+    "id": "pth26",
+    "page": true,
+    "verified": true,
+    "date": "2026-11-10",
+    "start": "2026-11-10T11:10:00+00:00",
+    "end": "2026-11-10T12:00:00+00:00",
+    "time": "11:10–12:00",
+    "title": "The Agentic Loops Every Developer Should Know",
+    "short": "Agentic Loops",
+    "event": "Porto Tech Hub Conference 2026",
+    "eventUrl": "https://portotechhub.com/conference-2026/",
+    "venue": "Alfândega do Porto",
+    "city": "Porto",
+    "track": "AWS / Darede track",
+    "format": "Talk",
+    "level": "Beginner",
+    "categories": [
+      "Programming & Development",
+      "Software Architecture & Design",
+      "Quality & Testing",
+      "Generative AI"
+    ],
+    "tags": [
+      "Agentic AI",
+      "AI Agents",
+      "Agentic SDLC",
+      "GenAI"
+    ],
+    "abstract": [
+      "Loops are a key primitive for autonomous AI agents, and the now widely used \"Agent Mode\".",
+      "This session dives into the journey from the core Reason + Act loop to loop engineering — the shift from prompting agents to designing the systems that prompt them.",
+      "And while the loops run — and the lights go out on fully automated Dark Software Factories — what should we focus on?"
+    ],
+    "slides": null,
+    "video": null,
+    "audio": null,
+    "resources": [
+      {
+        "title": "ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al.)",
+        "url": "https://arxiv.org/abs/2210.03629",
+        "note": "The paper behind the Reason + Act loop.",
+        "note_pt": "O artigo por trás do ciclo Reason + Act."
+      },
+      {
+        "title": "Inner Monologue: Embodied Reasoning through Planning with Language Models (Huang et al.)",
+        "url": "https://innermonologue.github.io/",
+        "note": "Closing the loop: feeding environment feedback back into the model.",
+        "note_pt": "Fechar o ciclo: devolver ao modelo o feedback do ambiente."
+      },
+      {
+        "title": "The Law of Leaky Abstractions (Joel Spolsky)",
+        "url": "https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/",
+        "note": "Why every abstraction, agents included, eventually leaks.",
+        "note_pt": "Porque é que todas as abstrações, incluindo os agentes, acabam por ter fugas."
+      },
+      {
+        "title": "The Five Levels: from Spicy Autocomplete to the Dark Factory (Dan Shapiro)",
+        "url": "https://www.danshapiro.com/blog/2026/01/the-five-levels-from-spicy-autocomplete-to-the-software-factory/",
+        "note": "A ladder of AI coding autonomy, up to the lights-out software factory.",
+        "note_pt": "Uma escada de autonomia na programação com IA, até à fábrica de software às escuras."
+      },
+      {
+        "title": "Loop Engineering (Addy Osmani)",
+        "url": "https://addyosmani.com/blog/loop-engineering/",
+        "note": "From writing prompts to designing the loops that prompt coding agents.",
+        "note_pt": "De escrever prompts a desenhar os ciclos que dão prompts aos agentes de programação."
+      },
+      {
+        "title": "The Factory Model: How Coding Agents Changed Software Engineering (Addy Osmani)",
+        "url": "https://addyosmani.com/blog/factory-model/",
+        "note": "Building the factory that builds your software.",
+        "note_pt": "Construir a fábrica que constrói o teu software."
+      }
+    ],
+    "language": "EN",
+    "feedback": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=3RrCHav0MkuqaBpocTNSjC5tqu1Ng7FHko5vGSfZQG9UN1EzSFM2MURHUFo4T1MxNlhOWVZOUklGTy4u",
+    "pt": {
+      "title": "Os ciclos agênticos que todos os programadores devem conhecer",
+      "short": "Ciclos agênticos",
+      "abstract": [
+        "Os ciclos (loops) são uma primitiva fundamental dos agentes de IA autónomos e do agora amplamente usado \"Agent Mode\".",
+        "Esta sessão percorre o caminho desde o ciclo base Reason + Act até à engenharia de ciclos (loop engineering) — a passagem de dar instruções aos agentes para desenhar os sistemas que lhes dão as instruções.",
+        "E enquanto os ciclos correm — e as luzes se apagam em Dark Software Factories totalmente automatizadas — em que nos devemos focar?"
+      ],
+      "abstractTranslated": true
+    }
+  },
+  {
+    "id": "dspt10",
+    "verified": true,
+    "date": "2026-10-10",
+    "title": "10 Years of Data in Portugal",
+    "short": "10 Years of Data",
+    "event": "10 Years of DSPT: Roundtable + Celebration",
+    "city": "Porto",
+    "format": "Panel",
+    "tags": [
+      "Data Science",
+      "Community"
+    ],
+    "eventUrl": "https://www.meetup.com/datascienceportugal/",
+    "venue": "JAM Porto",
+    "summary": "Roundtable for Data Science Portugal's 10th anniversary: the community's founders and early speakers look back at how data science and AI have changed in Portugal over the past decade, and where they go next.",
+    "pt": {
+      "title": "10 anos de dados em Portugal",
+      "short": "10 anos de dados",
+      "summary": "Mesa-redonda do 10.º aniversário da Data Science Portugal: os fundadores e os primeiros oradores da comunidade olham para a forma como a ciência de dados e a IA mudaram em Portugal na última década, e para o que vem a seguir."
+    }
+  },
+  {
+    "id": "software-factories",
+    "verified": true,
+    "date": "2026-09-28",
+    "title": "From GenAI to Software Factories",
+    "short": "Software Factories",
+    "event": "ISEP · MSc Software Engineering (MEI)",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "GenAI",
+      "Agentic SDLC",
+      "AI Agents"
+    ],
+    "venue": "ISEP – Instituto Superior de Engenharia do Porto",
+    "summary": "A two-hour session for ISEP's MSc software engineering students: what coding agents can do today, the path from machine learning to generative AI to agents, practical tips for working with coding agents, their limits and risks, and what software factories mean for the future of software engineering.",
+    "language": "EN",
+    "slides": "https://learn.agentia.pt/public/talks/isep-genai-to-software-factories/",
+    "pt": {
+      "title": "Da GenAI às fábricas de software",
+      "short": "Fábricas de software",
+      "event": "ISEP · Mestrado em Engenharia Informática (MEI)",
+      "summary": "Uma sessão de duas horas para os alunos do mestrado em engenharia de software do ISEP: o que os agentes de programação já fazem hoje, o caminho do machine learning à IA generativa e aos agentes, dicas práticas para trabalhar com agentes de programação, os seus limites e riscos, e o que as fábricas de software significam para o futuro da engenharia de software."
+    }
+  },
+  {
+    "id": "dados-a-conversa",
+    "verified": true,
+    "date": "2026-07-08",
+    "title": "Agentic AI + AI Agents",
+    "short": "Dados à Conversa",
+    "event": "Dados à Conversa podcast · S2 E10",
+    "city": "Online",
+    "format": "Podcast",
+    "language": "PT",
+    "tags": [
+      "Agentic AI",
+      "AI Agents",
+      "GenAI"
+    ],
+    "audio": "https://podcast.digitalinside.pt/e/2%C2%AA-serie-episodio-10-com-rui-quintino-agentic-ai-ai-agents-trainer",
+    "eventUrl": "https://digitalinside.pt/2-a-serie-episodio-10-com-rui-quintino-agentic-ai-ai-agents-trainer/",
+    "summary": "A conversation in Portuguese on generative AI and autonomous agents: as the human role shifts to architecture, requirements, validation and strategy, intentionality, critical thinking and constant relearning matter more than ever.",
+    "pt": {
+      "title": "IA agêntica + agentes de IA",
+      "event": "Podcast Dados à Conversa · T2 E10",
+      "summary": "Uma conversa sobre IA generativa e agentes autónomos: à medida que o papel humano passa para a arquitetura, os requisitos, a validação e a estratégia, a intencionalidade, o pensamento crítico e a reaprendizagem constante contam mais do que nunca."
+    }
+  },
+  {
+    "id": "magma-ai-apps",
+    "verified": false,
+    "date": "2026-07",
+    "title": "AI for Apps and Prototypes",
+    "short": "AI for apps & prototypes",
+    "event": "Magma Studio · School of Artificial Intelligence (Summer School 2026)",
+    "city": "Online",
+    "format": "Webinar",
+    "language": "PT",
+    "tags": [
+      "GenAI",
+      "Developer Productivity"
+    ],
+    "summary": "Building apps and prototypes with AI: vibe coding, the tools and platforms worth trying, and the security side, both for you and for your app's users.",
+    "slides": "https://learn.agentia.pt/public/talks/magmastudio-ia-para-aplica-es-e-prot-tipos/",
+    "pt": {
+      "title": "IA para aplicações e protótipos",
+      "short": "IA para apps e protótipos",
+      "event": "Magma Studio · Escola da Inteligência Artificial (Summer School 2026)",
+      "summary": "Criar aplicações e protótipos com IA: vibe coding, as ferramentas e plataformas que vale a pena experimentar, e o lado da segurança, para ti e para os utilizadores da tua aplicação."
+    }
+  },
+  {
+    "id": "magma-copilot365",
+    "verified": false,
+    "date": "2026-07",
+    "title": "Copilot 365 and Agents",
+    "short": "Copilot 365 & Agents",
+    "event": "Magma Studio · School of Artificial Intelligence (Summer School 2026)",
+    "city": "Online",
+    "format": "Webinar",
+    "language": "PT",
+    "tags": [
+      "GenAI",
+      "AI Agents"
+    ],
+    "summary": "Microsoft 365 Copilot and agents: AI, agents and specialists explained, Copilot 101, practical scenarios for everyday work, and a look at other platforms.",
+    "slides": "https://learn.agentia.pt/public/talks/magmastudio-copilot-365-e-agentes/",
+    "pt": {
+      "title": "Copilot 365 e Agentes",
+      "short": "Copilot 365 e Agentes",
+      "event": "Magma Studio · Escola da Inteligência Artificial (Summer School 2026)",
+      "summary": "Microsoft 365 Copilot e agentes: IA, agentes e especialistas explicados, Copilot 101, cenários práticos para o trabalho do dia a dia e um olhar sobre outras plataformas."
+    }
+  },
+  {
+    "id": "magma-ai-data",
+    "verified": false,
+    "date": "2026-06",
+    "title": "How to Connect AI Models to Any Data Source",
+    "short": "AI + any data source",
+    "event": "Magma Studio · School of Artificial Intelligence (Summer School 2026)",
+    "city": "Online",
+    "format": "Webinar",
+    "language": "PT",
+    "tags": [
+      "AI Agents",
+      "GenAI",
+      "MCP"
+    ],
+    "summary": "How to connect AI models to any data source: from generation to RAG and tool use, autonomous agents and the agentic loop (plan, act, observe), Model Context Protocol use cases, and security practices such as guarding against prompt injection and granting least privilege.",
+    "slides": "https://learn.agentia.pt/public/talks/magmastudio-como-ligar-modelos-de-ia-a-qualquer-fo/",
+    "pt": {
+      "title": "Como ligar modelos de IA a qualquer fonte de dados",
+      "short": "IA + qualquer fonte de dados",
+      "event": "Magma Studio · Escola da Inteligência Artificial (Summer School 2026)",
+      "summary": "Como ligar modelos de IA a qualquer fonte de dados: da geração ao RAG e ao uso de ferramentas, agentes autónomos e o ciclo agêntico (planear, agir, observar), casos de uso do Model Context Protocol e boas práticas de segurança, como a proteção contra prompt injection e o princípio do mínimo privilégio."
+    }
+  },
+  {
+    "id": "copilot-autopilot",
+    "verified": true,
+    "date": "2026-02-23",
+    "title": "From Copilot to Autopilot: The Two AI Loops Every Developer Should Know",
+    "short": "Copilot → Autopilot",
+    "event": "AI Tech Talk @ Sword Health",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "Agentic AI",
+      "AI Agents",
+      "Agentic SDLC",
+      "Developer Productivity"
+    ],
+    "eventUrl": "https://events.swordhealth.tech/",
+    "venue": "Sword Health office",
+    "summary": "Most AI coding is still single-turn autocomplete; agents loop. A tour of the two loops every developer should know, ReAct (the agent loop) and RALPH (plan, execute, verify, reset, repeat), with live demos, how agents fail, human gates, and a developer's playbook built on context and spec-driven engineering.",
+    "language": "EN",
+    "slides": "https://learn.agentia.pt/public/talks/from-copilot-to-autopilot/",
+    "pt": {
+      "title": "Do Copilot ao Autopilot: os dois ciclos de IA que todos os programadores devem conhecer",
+      "short": "Copilot → Autopilot",
+      "summary": "A maior parte da programação com IA ainda é autocomplete de um só passo; os agentes trabalham em ciclo. Uma visita aos dois ciclos que todos os programadores devem conhecer, o ReAct (o ciclo do agente) e o RALPH (planear, executar, verificar, recomeçar, repetir), com demos ao vivo, as formas como os agentes falham, pontos de aprovação humana e um guia prático assente em engenharia de contexto e desenvolvimento orientado por especificações."
+    }
+  },
+  {
+    "id": "coding-age-of-agents",
+    "verified": false,
+    "date": "2025-11-26",
+    "title": "Coding in the Age of Agents",
+    "short": "Coding with Agents",
+    "event": "DSPT Meetup · From Development to Evaluations: All About AI Agents",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "AI Agents",
+      "Developer Productivity",
+      "Agentic SDLC"
+    ],
+    "eventUrl": "https://devscope.net/events/dspt-meetup-from-development-to-evaluations-all-about-ai-agents",
+    "venue": "DevScope office",
+    "summary": "How agentic workflows and tools like Claude Code and GitHub Copilot are transforming software development.",
+    "pt": {
+      "title": "Programar na era dos agentes",
+      "short": "Programar com agentes",
+      "summary": "Como os fluxos de trabalho agênticos e ferramentas como o Claude Code e o GitHub Copilot estão a transformar o desenvolvimento de software."
+    }
+  },
+  {
+    "id": "os-ai-mentor",
+    "date": "2023-03-30",
+    "title": "Accelerate Value Delivery with OutSystems AI Mentor System",
+    "short": "AI Mentor System",
+    "event": "OutSystems User Group Porto",
+    "eventUrl": "https://usergroups.outsystems.com/events/details/outsystems-inc-porto-presents-accelerate-value-delivery-with-outsystems-ai-mentor-system/",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "GenAI",
+      "Developer Productivity"
+    ],
+    "verified": false,
+    "summary": "How to use OutSystems AI Mentor to accelerate value delivery on the OutSystems platform.",
+    "pt": {
+      "title": "Acelerar a entrega de valor com o OutSystems AI Mentor System",
+      "summary": "Como usar o OutSystems AI Mentor para acelerar a entrega de valor na plataforma OutSystems."
+    }
+  },
+  {
+    "id": "intro-mlops",
+    "verified": false,
+    "date": "2021-02-19",
+    "title": "Houston, we have a model… Introduction to MLOps",
+    "short": "Intro to MLOps",
+    "event": "FEUP Data Science & Engineering Talks",
+    "format": "Talk",
+    "tags": [
+      "MLOps",
+      "Machine Learning"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/houston-we-have-a-model-introduction-to-mlops",
+    "eventUrl": "https://dei.fe.up.pt/dsetalks/?p=1454",
+    "city": "Online",
+    "summary": "A trained model is where the real work starts: deploying, monitoring, retraining and scaling machine learning in production, and why the model code is just the tip of the iceberg.",
+    "pt": {
+      "title": "Houston, temos um modelo… Introdução ao MLOps",
+      "short": "Introdução ao MLOps",
+      "summary": "Um modelo treinado é onde o trabalho a sério começa: implementar, monitorizar, retreinar e escalar machine learning em produção, e porque é que o código do modelo é só a ponta do icebergue."
+    }
+  },
+  {
+    "id": "pbi-data-science",
+    "verified": false,
+    "date": "2020-12-16",
+    "title": "Power BI for Data Science and Machine Learning",
+    "short": "Power BI for DS & ML",
+    "event": "DSPT#82 Webinar · Data Science Portugal",
+    "city": "Online",
+    "format": "Talk",
+    "tags": [
+      "Power BI",
+      "Data Science",
+      "Machine Learning"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/power-bi-for-data-science-and-machine-learning-data-science-portugal-meetup",
+    "eventUrl": "https://www.meetup.com/datascienceportugal/events/274929534/",
+    "summary": "Power BI is a BI favourite, but it has plenty for data scientists too: quick exploratory analysis, built-in anomaly detection, R and Python integration, and AutoML.",
+    "pt": {
+      "title": "Power BI para ciência de dados e machine learning",
+      "short": "Power BI para DS e ML",
+      "summary": "O Power BI é um favorito do BI, mas também tem muito para oferecer a cientistas de dados: análise exploratória rápida, deteção de anomalias integrada, integração com R e Python, e AutoML."
+    }
+  },
+  {
+    "id": "azure-immersion-ai",
+    "date": "2020-12-03",
+    "title": "Azure Immersion Workshop: AI",
+    "short": "Azure Immersion: AI",
+    "event": "Azure Immersion Workshop (DevScope)",
+    "eventUrl": "https://devscope.net/events/azure-immersion-workshop-ai/",
+    "city": "Online",
+    "format": "Workshop",
+    "tags": [
+      "Azure",
+      "Machine Learning"
+    ],
+    "verified": false,
+    "summary": "A virtual hands-on workshop on Azure AI: Azure Machine Learning with Synapse, knowledge mining, Cognitive Services and bots.",
+    "pt": {
+      "title": "Azure Immersion Workshop: IA",
+      "short": "Azure Immersion: IA",
+      "summary": "Um workshop prático e virtual sobre IA no Azure: Azure Machine Learning com Synapse, knowledge mining, Cognitive Services e bots."
+    }
+  },
+  {
+    "id": "empowering-you",
+    "verified": false,
+    "date": "2020-06",
+    "title": "Empowering you – Power BI, Power Platform & AI Builder",
+    "short": "Empowering you",
+    "event": "Microsoft Empowering You webinar (by DevScope)",
+    "city": "Online",
+    "format": "Webinar",
+    "tags": [
+      "Power BI",
+      "Machine Learning"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/empowering-you-power-bi-power-platform-ai-builder",
+    "summary": "How Power Apps, Power Automate and AI Builder can enrich your Power BI experience, with demos that combine them.",
+    "pt": {
+      "event": "Webinar Microsoft Empowering You (DevScope)",
+      "summary": "Como o Power Apps, o Power Automate e o AI Builder podem enriquecer a tua experiência com o Power BI, com demos que os combinam."
+    }
+  },
+  {
+    "id": "kaggle-days-porto-2019",
+    "date": "2019-10",
+    "title": "Kaggle Days Porto 2019 – 1st place presentation (team DevScope)",
+    "short": "Kaggle Days · 1st place",
+    "event": "Kaggle Days Meetup Porto 2019",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning",
+      "Data Science"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/kaggle-days-porto-2019-1st-place-presentation-by-team-devscope",
+    "verified": false,
+    "pt": {
+      "title": "Kaggle Days Porto 2019 – apresentação do 1.º lugar (equipa DevScope)",
+      "short": "Kaggle Days · 1.º lugar"
+    }
+  },
+  {
+    "id": "btf2019",
+    "date": "2019-01-30",
+    "title": "Lean Artificial Intelligence with Deep Learning and AutoML",
+    "short": "Lean AI",
+    "event": "Building the Future 2019 (Microsoft)",
+    "city": "Lisbon",
+    "venue": "Pavilhão Carlos Lopes",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning"
+    ],
+    "verified": false,
+    "pt": {
+      "title": "Inteligência artificial lean com deep learning e AutoML",
+      "short": "IA lean"
+    }
+  },
+  {
+    "id": "dspt27",
+    "date": "2018-04",
+    "title": "Fifty Shades of Automated Machine Learning",
+    "short": "Fifty Shades of AutoML",
+    "event": "Data Science Portugal meetup #27",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning"
+    ],
+    "slides": "https://www.slideshare.net/slideshow/datasciencept-27-fifty-shades-of-automated-machine-learning/94210922",
+    "verified": false,
+    "summary": "How and when AutoML tools can help across a typical machine learning lifecycle.",
+    "pt": {
+      "title": "As cinquenta sombras do machine learning automatizado",
+      "short": "As cinquenta sombras do AutoML",
+      "summary": "Como e quando as ferramentas de AutoML podem ajudar ao longo de um ciclo de vida típico de machine learning."
+    }
+  },
+  {
+    "id": "sqlsat685-workshop",
+    "date": "2017-10-27",
+    "title": "Data Science with Azure Machine Learning Workbench & Docker Containers for Data Platform",
+    "short": "Azure ML Workbench",
+    "event": "SQLSaturday #685 Porto · pre-conference workshop",
+    "eventUrl": "https://sqlsaturday.com/2017-10-28-SQLSat-0685/",
+    "city": "Porto",
+    "venue": "ISEP",
+    "format": "Workshop",
+    "tags": [
+      "Machine Learning",
+      "Azure"
+    ],
+    "verified": false,
+    "pt": {
+      "title": "Ciência de dados com o Azure Machine Learning Workbench e contentores Docker para a Data Platform",
+      "event": "SQLSaturday #685 Porto · workshop pré-conferência"
+    }
+  },
+  {
+    "id": "epia2017",
+    "date": "2017-09-05",
+    "title": "Data Science at DevScope: from Reports & Dashboards to applied Artificial Intelligence",
+    "short": "Reports → Applied AI",
+    "event": "EPIA 2017 · Conference on Artificial Intelligence",
+    "eventUrl": "https://www.up.pt/arquivoweb/web.fe.up.pt/_epia2017/program/index.html",
+    "city": "Porto",
+    "format": "Talk",
+    "language": "EN",
+    "tags": [
+      "Machine Learning",
+      "Data Science"
+    ],
+    "verified": false,
+    "summary": "A journey from reports and dashboards to applied artificial intelligence, from the DevScope data science team.",
+    "pt": {
+      "title": "Ciência de dados na DevScope: de relatórios e dashboards à inteligência artificial aplicada",
+      "short": "Relatórios → IA aplicada",
+      "event": "EPIA 2017 · Conferência de Inteligência Artificial",
+      "summary": "Um percurso de relatórios e dashboards até à inteligência artificial aplicada, pela equipa de ciência de dados da DevScope."
+    }
+  },
+  {
+    "id": "containers-ml",
+    "verified": false,
+    "date": "2017-05",
+    "title": "Docker & Containers for Big Data, Data Science, ML & Deep Learning",
+    "short": "Containers for ML",
+    "event": "Event to be confirmed",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning",
+      "Data Science"
+    ],
+    "slides": "https://www.slideshare.net/slideshow/docker-containers-for-big-data-data-science-machine-learning-deep-learning/76380325",
+    "summary": "Hands-on Docker and containers for big data, data science, machine learning and deep learning, from GPU deep learning to Hadoop and Spark workbenches.",
+    "pt": {
+      "title": "Docker e contentores para big data, ciência de dados, ML e deep learning",
+      "short": "Contentores para ML",
+      "summary": "Docker e contentores na prática para big data, ciência de dados, machine learning e deep learning, de deep learning em GPU a ambientes Hadoop e Spark.",
+      "event": "Evento a confirmar"
+    }
+  },
+  {
+    "id": "oss-camp",
+    "verified": false,
+    "date": "2017-04",
+    "title": "Open Source Deep Learning & Machine Learning with Microsoft CNTK & LightGBM",
+    "short": "Deep Learning",
+    "event": "Microsoft Open Source Camp",
+    "city": "Lisbon",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning"
+    ],
+    "venue": "Microsoft Portugal",
+    "slides": "https://www.slideshare.net/slideshow/open-source-deep-learning-machine-learning-with-microsoft-cntk-lightgbm/74962301",
+    "summary": "An introduction to the Microsoft Cognitive Toolkit (CNTK) and LightGBM: custom image classification and computer vision on CPUs and GPUs, test-driven on the Kaggle Data Science Bowl 2017.",
+    "pt": {
+      "title": "Deep learning e machine learning open source com Microsoft CNTK e LightGBM",
+      "summary": "Uma introdução ao Microsoft Cognitive Toolkit (CNTK) e ao LightGBM: classificação de imagens personalizada e visão computacional em CPU e GPU, testadas no Kaggle Data Science Bowl 2017."
+    }
+  },
+  {
+    "id": "sqlsat583",
+    "verified": false,
+    "date": "2017-03-11",
+    "title": "First steps with R/RStudio for SQL Developers/DBAs",
+    "short": "R for SQL Devs",
+    "event": "SQLSaturday #583",
+    "city": "Lisbon",
+    "format": "Talk",
+    "tags": [
+      "Data Platform",
+      "Data Science"
+    ],
+    "eventUrl": "https://sqlsaturday.com/2017-03-11-SQLSat-0583/",
+    "venue": "Microsoft Portugal",
+    "summary": "A beginner session for BI developers, DBAs and analysts: why and when to use R, how it differs from typical SQL/BI development, and the first steps and typical challenges.",
+    "pt": {
+      "title": "Primeiros passos com R/RStudio para programadores SQL e DBAs",
+      "short": "R para devs SQL",
+      "summary": "Uma sessão para iniciantes, para programadores de BI, DBAs e analistas: porquê e quando usar R, em que difere do desenvolvimento SQL/BI habitual, e os primeiros passos e desafios típicos."
+    }
+  },
+  {
+    "id": "dp-airlift-2017",
+    "date": "2017-02-24",
+    "title": "Machine Learning with SQL Server 2016 and R Services",
+    "short": "ML with SQL Server",
+    "event": "Microsoft Data Platform Airlift 2017",
+    "city": "Lisbon",
+    "venue": "Microsoft Lisbon Experience",
+    "format": "Talk",
+    "language": "PT",
+    "tags": [
+      "Machine Learning",
+      "Data Platform"
+    ],
+    "slides": "https://www.slideshare.net/slideshow/microsoft-data-platform-airlift-2017-rui-quintino-machine-learning-with-sql-server-2016-and-r-services/73152258",
+    "verified": false,
+    "summary": "Machine learning basics, why R, and running R inside SQL Server 2016 with R Services.",
+    "pt": {
+      "title": "Machine learning com SQL Server 2016 e R Services",
+      "short": "ML com SQL Server",
+      "summary": "Fundamentos de machine learning, porquê R, e como correr R dentro do SQL Server 2016 com o R Services."
+    }
+  },
+  {
+    "id": "cognitive-services",
+    "verified": false,
+    "date": "2017",
+    "title": "Microsoft Cognitive Services & Bot Framework",
+    "short": "Cognitive Services",
+    "event": "Universidade Fernando Pessoa",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning",
+      "Azure"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/microsoft-cognitive-services-bot-framework-universidade-fernando-pessoa",
+    "pt": {
+      "title": "Microsoft Cognitive Services e Bot Framework"
+    }
+  },
+  {
+    "id": "sqlsat546",
+    "verified": false,
+    "date": "2016-10-01",
+    "title": "First steps with R in the Microsoft Data Platform",
+    "short": "R in the Data Platform",
+    "event": "SQLSaturday #546 Oporto",
+    "city": "Porto",
+    "format": "Talk",
+    "tags": [
+      "Data Platform",
+      "Data Science"
+    ],
+    "eventUrl": "https://sqlsaturday.com/2016-10-01-SQLSat-0546/",
+    "venue": "ISEP",
+    "summary": "Can you use R inside SQL Server 2016, Power BI, Azure ML or Visual Studio? A beginner's tour for BI developers, DBAs and analysts.",
+    "pt": {
+      "title": "Primeiros passos com R na Microsoft Data Platform",
+      "short": "R na Data Platform",
+      "summary": "É possível usar R dentro do SQL Server 2016, do Power BI, do Azure ML ou do Visual Studio? Uma visita guiada para iniciantes, para programadores de BI, DBAs e analistas."
+    }
+  },
+  {
+    "id": "techrefresh",
+    "verified": false,
+    "date": "2015-06-15",
+    "title": "Applications that Learn",
+    "short": "Applications that Learn",
+    "event": "Microsoft Developer Tech Refresh 2015",
+    "city": "Lisbon",
+    "format": "Talk",
+    "tags": [
+      "Machine Learning"
+    ],
+    "summary": "Where machine learning meets the application features developers used to build by hand, with Azure Machine Learning.",
+    "pt": {
+      "title": "Aplicações que aprendem",
+      "short": "Aplicações que aprendem",
+      "summary": "Onde o machine learning encontra as funcionalidades que os programadores costumavam construir à mão, com o Azure Machine Learning."
+    }
+  },
+  {
+    "id": "sqlsat369",
+    "verified": false,
+    "date": "2015-05-16",
+    "title": "The Amazing Power BI vNext",
+    "short": "Power BI vNext",
+    "event": "SQLSaturday #369",
+    "city": "Lisbon",
+    "format": "Talk",
+    "tags": [
+      "Power BI",
+      "Data Platform"
+    ],
+    "eventUrl": "https://sqlsaturday.com/2015-05-16-SQLSat-0369/",
+    "venue": "Microsoft Portugal",
+    "summary": "A test drive of the new Power BI: real-time analytics through the new Power BI APIs and the new Power BI Designer.",
+    "pt": {
+      "title": "O incrível Power BI vNext",
+      "summary": "Um test drive ao novo Power BI: analytics em tempo real através das novas APIs do Power BI e o novo Power BI Designer."
+    }
+  },
+  {
+    "id": "sqlsat369-data-intelligence",
+    "date": "2015-05-16",
+    "title": "Data Intelligence: Stories of useful data",
+    "short": "Data Intelligence",
+    "event": "SQLSaturday #369",
+    "eventUrl": "https://sqlsaturday.com/2015-05-16-SQLSat-0369/",
+    "city": "Lisbon",
+    "venue": "Microsoft Portugal",
+    "format": "Talk",
+    "tags": [
+      "Data Science",
+      "Data Storytelling"
+    ],
+    "verified": false,
+    "summary": "Stories of useful data, from basket analysis to Netflix's House of Cards, healthcare analytics and the quantified self, and the patterns behind them: big data, visualisation, data mining and statistics.",
+    "pt": {
+      "title": "Data Intelligence: histórias de dados úteis",
+      "summary": "Histórias de dados úteis, da análise de cestos de compras ao House of Cards da Netflix, analytics na saúde e o quantified self, e os padrões por trás delas: big data, visualização, data mining e estatística."
+    }
+  },
+  {
+    "id": "asa-airlift",
+    "verified": false,
+    "date": "2015-01-22",
+    "title": "The Power of Now! Azure Stream Analytics",
+    "short": "The Power of Now!",
+    "event": "Microsoft ITPro AirLift",
+    "format": "Talk",
+    "tags": [
+      "Azure",
+      "Data Platform"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/the-power-of-now-azure-stream-analytics-microsoft-itpro-airlift",
+    "city": "Lisbon",
+    "venue": "Microsoft Lisbon Experience",
+    "language": "PT",
+    "summary": "Real-time analytics with Azure Stream Analytics, a fully managed event-processing engine with a SQL-like query language.",
+    "pt": {
+      "title": "O poder do agora! Azure Stream Analytics",
+      "short": "O poder do agora!",
+      "summary": "Analytics em tempo real com o Azure Stream Analytics, um motor de processamento de eventos totalmente gerido, com uma linguagem de consulta semelhante a SQL."
+    }
+  },
+  {
+    "id": "24hop-pt-2014",
+    "date": "2014-10-07",
+    "title": "Data Mining in the Cloud with Windows Azure Machine Learning",
+    "short": "Azure ML",
+    "event": "24 Hours of PASS: Portuguese Edition 2014",
+    "city": "Online",
+    "format": "Webinar",
+    "language": "PT",
+    "tags": [
+      "Machine Learning",
+      "Azure"
+    ],
+    "verified": false,
+    "pt": {
+      "title": "Data Mining na Cloud com o Windows Azure Machine Learning",
+      "short": "Azure ML"
+    }
+  },
+  {
+    "id": "24hop-pt-2013",
+    "date": "2013-11-14",
+    "title": "\"Data Driven\" Business Intelligence",
+    "short": "Data Driven BI",
+    "event": "24 Hours of PASS: Portuguese Edition 2013",
+    "city": "Online",
+    "format": "Webinar",
+    "language": "PT",
+    "tags": [
+      "Data Platform"
+    ],
+    "verified": false,
+    "pt": {}
+  },
+  {
+    "id": "sqlsat188",
+    "verified": false,
+    "date": "2013-03-16",
+    "title": "Faster than the speed of light… with #MSBI",
+    "short": "Faster than light",
+    "event": "SQLSaturday #188 Portugal",
+    "city": "Lisbon",
+    "format": "Talk",
+    "tags": [
+      "Data Platform",
+      "Power BI"
+    ],
+    "eventUrl": "https://sqlsaturday.com/2013-03-16-SQLSat-0188/",
+    "venue": "Microsoft Lisbon Experience",
+    "summary": "What if insights from your business data were only seconds or a few clicks away? Faster self-service BI with Excel 2013, PowerPivot and Power View, without auxiliary tables or complex DAX modelling.",
+    "pt": {
+      "title": "Mais rápido do que a velocidade da luz… com #MSBI",
+      "short": "Mais rápido do que a luz",
+      "summary": "E se os insights dos dados do teu negócio estivessem a poucos segundos ou cliques de distância? BI self-service mais rápido com Excel 2013, PowerPivot e Power View, sem tabelas auxiliares nem modelação DAX complexa."
+    }
+  },
+  {
+    "id": "sqlsat115",
+    "date": "2012-03-17",
+    "title": "More Agile Business Intelligence with Microsoft BI",
+    "short": "Agile BI",
+    "event": "SQLSaturday #115 Portugal",
+    "eventUrl": "https://sqlsaturday.com/2012-03-17-SQLSat-0115/",
+    "city": "Lisbon",
+    "venue": "Universidade Autónoma de Lisboa",
+    "format": "Talk",
+    "tags": [
+      "Data Platform"
+    ],
+    "verified": false,
+    "summary": "Agile patterns and techniques applied to the Microsoft BI stack: rapid feedback cycles, test automation, flexible integration processes and flexible Analysis Services models.",
+    "pt": {
+      "title": "Business Intelligence mais ágil com Microsoft BI",
+      "short": "BI ágil",
+      "summary": "Padrões e técnicas ágeis aplicados à stack Microsoft BI: ciclos de feedback rápidos, automação de testes, processos de integração flexíveis e modelos de Analysis Services flexíveis."
+    }
+  },
+  {
+    "id": "ignite-pt",
+    "verified": false,
+    "date": "2011-05",
+    "title": "The Perception-Reality Gap",
+    "short": "Perception vs reality",
+    "event": "Ignite Portugal #12",
+    "city": "Lisbon",
+    "format": "Lightning",
+    "language": "PT",
+    "tags": [
+      "Data Storytelling"
+    ],
+    "slides": "https://www.slideshare.net/rquintino/de-histrias-mal-contadas",
+    "venue": "LX Factory",
+    "summary": "A five-minute Ignite talk on the gap between perception and reality, told through visual illusions.",
+    "pt": {
+      "title": "De histórias mal contadas…",
+      "short": "Histórias mal contadas",
+      "summary": "Uma palestra Ignite de cinco minutos sobre a distância entre a perceção e a realidade, contada através de ilusões visuais."
+    }
+  },
+  {
+    "id": "devdays09",
+    "date": "2009-02",
+    "title": "DAT302: Tuning & understanding MDX Query Performance in SQL Server 2008 Analysis Services",
+    "short": "MDX Performance",
+    "event": "Microsoft DevDays 2009",
+    "city": "Oeiras",
+    "venue": "IST Taguspark",
+    "format": "Talk",
+    "language": "PT",
+    "tags": [
+      "Data Platform"
+    ],
+    "verified": false,
+    "pt": {
+      "title": "DAT302: afinar e compreender a performance de queries MDX no SQL Server 2008 Analysis Services",
+      "short": "Performance MDX"
+    }
+  },
+  {
+    "id": "techdays07",
+    "date": "2007-03",
+    "title": "0wn3d: Hacking even easier in AJAX Web Sites",
+    "short": "0wn3d",
+    "event": "Microsoft TechDays 2007",
+    "city": "Lisbon",
+    "format": "Talk",
+    "language": "PT",
+    "tags": [
+      "Security"
+    ],
+    "verified": false,
+    "pt": {
+      "title": "0wn3d: hacking ainda mais fácil em sites AJAX"
+    }
+  },
+  {
+    "id": "techdays05",
+    "verified": false,
+    "first": true,
+    "date": "2005-11",
+    "title": "Security session (title to confirm)",
+    "short": "Where it started",
+    "event": "Microsoft TechDays 2005",
+    "city": "Lisbon",
+    "format": "Talk",
+    "tags": [
+      "Security"
+    ],
+    "venue": "Centro de Congressos de Lisboa",
+    "language": "PT",
+    "summary": "A live web/HTTP hacking demo, voted best session of Microsoft TechDays 2005.",
+    "pt": {
+      "title": "Sessão de segurança (título a confirmar)",
+      "short": "Onde tudo começou",
+      "summary": "Uma demonstração ao vivo de hacking web/HTTP, eleita a melhor sessão do Microsoft TechDays 2005."
+    }
+  }
+]
