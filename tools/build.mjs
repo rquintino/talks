@@ -313,42 +313,47 @@ function talkPage(t) {
   const upcoming = isUpcoming(t);
   const shortUrl = url.replace('https://', '').replace(/\/$/, '');
   const qr = qrSvg(url, `${T('qrLabel')} ${shortUrl}`);
-  const facts = [
-    [T('when'), `${dateLabel(t)}${t.time ? ' · ' + t.time : ''}`],
-    [T('where'), where(t)],
-    [T('eventL'), t.event],
-    [T('track'), t.track],
+  const nres = (t.resources || []).length;
+  // One scannable line instead of seven boxes: date · time · venue · track.
+  const metaBits = [dateLabel(t), t.time, where(t), t.track].filter(Boolean).map((v) => `<span>${esc(v)}</span>`);
+  const details = [
     [T('level'), t.level ? (UI[LANG].levels || {})[t.level] || t.level : ''],
     [T('formatL'), fmtLabel(t.format)],
     [T('languageL'), t.language ? langName(t.language) : ''],
   ].filter(([, v]) => v);
+  const orig = t._orig || t;
+  const showOrig = LANG === 'pt' && t.language && !/^pt/i.test(t.language) && orig.title !== t.title;
+  // Time-aware bits: rendered for the build moment, then corrected in the browser (site.js) from data-start/data-end.
+  const timeAttrs = t.start && t.end ? ` data-start="${esc(t.start)}" data-end="${esc(t.end)}"` : '';
+  const primary = t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary q-fb')
+    : t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary q-fb') : '';
+  const slidesBtn = t.slides ? ext(t.slides, `${T('qSlides')} ↗`, 'btn') : `<a class="btn" href="#mat">${T('qSlides')}</a>`;
+  const relHref = (o) => mainHref(o, prefix);
   return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${t.id}.png` })}
 <body class="talk-page">
 ${header(prefix)}
 <main id="main" class="wrap talk-layout">
 <div class="talk">
   <p class="crumb"><a href="${prefix}">${T('crumb')}</a></p>
-  <header class="talk-head">
-    <p class="eyebrow mono">${upcoming ? `<span class="pulse" aria-hidden="true">●</span> ${T('upcoming')} · ` : ''}${esc(t.event)}</p>
+  <header class="talk-head"${timeAttrs}>
+    <p class="eyebrow mono"><span data-status${upcoming ? '' : ' hidden'}><span class="pulse" aria-hidden="true">●</span> <span data-status-label>${T('upcoming')}</span> · </span>${t.eventUrl ? ext(t.eventUrl, esc(t.event), 'eyebrow-link') : esc(t.event)}</p>
     <h1 class="talk-title">${esc(t.title)}</h1>
-    <dl class="facts">
-      ${facts.map(([k, v]) => `<div><dt class="mono">${k}</dt><dd>${esc(v)}</dd></div>`).join('\n      ')}
-    </dl>
-    <div class="tags">${t.tags.map((g) => `<a class="tag" href="${prefix}?tag=${encodeURIComponent(g)}">${esc(tagLabel(g))}</a>`).join('')}</div>
-    ${upcoming && t.start ? `<div class="talk-actions"><a class="btn btn-primary" href="talk.ics" download>${T('addCal')}</a>${t.eventUrl ? ext(t.eventUrl, T('eventPage'), 'btn') : ''}</div>` : (t.eventUrl ? `<div class="talk-actions">${ext(t.eventUrl, T('eventPage'), 'btn')}</div>` : '')}
+    ${showOrig ? `<p class="orig-title"><span class="mono">${T('origTitle')}:</span> <span lang="en">${esc(orig.title)}</span></p>` : ''}
+    <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
+    <nav class="quick" aria-label="${T('resources')}">
+      ${primary}
+      ${slidesBtn}
+      <a class="btn" href="#res">${T('qRes')}${nres ? ` <span class="q-count mono">${nres}</span>` : ''}</a>
+    </nav>
+    ${upcoming && t.start ? `<p class="talk-actions" data-before><a class="btn btn-small" href="talk.ics" download>${T('addCal')}</a></p>` : ''}
   </header>
 
-  <section class="talk-section" aria-labelledby="abs">
-    <h2 id="abs" class="section-title">${t.abstract ? T('abstract') : T('summary')}</h2>
-    <div class="prose">${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('\n      ')}</div>
-  </section>
-
-  <section class="talk-section materials" aria-labelledby="mat">
-    <h2 id="mat" class="section-title">${T('slidesRec')}</h2>
+  <section class="talk-section materials" id="mat" aria-labelledby="mat-h">
+    <h2 id="mat-h" class="section-title">${T('slidesRec')}</h2>
     <div class="mat-grid">
       <div class="mat">
         <p class="mat-k mono">${T('slidesF')}</p>
-        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p>`}
+        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted" data-slides-note data-after-text="${esc(T('slidesSoon'))}">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p>`}
       </div>
       <div class="mat">
         <p class="mat-k mono">${T('recording')}</p>
@@ -357,30 +362,49 @@ ${header(prefix)}
     </div>
   </section>
 
-  <section class="talk-section" aria-labelledby="res">
-    <h2 id="res" class="section-title">${T('resources')}</h2>
-    ${(t.resources || []).length ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)} ↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
+  <section class="talk-section" id="res" aria-labelledby="res-h">
+    <h2 id="res-h" class="section-title">${T('resources')}</h2>
+    ${nres ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)} ↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
   </section>
 
-  <section class="talk-section feedback" aria-labelledby="fb">
-    <h2 id="fb" class="section-title">${T('fbH')}</h2>
-    <p>${T('fbP')} ${t.feedback ? ext(t.feedback, T('fbLink'), 'lnk') : ext(site.links[0].url, T('liLink'), 'lnk')}</p>
+  <section class="talk-section feedback" id="fb" aria-labelledby="fb-h">
+    <div class="fb-card">
+      <h2 id="fb-h" class="section-title">${T('fbH')}</h2>
+      <p>${T('fbP')}</p>
+      ${t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary') : ext(site.links[0].url, T('liLink'), 'btn')}
+    </div>
+  </section>
+
+  <section class="talk-section" aria-labelledby="abs">
+    <h2 id="abs" class="section-title">${t.abstract ? T('abstract') : T('summary')}</h2>
+    <div class="prose">${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('\n      ')}</div>
+    ${LANG === 'pt' && t.abstractTranslated ? `<p class="note">${T('translated')}</p>` : ''}
+  </section>
+
+  <section class="talk-section" aria-labelledby="about-h">
+    <h2 id="about-h" class="section-title">${T('aboutTalk')}</h2>
+    ${details.length ? `<dl class="kv">${details.map(([k, v]) => `<div><dt class="mono">${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+    <div class="tags">${t.tags.map((g) => `<a class="tag" href="${prefix}?tag=${encodeURIComponent(g)}">${esc(tagLabel(g))}</a>`).join('')}</div>
+    ${t.eventUrl ? `<p class="talk-actions">${ext(t.eventUrl, T('eventPage'), 'btn btn-small')}</p>` : ''}
   </section>
 
   ${related.length ? `<section class="talk-section" aria-labelledby="rel">
     <h2 id="rel" class="section-title">${T('related')}</h2>
-    <ul class="grid grid-3">${related.map((o) => card(o, prefix)).join('')}</ul>
+    <ul class="rel">${related.map((o) => {
+      const h = relHref(o);
+      const a = h ? (o.page ? `<a href="${h}">${esc(o.title)}</a>` : `<a href="${esc(h)}" rel="noopener noreferrer">${esc(o.title)}</a>`) : esc(o.title);
+      return `<li><span class="rel-title">${a}</span><span class="rel-sub">${esc(o.event)} · ${esc(dateLabel(o))}</span></li>`;
+    }).join('')}</ul>
   </section>` : ''}
 </div>
 <aside class="qr-rail" aria-label="${T('qrAside')}">
   <div class="qr-card">
-    <p class="qr-k mono">${T('qrK')}</p>
+    <p class="qr-k mono"><span class="qr-k-desk">${T('qrK')}</span><span class="qr-k-mob">${T('qrKMob')}</span></p>
     <a class="qr-link" href="#stage" title="${T('showFull')}">${qr}</a>
     <p class="qr-url mono" data-copy-src>${wbr(shortUrl)}</p>
     <div class="qr-actions">
-      <a class="btn btn-small btn-primary" href="#stage">${T('stage')}</a>
-      ${t.feedback ? ext(t.feedback, T('giveFb'), 'btn btn-small') : ''}
-      <button type="button" class="btn btn-small" data-copy="${esc(url)}" hidden>${T('copy')}</button>
+      <a class="btn btn-small btn-primary stage-open" href="#stage">${T('stage')}</a>
+      <button type="button" class="btn btn-small" data-copy="${esc(url)}" data-share-title="${esc(t.title)}" hidden>${T('copy')}</button>
     </div>
   </div>
 </aside>
@@ -388,7 +412,7 @@ ${header(prefix)}
 <div id="stage" class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title">
   <div class="stage-bar">
     <button type="button" class="btn btn-small" data-fullscreen hidden>${T('fullscreen')}</button>
-    <a class="btn btn-small" href="#main">${T('close')}</a>
+    <a class="btn btn-small" href="#main" data-stage-close>${T('close')}</a>
   </div>
   <div class="stage-inner">
     <div class="stage-qr">${qr}</div>
@@ -408,6 +432,7 @@ ${footer()}
 
 function notFound() {
   const prefix = '/talks/';
+  const latestPage = sorted.find((t) => t.page);
   ASSET = prefix; SWITCH = '/talks/pt/';
   return `${head({ title: `Not found · ${site.name}`, description: S.description, prefix, canonical: site.baseUrl, og: `${site.baseUrl}og/home.png` })}
 <body>
@@ -416,6 +441,7 @@ ${header(prefix)}
   <h1 class="intro-title">Lost in the loop</h1>
   <p>That page doesn’t exist. <a class="lnk" href="${prefix}">Browse all talks →</a></p>
   <p lang="pt-PT">Esta página não existe. <a class="lnk" href="${prefix}pt/">Ver todas as palestras →</a></p>
+  ${latestPage ? `<p>Looking for the latest talk? <a class="lnk" href="${prefix}${latestPage.id}/">${esc(latestPage.title)} →</a></p>` : ''}
 </main>
 ${footer()}
 </body>
@@ -425,7 +451,17 @@ ${footer()}
 
 function ics(t) {
   const fmt = (iso) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  const fold = (s) => s.replace(/[\\;,]/g, (m) => '\\' + m);
+  const escTxt = (s) => String(s).replace(/[\\;,]/g, (m) => '\\' + m);
+  const fold = (line) => {
+    const out = []; let cur = '', bytes = 0;
+    for (const ch of line) {
+      const n = Buffer.byteLength(ch);
+      if (bytes + n > (out.length ? 74 : 75)) { out.push(cur); cur = ''; bytes = 0; }
+      cur += ch; bytes += n;
+    }
+    out.push(cur);
+    return out.join('\r\n ');
+  };
   return [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//rquintino//talks//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT',
@@ -433,12 +469,12 @@ function ics(t) {
     `DTSTAMP:${fmt(t.updated || t.start)}`, // stable: no churn on rebuild
     `DTSTART:${fmt(t.start)}`,
     `DTEND:${fmt(t.end)}`,
-    `SUMMARY:${fold(t.title)} (${fold(site.name)})`,
-    `LOCATION:${fold([t.venue, t.city].filter(Boolean).join(', '))}`,
-    `DESCRIPTION:${fold(`${t.event}${t.track ? ' · ' + t.track : ''}\\n${LANGBASE}${t.id}/`)}`,
+    `SUMMARY:${escTxt(t.title)} (${escTxt(site.name)})`,
+    `LOCATION:${escTxt([t.venue, t.city].filter(Boolean).join(', '))}`,
+    `DESCRIPTION:${escTxt(`${t.event}${t.track ? ' · ' + t.track : ''}`)}\\n${escTxt(`${LANGBASE}${t.id}/`)}`,
     `URL:${LANGBASE}${t.id}/`,
-    'END:VEVENT', 'END:VCALENDAR', '',
-  ].join('\r\n');
+    'END:VEVENT', 'END:VCALENDAR',
+  ].map(fold).join('\r\n') + '\r\n';
 }
 
 function sitemap() {

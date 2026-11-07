@@ -1,6 +1,7 @@
 // rquintino.github.io/talks: vanilla JS, no dependencies (see CLAUDE.md).
 // Progressive enhancement: every talk is in the HTML; this adds theme toggle,
-// search, faceted filters, sort, cards/timeline view, countdown and copy-link.
+// search, faceted filters, sort, cards/timeline view, countdown, share/copy-link
+// and the talk page's live status and stage mode.
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -8,13 +9,15 @@
   var PT = (document.documentElement.lang || '').toLowerCase().indexOf('pt') === 0;
   var TXT = PT ? {
     dark: '☾ Escuro', light: '☀ Claro', switchTo: function (n) { return 'Mudar para o tema ' + (n === 'dark' ? 'escuro' : 'claro'); },
-    copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar ligação',
+    copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar ligação', share: 'Partilhar ligação',
+    upcoming: 'Em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
     latest: 'Última palestra', now: 'Agora', onStage: 'EM PALCO', today: 'Hoje', day: 'DIA', days: 'DIAS',
     session: 'sessão', sessions: 'sessões', newest: 'Mais recentes primeiro ↓', oldest: 'Mais antigas primeiro ↑',
     remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com diapositivos', video: 'Com vídeo', audio: 'Com áudio' }
   } : {
     dark: '☾ Dark', light: '☀ Light', switchTo: function (n) { return 'Switch to ' + n + ' theme'; },
-    copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy link',
+    copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy link', share: 'Share link',
+    upcoming: 'Upcoming', onNow: 'On now', thanks: 'Thanks for joining',
     latest: 'Latest talk', now: 'Now', onStage: 'ON STAGE', today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
     session: 'session', sessions: 'sessions', newest: 'Newest first ↓', oldest: 'Oldest first ↑',
     remove: 'Remove filter: ', clear: 'Clear all', has: { slides: 'Has slides', video: 'Has video', audio: 'Has audio' }
@@ -46,23 +49,54 @@
     if (mq && mq.addEventListener) mq.addEventListener('change', paint);
   });
 
-  // ---- copy link ----
+  // ---- share / copy link: the phone's own share sheet when there is one ----
   $$('[data-copy]').forEach(function (b) {
+    var canShare = !!navigator.share;
+    var label = canShare ? TXT.share : TXT.copy;
+    b.textContent = label;
     b.hidden = false;
     b.addEventListener('click', function () {
-      var done = function (t) { b.textContent = t; setTimeout(function () { b.textContent = TXT.copy; }, 2000); };
+      var url = b.getAttribute('data-copy');
+      var done = function (t) { b.textContent = t; setTimeout(function () { b.textContent = label; }, 2000); };
       var fallback = function () {
         var src = $('[data-copy-src]');
-        if (src) { var r = document.createRange(); r.selectNodeContents(src); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+        if (src) { var rg = document.createRange(); rg.selectNodeContents(src); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rg); }
         done(TXT.selected);
       };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(b.getAttribute('data-copy')).then(function () { done(TXT.copied); }, fallback);
-      } else { fallback(); }
+      var copy = function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () { done(TXT.copied); }, fallback);
+        } else { fallback(); }
+      };
+      if (canShare) {
+        navigator.share({ title: b.getAttribute('data-share-title') || document.title, url: url }).catch(function (e) {
+          if (!e || e.name !== 'AbortError') copy();
+        });
+      } else { copy(); }
     });
   });
 
-  // ---- stage mode (full-screen QR): Esc closes, optional real full screen ----
+  // ---- talk page: live status (the HTML is built ahead of time) ----
+  var head = $('.talk-head[data-start]');
+  if (head) {
+    var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
+    var tNow = new Date();
+    var status = $('[data-status]', head), statusLabel = $('[data-status-label]', head);
+    var soon = tNow >= new Date(tStart.getTime() - 30 * 60000);
+    var over = tNow > tEnd;
+    var recent = over && tNow - tEnd < 7 * 864e5;
+    if (status && statusLabel) {
+      statusLabel.textContent = over ? TXT.thanks : soon ? TXT.onNow : TXT.upcoming;
+      status.hidden = over && !recent;
+      var dot = $('.pulse', status);
+      if (dot) dot.hidden = over;
+    }
+    $$('[data-before]').forEach(function (e) { e.hidden = soon; });
+    var note = $('[data-slides-note]');
+    if (note && over) note.textContent = note.getAttribute('data-after-text');
+  }
+
+  // ---- stage mode (full-screen QR): Esc/Close return to where you were ----
   var stage = $('#stage');
   if (stage) {
     var fsBtn = $('[data-fullscreen]', stage);
@@ -73,12 +107,29 @@
         else document.documentElement.requestFullscreen().catch(function () {});
       });
     }
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && window.location.hash === '#stage') {
-        if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
-        window.location.hash = 'main';
-      }
+    var savedY = null, openedHere = false;
+    $$('a[href="#stage"]').forEach(function (a) {
+      a.addEventListener('click', function () { savedY = window.scrollY; openedHere = true; });
     });
+    var closeStage = function () {
+      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      if (openedHere) { openedHere = false; history.back(); }
+      else { location.replace('#main'); }
+    };
+    window.addEventListener('hashchange', function () {
+      if (location.hash !== '#stage' && savedY !== null) { var y = savedY; savedY = null; window.scrollTo(0, y); }
+    });
+    var closer = $('[data-stage-close]', stage);
+    if (closer) closer.addEventListener('click', function (e) { e.preventDefault(); closeStage(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && window.location.hash === '#stage') closeStage();
+    });
+  }
+
+  // ---- 404: slugs are lowercase, so retry a mistyped "/talks/PTH26/" ----
+  if ($('.notfound')) {
+    var lower = location.pathname.toLowerCase();
+    if (lower !== location.pathname) location.replace(lower + location.search + location.hash);
   }
 
   // ---- next-talk countdown ----
