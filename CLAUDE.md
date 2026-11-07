@@ -117,8 +117,12 @@ exceptions for "popular", "official", "tiny" or "just for dev".
 - Two languages: English at `/talks/` and European Portuguese (pt-PT) at
   `/talks/pt/`, same slugs (`/talks/pt/pth26/`). Every page links to its
   counterpart (EN · PT switch) and declares `hreflang` alternates.
-  Portuguese must be pt-PT (ecrã, telemóvel, ligação, equipa, utilizador,
-  programador), never pt-BR.
+  Portuguese must be pt-PT (ecrã, telemóvel, equipa, utilizador,
+  programador), never pt-BR. Keep the tech terms Portuguese developers say
+  in English: loops (never "ciclos" for agent loops), slides, links, prompts,
+  coding agents, software factories, containers, feedback, context
+  engineering, spec-driven development, machine learning. "Fábrica de
+  software" means an outsourcing shop in Portuguese, so don't use it.
 
 ## How the site is built
 
@@ -132,6 +136,12 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   translation of it is marked `abstractTranslated` until he approves it.
   `"page": true` gives a talk its own `/<id>/` page; `"verified": false`
   shows a "to confirm" marker.
+- Talk times: `start`/`end` are ISO timestamps with the venue's UTC offset
+  (Portugal: `+00:00` in winter, `+01:00` from the last Sunday of March to
+  the last Sunday of October). The page compares them as absolute instants,
+  so the live status, feedback window (`feedbackLead`, default 10 minutes
+  before the end) and toast happen at the same moment for every visitor;
+  `time` is the venue-local text shown on the page.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
   cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,
