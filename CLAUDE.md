@@ -151,6 +151,9 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   saved theme before paint). Fonts in `assets/fonts/` are Sora, DM Sans and
   JetBrains Mono (latin subsets, OFL, licences alongside), downloaded once from
   the npm registry tarballs with their sha512 integrity hashes checked.
+- `assets/rui.webp` is Rui's photo, approved by him for the site: 256×256,
+  re-encoded from pixels only, so it carries no EXIF, XMP or ICC metadata.
+  Re-check that with any new image.
 - Tone: talks first. agentia.pt appears only as a quiet footer link. No
   self-promotion (titles, roles, client lists) on these pages.
 
