@@ -178,14 +178,14 @@ function card(t, prefix) {
           <dt>${T('when')}</dt><dd>${esc(dateLabel(t))}${t.time ? ' · ' + esc(t.time) : ''}</dd>
           ${where(t) ? `<dt>${T('where')}</dt><dd>${esc(where(t))}</dd>` : ''}
           ${t.track ? `<dt>${T('track')}</dt><dd>${esc(t.track)}</dd>` : ''}
-          ${t.level ? `<dt>${T('level')}</dt><dd>${esc(t.level)}</dd>` : ''}
+          ${t.level ? `<dt>${T('level')}</dt><dd>${esc((UI[LANG].levels || {})[t.level] || t.level)}</dd>` : ''}
         </dl>
       </details>`
     : '';
   return `<li class="card${isUpcoming(t) ? ' is-next' : ''}" ${dataAttrs(t)}>
     ${coverEl}
     <div class="card-body">
-      <p class="meta mono"><span class="meta-fmt">${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}${badge ? ' · ' + badge.replace(/<[^>]+>/g, '') : ''} · </span>${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
+      <p class="meta mono"><span class="meta-fmt">${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}${badge ? `<span class="badge-txt"> · ${badge.replace(/<[^>]+>/g, '')}</span>` : ''} · </span>${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
       <h3 class="card-title">${titleEl}</h3>
       <p class="card-event">${esc(t.event)}</p>
       ${t.summary ? `<p class="card-sum">${esc(t.summary)}</p>` : ''}
