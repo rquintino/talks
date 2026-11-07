@@ -106,11 +106,12 @@
     }
     $$('[data-before]').forEach(function (e) { e.hidden = soon; });
     $$('[data-after-start]').forEach(function (e) { e.hidden = !soon; });
-    var lead = parseInt(head.getAttribute('data-fb-lead'), 10) || 15;
+    var lead = parseInt(head.getAttribute('data-fb-lead'), 10) || 10;
     var fbWin = tNow >= new Date(tEnd.getTime() - lead * 60000);
     $$('[data-fb-window]').forEach(function (e) { e.hidden = !fbWin; });
     if (openedEarly === null) openedEarly = !fbWin;
-    if (toast) toast.hidden = !(openedEarly && fbWin && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
+    // toast only once the session has ended: nothing pulls attention to the phone during the talk
+    if (toast) toast.hidden = !(openedEarly && over && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
     var note = $('[data-slides-note]');
     if (note && over) note.textContent = note.getAttribute('data-after-text');
     // two weeks on with no recording: stop promising one
