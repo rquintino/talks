@@ -308,7 +308,7 @@ ${footer()}
 function talkPage(t) {
   const prefix = '../';
   const url = `${LANGBASE}${t.id}/`;
-  const desc = t.abstract ? t.abstract.join(' ').slice(0, 200) : `${t.title} — ${t.event}`;
+  const desc = t.abstract ? t.abstract.join(' ').slice(0, 200) : `${t.title} · ${t.event}`;
   const related = sorted.filter((o) => o.id !== t.id && o.tags.some((g) => t.tags.includes(g))).slice(0, 3).map(loc);
   const upcoming = isUpcoming(t);
   const shortUrl = url.replace('https://', '').replace(/\/$/, '');
@@ -441,7 +441,7 @@ ${header(prefix)}
   <h1 class="intro-title">Lost in the loop</h1>
   <p>That page doesn’t exist. <a class="lnk" href="${prefix}">Browse all talks →</a></p>
   <p lang="pt-PT">Esta página não existe. <a class="lnk" href="${prefix}pt/">Ver todas as palestras →</a></p>
-  ${latestPage ? `<p>Looking for the latest talk? <a class="lnk" href="${prefix}${latestPage.id}/">${esc(latestPage.title)} →</a></p>` : ''}
+  ${latestPage ? `<p>Latest talk: <a class="lnk" href="${prefix}${latestPage.id}/">${esc(latestPage.title)} →</a></p>` : ''}
 </main>
 ${footer()}
 </body>
