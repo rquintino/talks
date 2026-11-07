@@ -355,12 +355,11 @@ ${header(prefix)}
     ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · <span lang="en">${esc(orig.title)}</span></p>` : ''}
     <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
     <nav class="quick" aria-label="${T('quickNav')}">
-      ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before>${T('addCal')}</a>` : ''}
+      ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before>${T('addCal')}</a>${ext(gcalUrl(t, url), T('gcal'), 'lnk q-alt').replace('<a ', '<a data-before ')}` : ''}
       ${primary}
       ${slidesBtn}
       <a class="btn" href="#res">${T('qRes')}${nres ? ` <span class="q-count mono">${nres}</span>` : ''}</a>
     </nav>
-    ${upcoming && t.start ? `<p class="cal-alt" data-before>${ext(gcalUrl(t, url), T('gcal'), 'lnk')}</p>` : ''}
   </header>
 
   <section class="talk-section" aria-labelledby="abs">
