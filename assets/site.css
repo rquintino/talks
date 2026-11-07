@@ -88,7 +88,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .next-title a { text-decoration: none; }
 .next-title a:hover { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 .next-sub { margin: 0; color: var(--fg-2); font-size: 16px; }
-.next-actions { flex: 1 0 auto; display: flex; flex-wrap: wrap; align-content: center; gap: 10px; }
+.next-actions { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-content: center; gap: 10px; }
+@media (min-width: 900px) {
+  .next { flex-wrap: nowrap; }
+  .next-main { flex: 1 1 auto; }
+  .next-actions { flex: 0 0 auto; flex-direction: column; flex-wrap: nowrap; justify-content: center; }
+}
 .next-actions .btn { white-space: nowrap; }
 .eyebrow { margin: 0; font-size: 14px; color: var(--accent); letter-spacing: 0.02em; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
@@ -226,7 +231,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .next-count { width: auto; aspect-ratio: auto; flex-direction: row; align-items: baseline; gap: 8px; padding: 6px 14px; align-self: flex-start; }
   .next-num { font-size: 26px; }
   .next-title { font-size: 24px; }
-  .next-actions .btn { flex: 1 1 auto; }
+  .next-actions { flex: 1 1 100%; }
+  .next-actions .btn { flex: 1 1 auto; white-space: normal; }
   .cover { aspect-ratio: auto; padding: 0; height: 6px; }
   .cover-top, .cover-title, .cover::before, .cover::after { display: none; }
   .card-sum { -webkit-line-clamp: 2; line-clamp: 2; }

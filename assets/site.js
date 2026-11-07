@@ -390,7 +390,10 @@
   });
   $('[data-sort]').addEventListener('click', function () { state.sort = state.sort === 'new' ? 'old' : 'new'; order(); render(); });
   input.addEventListener('input', function () { state.q = input.value; render(); });
-  input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { state.q = ''; input.value = ''; render(); } });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { state.q = ''; input.value = ''; render(); }
+    if (e.key === 'Enter') { input.blur(); toResults(); }
+  });
   document.addEventListener('keydown', function (e) {
     var t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
     if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); input.focus(); }
