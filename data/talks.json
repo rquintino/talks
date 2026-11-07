@@ -829,8 +829,8 @@
     "verified": false,
     "first": true,
     "date": "2005-11",
-    "title": "Security session (title to confirm)",
-    "short": "Where it started",
+    "title": "Hacked! Como são atacadas as aplicações Web, e como devemos usar a .NET Framework para as proteger",
+    "short": "Hacked!",
     "event": "Microsoft TechDays 2005",
     "city": "Lisbon",
     "format": "Talk",
@@ -839,11 +839,11 @@
     ],
     "venue": "Centro de Congressos de Lisboa",
     "language": "PT",
-    "summary": "A live web/HTTP hacking demo, voted best session of Microsoft TechDays 2005.",
+    "summary": "Session WEB04, in Portuguese: why application security matters as much as server and network security, the most common attacks on web applications, and how to use the .NET Framework to protect against them. Voted best session of Microsoft TechDays 2005.",
     "pt": {
-      "title": "Sessão de segurança (título a confirmar)",
-      "short": "Onde tudo começou",
-      "summary": "Uma demonstração ao vivo de hacking web/HTTP, eleita a melhor sessão do Microsoft TechDays 2005."
+      "title": "Hacked! Como são atacadas as aplicações Web, e como devemos usar a .NET Framework para as proteger",
+      "short": "Hacked!",
+      "summary": "Sessão WEB04: porque é que a segurança aplicacional importa tanto como a de servidores e de rede, os ataques mais comuns às aplicações Web e como usar a .NET Framework para as proteger. Eleita a melhor sessão do Microsoft TechDays 2005."
     }
   }
 ]
