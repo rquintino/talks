@@ -148,7 +148,7 @@ function footer() {
 }
 
 function tagButtons(t) {
-  return t.tags.map((g) => `<button type="button" class="tag" data-tag="${esc(g)}">${esc(tagLabel(g))}</button>`).join('');
+  return t.tags.map((g) => `<span class="tag" data-tag="${esc(g)}">${esc(tagLabel(g))}</span>`).join('');
 }
 
 function dataAttrs(t) {
@@ -164,12 +164,12 @@ function card(t, prefix) {
   const href = mainHref(t, prefix);
   const internal = t.page;
   const badge = isUpcoming(t) ? `<span class="badge">${T('nextBadge')}</span>` : t.first ? `<span class="badge">${T('first')}</span>` : '';
-  const cover = `<span class="cover-top"><span>${esc(fmtLabel(t.format))}${t.language ? ' · ' + esc(t.language) : ''}</span>${badge}</span><span class="cover-title">${esc(t.short || t.title)}</span>`;
+  const cover = `<span class="cover-top"><span>${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}</span>${badge}</span><span class="cover-title">${esc(t.short || t.title)}</span>`;
   const coverEl = href
     ? internal ? `<a class="cover tone-${eraOf(t)}" href="${href}" tabindex="-1" aria-hidden="true">${cover}</a>` : `<a class="cover tone-${eraOf(t)}" href="${esc(href)}" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">${cover}</a>`
     : `<div class="cover tone-${eraOf(t)}" aria-hidden="true">${cover}</div>`;
   const titleEl = href
-    ? internal ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)} ↗</a>`
+    ? internal ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}&nbsp;↗</a>`
     : esc(t.title);
   const details = t.abstract
     ? `<details class="peek"><summary>${T('details')}</summary>
@@ -185,7 +185,7 @@ function card(t, prefix) {
   return `<li class="card${isUpcoming(t) ? ' is-next' : ''}" ${dataAttrs(t)}>
     ${coverEl}
     <div class="card-body">
-      <p class="meta mono">${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
+      <p class="meta mono"><span class="meta-fmt">${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}${badge ? ' · ' + badge.replace(/<[^>]+>/g, '') : ''} · </span>${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
       <h3 class="card-title">${titleEl}</h3>
       <p class="card-event">${esc(t.event)}</p>
       ${t.summary ? `<p class="card-sum">${esc(t.summary)}</p>` : ''}
@@ -198,7 +198,7 @@ function card(t, prefix) {
 
 function row(t, prefix) {
   const href = mainHref(t, prefix);
-  const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)} ↗</a>`) : esc(t.title);
+  const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}&nbsp;↗</a>`) : esc(t.title);
   return `<li class="row" ${dataAttrs(t)}>
       <span class="row-date mono">${esc(shortDate(t)) || '—'}</span>
       <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(city(t.city)) : ''} · ${esc(fmtLabel(t.format))}${t.verified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
@@ -230,7 +230,7 @@ function homePage() {
   const nextHtml = next ? `<div class="wrap next-wrap"><section class="next" aria-labelledby="next-title" data-next data-id="${esc(next.id)}" data-start="${esc(next.start || '')}" data-end="${esc(next.end || '')}">
   <div class="next-count tone-agentic" aria-hidden="true"><span class="next-num" data-countdown-num>${esc(shortDate(next))}</span><span class="next-unit mono" data-countdown-unit>${esc(next.date.slice(0, 4))}</span></div>
   <div class="next-main">
-    <p class="eyebrow mono"><span class="pulse" aria-hidden="true" hidden>●</span> <span data-next-label>${isUpcoming(next) ? T('nextTalk') : T('latestTalk')}</span> · ${esc(dateLabel(next))}${next.time ? ' · ' + esc(next.time) : ''}</p>
+    <p class="eyebrow mono"><span class="pulse" aria-hidden="true" hidden>●</span> <span data-next-label>${isUpcoming(next) ? T('nextTalk') : T('latestTalk')}</span> · <span class="nw d-long">${esc(dateLabel(next))}</span><span class="nw d-short">${esc(shortDate(next))}</span>${next.time ? ` · <span class="nw">${esc(next.time)}</span>` : ''}</p>
     <h2 id="next-title" class="next-title"><a href="${prefix}${next.id}/">${esc(next.title)}</a></h2>
     <p class="next-sub">${esc(next.event)} · ${esc(where(next))}${next.track ? ' · ' + esc(next.track) : ''}</p>
   </div>
@@ -377,7 +377,7 @@ ${header(prefix)}
 
   <section class="talk-section" id="res" aria-labelledby="res-h">
     <h2 id="res-h" class="section-title">${T('resources')}</h2>
-    ${nres ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)} ↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
+    ${nres ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)}&nbsp;↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
   </section>
 
   <section class="talk-section feedback" id="fb" aria-labelledby="fb-h"${t.feedback ? ' data-after-start' : ''}>
@@ -399,7 +399,7 @@ ${header(prefix)}
     <h2 id="rel" class="section-title">${T('related')}</h2>
     <ul class="rel">${related.map((o) => {
       const h = relHref(o);
-      const a = h ? (o.page ? `<a href="${h}">${esc(o.title)}</a>` : `<a href="${esc(h)}" rel="noopener noreferrer">${esc(o.title)} ↗</a>`) : esc(o.title);
+      const a = h ? (o.page ? `<a href="${h}">${esc(o.title)}</a>` : `<a href="${esc(h)}" rel="noopener noreferrer">${esc(o.title)}&nbsp;↗</a>`) : esc(o.title);
       return `<li><span class="rel-title">${a}</span><span class="rel-sub">${esc(o.event)} · ${esc(dateLabel(o))}</span></li>`;
     }).join('')}</ul>
   </section>` : ''}

@@ -129,6 +129,7 @@
     applyPhase();
     setInterval(applyPhase, 60000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) applyPhase(); });
+    window.addEventListener('pageshow', applyPhase);
   }
 
   // ---- stage mode (full-screen QR): Esc/Close return to where you were ----
@@ -178,11 +179,13 @@
 
   // ---- next-talk countdown ----
   var next = $('[data-next]');
-  if (next && next.getAttribute('data-start')) {
+  var orig = null;
+  var paintNext = function () {
     var start = new Date(next.getAttribute('data-start'));
     var end = new Date(next.getAttribute('data-end') || next.getAttribute('data-start'));
     var now = new Date();
     var num = $('[data-countdown-num]', next), unit = $('[data-countdown-unit]', next), lab = $('[data-next-label]', next);
+    if (!orig) orig = { num: num.textContent, unit: unit.textContent };
     var dayOf = function (d) { return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); };
     var days = Math.round((dayOf(start) - dayOf(now)) / 864e5);
     var hhmm = function (d) { return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Lisbon' }); };
@@ -193,13 +196,20 @@
       $$('[data-ics]', next).forEach(function (e) { e.hidden = true; });
     }
     if (now > end) {
-      // keep the build-time date in the tile
+      // back to the build-time date in the tile
+      num.textContent = orig.num; unit.textContent = orig.unit;
       lab.textContent = TXT.latest;
       $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); var bd = $('.badge', c); if (bd) bd.remove(); });
     }
     else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.until(hhmm(end)); lab.textContent = TXT.onNow; }
     else if (days <= 0) { num.textContent = TXT.today; unit.textContent = hhmm(start); }
     else { num.textContent = String(days); unit.textContent = days === 1 ? TXT.day : TXT.days; }
+  };
+  if (next && next.getAttribute('data-start')) {
+    paintNext();
+    setInterval(paintNext, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) paintNext(); });
+    window.addEventListener('pageshow', paintNext);
   }
 
   // ---- explorer ----
@@ -208,6 +218,12 @@
   var input = $('#q');
   if (!grid || !list || !input) return;
   $$('[data-js-only]').forEach(function (e) { e.hidden = false; });
+  $$('span.tag[data-tag]').forEach(function (sp) {
+    var bt = document.createElement('button');
+    bt.type = 'button'; bt.className = sp.className; bt.textContent = sp.textContent;
+    bt.setAttribute('data-tag', sp.getAttribute('data-tag'));
+    sp.parentNode.replaceChild(bt, sp);
+  });
 
   var parse = function (el) {
     return {
