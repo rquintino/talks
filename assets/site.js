@@ -12,7 +12,8 @@
     copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar link da página', share: 'Partilhar esta página',
     showN: function (n) { return 'Ver ' + n + (n === 1 ? ' sessão' : ' sessões'); },
     upcoming: 'Em breve', startingSoon: 'Começa em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
-    latest: 'Última palestra', now: 'Agora', onStage: 'EM PALCO', today: 'Hoje', day: 'DIA', days: 'DIAS',
+    latest: 'Última palestra', now: 'Agora', until: function (t) { return 'ATÉ ÀS ' + t; }, today: 'Hoje', day: 'DIA RESTANTE', days: 'DIAS RESTANTES',
+    emptyQ: function (q) { return 'Nenhuma palestra corresponde a “' + q + '”'; },
     session: 'sessão', sessions: 'sessões', newest: 'Mais recentes primeiro ↓', oldest: 'Mais antigas primeiro ↑',
     remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com slides', video: 'Com vídeo', audio: 'Com áudio' }
   } : {
@@ -20,7 +21,8 @@
     copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy page link', share: 'Share this page',
     showN: function (n) { return 'Show ' + n + (n === 1 ? ' session' : ' sessions'); },
     upcoming: 'Upcoming', startingSoon: 'Starting soon', onNow: 'On now', thanks: 'Thanks for joining',
-    latest: 'Latest talk', now: 'Now', onStage: 'ON STAGE', today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
+    latest: 'Latest talk', now: 'Now', until: function (t) { return 'UNTIL ' + t; }, today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
+    emptyQ: function (q) { return 'No talks match “' + q + '”'; },
     session: 'session', sessions: 'sessions', newest: 'Newest first ↓', oldest: 'Oldest first ↑',
     remove: 'Remove filter: ', clear: 'Clear all', has: { slides: 'Has slides', video: 'Has video', audio: 'Has audio' }
   };
@@ -82,6 +84,12 @@
 
   // ---- talk page: live status (the HTML is built ahead of time) ----
   var head = $('.talk-head[data-start]');
+  var toast = $('[data-fb-toast]');
+  var openedEarly = null; // page opened before the feedback window: those visitors get the toast
+  var toastKey = head ? 'fb-toast:' + head.getAttribute('data-id') : '';
+  if (toast) $$('[data-toast-done]', toast).forEach(function (b) {
+    b.addEventListener('click', function () { toast.hidden = true; store.set(toastKey, '1'); });
+  });
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
     var tNow = new Date();
@@ -98,6 +106,11 @@
     }
     $$('[data-before]').forEach(function (e) { e.hidden = soon; });
     $$('[data-after-start]').forEach(function (e) { e.hidden = !soon; });
+    var lead = parseInt(head.getAttribute('data-fb-lead'), 10) || 15;
+    var fbWin = tNow >= new Date(tEnd.getTime() - lead * 60000);
+    $$('[data-fb-window]').forEach(function (e) { e.hidden = !fbWin; });
+    if (openedEarly === null) openedEarly = !fbWin;
+    if (toast) toast.hidden = !(openedEarly && fbWin && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
     var note = $('[data-slides-note]');
     if (note && over) note.textContent = note.getAttribute('data-after-text');
     // two weeks on with no recording: stop promising one
@@ -168,14 +181,20 @@
     var num = $('[data-countdown-num]', next), unit = $('[data-countdown-unit]', next), lab = $('[data-next-label]', next);
     var dayOf = function (d) { return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); };
     var days = Math.round((dayOf(start) - dayOf(now)) / 864e5);
-    if (now > end) {
-      lab.textContent = TXT.latest;
-      $$('[data-ics], .pulse', next).forEach(function (e) { e.hidden = true; });
-      $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); var b = $('.badge', c); if (b) b.remove(); });
+    var hhmm = function (d) { return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Lisbon' }); };
+    var pulse = $('.pulse', next);
+    if (pulse) pulse.hidden = !(now >= new Date(start.getTime() - 30 * 60000) && now <= end);
+    if (now >= start) {
+      $$('[data-live-text]', next).forEach(function (a) { a.textContent = a.getAttribute('data-live-text'); });
+      $$('[data-ics]', next).forEach(function (e) { e.hidden = true; });
     }
-    if (now >= start) $$('[data-live-text]', next).forEach(function (a) { a.textContent = a.getAttribute('data-live-text'); });
-    if (now >= start && now <= end) { num.textContent = TXT.now; unit.textContent = TXT.onStage; lab.textContent = TXT.onNow; $$('[data-ics]', next).forEach(function (e) { e.hidden = true; }); }
-    else if (days <= 0) { num.textContent = TXT.today; unit.textContent = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Lisbon' }); }
+    if (now > end) {
+      // keep the build-time date in the tile
+      lab.textContent = TXT.latest;
+      $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); var bd = $('.badge', c); if (bd) bd.remove(); });
+    }
+    else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.until(hhmm(end)); lab.textContent = TXT.onNow; }
+    else if (days <= 0) { num.textContent = TXT.today; unit.textContent = hhmm(start); }
     else { num.textContent = String(days); unit.textContent = days === 1 ? TXT.day : TXT.days; }
   }
 
@@ -257,6 +276,8 @@
   };
 
   var activeBox = $('[data-active]');
+  var bannerId = (function () { var n = $('[data-next]'); return n ? n.getAttribute('data-id') : null; })();
+  var emptyTitle = $('[data-empty] .empty-title'), emptyDefault = emptyTitle ? emptyTitle.textContent : '';
   var panel = $('#filters'), filtersBtn = $('[data-filters-toggle]'), doneBtn = $('[data-filters-done]'), filtersN = $('[data-filters-n]');
   var narrow = window.matchMedia ? window.matchMedia('(max-width: 999px)') : { matches: false };
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -278,7 +299,7 @@
   var render = function () {
     var n = 0;
     var plain = !state.q && GROUPS.every(function (g) { return !state[g].length; });
-    cards.forEach(function (it) { var ok = match(it); it.el.hidden = !ok || (plain && narrow.matches && it.el.classList.contains('is-next')); if (ok) n++; });
+    cards.forEach(function (it) { var ok = match(it); it.el.hidden = !ok || (plain && narrow.matches && it.el.getAttribute('data-id') === bannerId); if (ok) n++; });
     rows.forEach(function (it) { it.el.hidden = !match(it); });
     $$('.year', list).forEach(function (y) { y.hidden = !$$('.row:not([hidden])', y).length; });
 
@@ -300,6 +321,7 @@
     }
     $('[data-result-noun]').textContent = n === 1 ? TXT.session : TXT.sessions;
     $('[data-empty]').hidden = n !== 0;
+    if (emptyTitle) emptyTitle.textContent = state.q && GROUPS.every(function (g) { return !state[g].length; }) ? TXT.emptyQ(state.q) : emptyDefault;
 
     activeBox.textContent = '';
     var add = function (label, onRemove) {

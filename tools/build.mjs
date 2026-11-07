@@ -227,10 +227,10 @@ function homePage() {
   const groups = [];
   sorted.forEach((t) => { const y = String(year(t)); let g = groups.find((x) => x.y === y); if (!g) groups.push((g = { y, items: [] })); g.items.push(t); });
 
-  const nextHtml = next ? `<div class="wrap next-wrap"><section class="next" aria-labelledby="next-title" data-next data-start="${esc(next.start || '')}" data-end="${esc(next.end || '')}">
+  const nextHtml = next ? `<div class="wrap next-wrap"><section class="next" aria-labelledby="next-title" data-next data-id="${esc(next.id)}" data-start="${esc(next.start || '')}" data-end="${esc(next.end || '')}">
   <div class="next-count tone-agentic" aria-hidden="true"><span class="next-num" data-countdown-num>${esc(shortDate(next))}</span><span class="next-unit mono" data-countdown-unit>${esc(next.date.slice(0, 4))}</span></div>
   <div class="next-main">
-    <p class="eyebrow mono"><span class="pulse" aria-hidden="true">●</span> <span data-next-label>${isUpcoming(next) ? T('nextTalk') : T('latestTalk')}</span> · ${esc(dateLabel(next))}${next.time ? ' · ' + esc(next.time) : ''}</p>
+    <p class="eyebrow mono"><span class="pulse" aria-hidden="true" hidden>●</span> <span data-next-label>${isUpcoming(next) ? T('nextTalk') : T('latestTalk')}</span> · ${esc(dateLabel(next))}${next.time ? ' · ' + esc(next.time) : ''}</p>
     <h2 id="next-title" class="next-title"><a href="${prefix}${next.id}/">${esc(next.title)}</a></h2>
     <p class="next-sub">${esc(next.event)} · ${esc(where(next))}${next.track ? ' · ' + esc(next.track) : ''}</p>
   </div>
@@ -331,8 +331,8 @@ function talkPage(t) {
   const orig = t._orig || t;
   const showOrig = LANG === 'pt' && t.language && !/^pt/i.test(t.language) && orig.title !== t.title;
   // Time-aware bits: rendered for the build moment, then corrected in the browser (site.js) from data-start/data-end.
-  const timeAttrs = t.start && t.end ? ` data-start="${esc(t.start)}" data-end="${esc(t.end)}"` : '';
-  const primary = t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary q-fb').replace('<a ', '<a data-after-start ')
+  const timeAttrs = t.start && t.end ? ` data-start="${esc(t.start)}" data-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 15}" data-id="${esc(t.id)}"` : '';
+  const primary = t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary q-fb').replace('<a ', '<a data-fb-window ')
     : t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary q-fb') : '';
   const slidesBtn = t.slides ? ext(t.slides, `${T('qSlides')} ↗`, 'btn') : `<a class="btn" href="#mat">${T('qSlides')}</a>`;
   const relHref = (o) => mainHref(o, prefix);
@@ -416,6 +416,10 @@ ${header(prefix)}
   </div>
 </aside>
 </main>
+${t.feedback && t.start ? `<div class="toast" data-fb-toast hidden role="status" aria-live="polite">
+  <p>${T('toastP')}</p>
+  <div class="toast-actions">${ext(t.feedback, T('toastBtn'), 'btn btn-small btn-primary').replace('<a ', '<a data-toast-done ')}<button type="button" class="toast-x" data-toast-done aria-label="${T('dismiss')}">✕</button></div>
+</div>` : ''}
 <div id="stage" class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title">
   <div class="stage-bar">
     <button type="button" class="btn btn-small" data-fullscreen hidden>${T('fullscreen')}</button>

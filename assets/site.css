@@ -321,6 +321,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .qr-card > .qr-url, .qr-card > .qr-actions { flex: 1 1 200px; }
 }
 
+/* Feedback toast: bottom of the screen, never blocks the page */
+.toast { position: fixed; z-index: 40; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: min(440px, calc(100% - 32px)); display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 6px 6px 6px 16px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--next-ring);
+  box-shadow: 0 10px 30px rgba(10, 15, 28, 0.28); animation: toast-in 0.25s ease-out; }
+.toast p { margin: 0; flex: 1 1 auto; min-width: 0; font-size: 16px; color: var(--fg); }
+.toast-actions { display: flex; align-items: center; gap: 4px; }
+.toast-x { min-width: 44px; min-height: 44px; border: 0; background: none; color: var(--muted); font-size: 18px; border-radius: 10px; }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
 /* Stage mode: full-screen QR for the projector (pure CSS via :target) */
 .stage { display: none; position: fixed; inset: 0; z-index: 50; background: var(--bg); color: var(--fg);
   padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px));
