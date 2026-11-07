@@ -177,6 +177,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tone-early { background: var(--tone-early); }
 .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; }
 .meta { margin: 0; font-size: 14px; color: var(--muted); }
+.nw { white-space: nowrap; }
+.d-short, .meta-fmt { display: none; }
 .unverified { color: var(--muted); border-bottom: 1px dotted var(--muted); white-space: nowrap; }
 .card-title { margin: 0; font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.25; letter-spacing: -0.015em; text-wrap: balance; }
 .card-title a { text-decoration: none; }
@@ -224,8 +226,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .next-num { font-size: 26px; }
   .next-title { font-size: 24px; }
   .next-actions .btn { flex: 1 1 auto; }
-  .cover { aspect-ratio: auto; padding: 10px 16px; }
-  .cover-title, .cover::before, .cover::after { display: none; }
+  .cover { aspect-ratio: auto; padding: 0; height: 6px; }
+  .cover-top, .cover-title, .cover::before, .cover::after { display: none; }
+  .card-sum { -webkit-line-clamp: 2; line-clamp: 2; }
+  .meta-fmt { display: inline; }
+  .d-long { display: none; }
+  .d-short { display: inline; }
 }
 
 /* talk page */
