@@ -190,7 +190,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .card-title a { text-decoration: none; }
 .card-title a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .card-event { margin: 0; font-size: 16px; color: var(--fg-2); }
-.card-sum { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-sum { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.js .card-sum:not(.is-open) { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.more { align-self: flex-start; min-height: 44px; padding: 0; border: 0; background: none; color: var(--accent); font-size: 16px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; margin-top: -8px; }
+.next-num.is-word { font-size: 34px; }
 .peek[open] ~ .card-sum, .card:has(.peek[open]) .card-sum { display: none; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface-2); color: var(--fg-2); font-size: 14px; text-decoration: none; }
@@ -235,7 +238,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .next-actions .btn { flex: 1 1 auto; white-space: normal; }
   .cover { aspect-ratio: auto; padding: 0; height: 6px; }
   .cover-top, .cover-title, .cover::before, .cover::after { display: none; }
-  .card-sum { -webkit-line-clamp: 2; line-clamp: 2; }
+  .js .card-sum:not(.is-open) { -webkit-line-clamp: 2; line-clamp: 2; }
   .meta-fmt { display: inline; }
   .d-long { display: none; }
   .d-short { display: inline; }

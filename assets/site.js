@@ -13,7 +13,7 @@
     showN: function (n) { return 'Ver ' + n + (n === 1 ? ' sessão' : ' sessões'); },
     upcoming: 'Em breve', startingSoon: 'Começa em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
     latest: 'Última palestra', now: 'Agora', until: function (t) { return 'ATÉ ÀS ' + t; }, today: 'Hoje', day: 'DIA RESTANTE', days: 'DIAS RESTANTES',
-    emptyQ: function (q) { return 'Nenhuma palestra corresponde a “' + q + '”'; },
+    emptyQ: function (q) { return 'Nenhuma palestra corresponde a “' + q + '”'; }, emptyQP: 'Experimenta uma palavra mais curta ou diferente.', more: 'Ler mais', less: 'Ler menos',
     session: 'sessão', sessions: 'sessões', newest: 'Mais recentes primeiro ↓', oldest: 'Mais antigas primeiro ↑',
     remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com slides', video: 'Com vídeo', audio: 'Com áudio' }
   } : {
@@ -22,7 +22,7 @@
     showN: function (n) { return 'Show ' + n + (n === 1 ? ' session' : ' sessions'); },
     upcoming: 'Upcoming', startingSoon: 'Starting soon', onNow: 'On now', thanks: 'Thanks for joining',
     latest: 'Latest talk', now: 'Now', until: function (t) { return 'UNTIL ' + t; }, today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
-    emptyQ: function (q) { return 'No talks match “' + q + '”'; },
+    emptyQ: function (q) { return 'No talks match “' + q + '”'; }, emptyQP: 'Try a shorter or different word.', more: 'Read more', less: 'Read less',
     session: 'session', sessions: 'sessions', newest: 'Newest first ↓', oldest: 'Oldest first ↑',
     remove: 'Remove filter: ', clear: 'Clear all', has: { slides: 'Has slides', video: 'Has video', audio: 'Has audio' }
   };
@@ -208,6 +208,7 @@
     else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.until(hhmm(end)); lab.textContent = TXT.onNow; }
     else if (days <= 0) { num.textContent = TXT.today; unit.textContent = hhmm(start); }
     else { num.textContent = String(days); unit.textContent = days === 1 ? TXT.day : TXT.days; }
+    num.classList.toggle('is-word', /^[^0-9]+$/.test(num.textContent.trim()));
   };
   if (next && next.getAttribute('data-start')) {
     paintNext();
@@ -304,9 +305,11 @@
       });
   };
 
+  var fitMore = null;
   var activeBox = $('[data-active]');
   var bannerId = (function () { var n = $('[data-next]'); return n ? n.getAttribute('data-id') : null; })();
   var emptyTitle = $('[data-empty] .empty-title'), emptyDefault = emptyTitle ? emptyTitle.textContent : '';
+  var emptyHint = $('[data-empty] .empty-title + p'), emptyHintDefault = emptyHint ? emptyHint.textContent : '';
   var panel = $('#filters'), filtersBtn = $('[data-filters-toggle]'), doneBtn = $('[data-filters-done]'), filtersN = $('[data-filters-n]');
   var narrow = window.matchMedia ? window.matchMedia('(max-width: 999px)') : { matches: false };
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -350,7 +353,9 @@
     }
     $('[data-result-noun]').textContent = n === 1 ? TXT.session : TXT.sessions;
     $('[data-empty]').hidden = n !== 0;
-    if (emptyTitle) emptyTitle.textContent = state.q && GROUPS.every(function (g) { return !state[g].length; }) ? TXT.emptyQ(state.q) : emptyDefault;
+    var searchOnly = state.q && GROUPS.every(function (g) { return !state[g].length; });
+    if (emptyTitle) emptyTitle.textContent = searchOnly ? TXT.emptyQ(state.q) : emptyDefault;
+    if (emptyHint) emptyHint.textContent = searchOnly ? TXT.emptyQP : emptyHintDefault;
 
     activeBox.textContent = '';
     var add = function (label, onRemove) {
@@ -380,6 +385,7 @@
     $$('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-view') === state.view ? 'true' : 'false'); });
     $('[data-sort]').textContent = state.sort === 'new' ? TXT.newest : TXT.oldest;
     syncUrl();
+    if (fitMore) fitMore();
   };
 
   var clearAll = function () {
@@ -405,6 +411,29 @@
     if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); input.focus(); }
   });
 
+  var sums = $$('.card-sum', grid);
+  fitMore = function () {
+    sums.forEach(function (p) {
+      var btn = p.nextElementSibling && p.nextElementSibling.classList.contains('more') ? p.nextElementSibling : null;
+      if (p.classList.contains('is-open')) return;
+      var cut = p.scrollHeight > p.clientHeight + 2;
+      if (cut && !btn) {
+        btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'more'; btn.textContent = TXT.more; btn.setAttribute('aria-expanded', 'false');
+        btn.addEventListener('click', function () {
+          var open = p.classList.toggle('is-open');
+          btn.textContent = open ? TXT.less : TXT.more; btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        p.parentNode.insertBefore(btn, p.nextSibling);
+      }
+      if (btn) btn.hidden = !cut;
+    });
+  };
+  var fitTimer = null;
+  window.addEventListener('resize', function () { clearTimeout(fitTimer); fitTimer = setTimeout(fitMore, 150); });
+  $$('[data-view]').forEach(function (b) { b.addEventListener('click', function () { setTimeout(fitMore, 0); }); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMore);
   order();
   render();
+  fitMore();
 })();
