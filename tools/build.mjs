@@ -246,7 +246,7 @@ function homePage() {
 ${header(prefix)}
 <main id="main">
 <section class="intro wrap">
-  <h1 class="intro-title">${T('titleHome')}</h1>
+  <div class="intro-head"><img class="avatar" src="${ASSET}assets/rui.webp" width="72" height="72" alt="${esc(site.name)}"><h1 class="intro-title">${T('titleHome')}</h1></div>
   <p class="intro-tagline"><span class="about-label">${T('about')}</span> ${esc(S.tagline)}</p>
   <p class="intro-stats mono">${esc(stats)}</p>
 </section>
@@ -283,8 +283,8 @@ ${nextHtml}
         <div class="controls" data-js-only hidden>
           <button type="button" class="btn btn-small" data-sort>${T('newest')}</button>
           <div class="seg" role="group" aria-label="${T('layout')}">
-            <button type="button" class="seg-btn" data-view="grid" aria-pressed="true">${T('cards')}</button>
-            <button type="button" class="seg-btn" data-view="list" aria-pressed="false">${T('timeline')}</button>
+            <button type="button" class="seg-btn" data-view="grid" aria-pressed="false">${T('cards')}</button>
+            <button type="button" class="seg-btn" data-view="list" aria-pressed="true">${T('timeline')}</button>
           </div>
         </div>
       </div>
@@ -293,10 +293,10 @@ ${nextHtml}
         <p>${T('emptyP')}</p>
         <button type="button" class="btn btn-primary" data-clear>${T('showAll')}</button>
       </div>
-      <ul class="grid" data-grid>
+      <ul class="grid" data-grid hidden>
         ${sorted.map((t) => card(loc(t), prefix)).join('\n        ')}
       </ul>
-      <div class="timeline" data-list hidden>
+      <div class="timeline" data-list>
         ${groups.map((g) => `<section class="year" data-year="${g.y}"><h3 class="year-label">${g.y}</h3><ol class="rows">
       ${g.items.map((t) => row(loc(t), prefix)).join('\n      ')}
     </ol></section>`).join('\n        ')}
