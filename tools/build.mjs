@@ -152,7 +152,7 @@ function dataAttrs(t) {
   const o = t._orig || t, p = o.pt || {};
   const text = [o.title, o.event, o.city, o.venue, o.track, o.format, o.language, o.summary, ...(o.tags || []), ...(o.abstract || []),
     p.title, p.event, p.summary, ...(p.abstract || []), fmtLabel(o.format), ...(o.tags || []).map(tagLabel)]
-    .filter(Boolean).join(' ').toLowerCase();
+    .filter(Boolean).join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   return `data-item data-id="${esc(t.id)}" data-date="${esc(t.date)}" data-era="${eraOf(t)}" data-format="${esc(t.format)}" data-tags="${esc(t.tags.join('|'))}" data-has="${materials(t).join(' ')}" data-text="${esc(text)}"`;
 }
 
@@ -165,7 +165,7 @@ function card(t, prefix) {
     ? internal ? `<a class="cover tone-${eraOf(t)}" href="${href}" tabindex="-1" aria-hidden="true">${cover}</a>` : `<a class="cover tone-${eraOf(t)}" href="${esc(href)}" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">${cover}</a>`
     : `<div class="cover tone-${eraOf(t)}" aria-hidden="true">${cover}</div>`;
   const titleEl = href
-    ? internal ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}</a>`
+    ? internal ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)} ↗</a>`
     : esc(t.title);
   const details = t.abstract || t.summary || t.venue || t.track
     ? `<details class="peek"><summary>${T('details')}</summary>
@@ -194,7 +194,7 @@ function card(t, prefix) {
 
 function row(t, prefix) {
   const href = mainHref(t, prefix);
-  const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}</a>`) : esc(t.title);
+  const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)} ↗</a>`) : esc(t.title);
   return `<li class="row" ${dataAttrs(t)}>
       <span class="row-date mono">${esc(shortDate(t)) || '—'}</span>
       <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(t.city) : ''} · ${esc(fmtLabel(t.format))}${t.verified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
@@ -232,7 +232,7 @@ function homePage() {
   </div>
   <div class="next-actions">
     <a class="btn btn-primary" href="${prefix}${next.id}/">${T('talkPageBtn')}</a>
-    ${next.start && isUpcoming(next) ? `<a class="btn" href="${prefix}${next.id}/talk.ics">${T('addCal')}</a>` : ''}
+    ${next.start && isUpcoming(next) ? `<a class="btn" href="${prefix}${next.id}/talk.ics" data-ics>${T('addCal')}</a>` : ''}
   </div>
   <a class="next-qr" href="${prefix}${next.id}/#stage" title="${T('qrFull')}">${qrSvg(`${LANGBASE}${next.id}/`, `${T('qrLabel')} ${next.title}`)}<span class="mono">${T('scanMe')}</span></a>
 </section></div>` : '';
@@ -255,9 +255,10 @@ ${nextHtml}
       <input id="q" type="search" placeholder="${T('searchPh')}" autocomplete="off" spellcheck="false">
       <kbd class="mono" aria-hidden="true">/</kbd>
     </label>
+    <button type="button" class="btn filters-btn" data-filters-toggle aria-expanded="false" aria-controls="filters">${T('filters')} <span class="q-count mono" data-filters-n hidden></span></button>
   </div>
   <div class="layout">
-    <aside class="filters" data-js-only hidden aria-label="${T('filters')}">
+    <aside class="filters" id="filters" data-js-only hidden aria-label="${T('filters')}">
       <div class="fgroup"><h2 class="fhead mono">${T('eraH')}</h2><div class="fstack">
         ${ERAS.map(([k, , span]) => chip('era', k, T('era_' + k), count((t) => eraOf(t) === k), '').replace(`${esc(T('era_' + k))}</span>`, `${esc(T('era_' + k))} <span class="chip-span">${span}</span></span>`)).join('\n        ')}
       </div></div>
@@ -268,8 +269,9 @@ ${nextHtml}
         ${formats.map((f) => chip('format', f, fmtLabel(f), count((t) => t.format === f))).join('\n        ')}
       </div></div>
       <div class="fgroup"><h2 class="fhead mono">${T('materialsH')}</h2><div class="fwrap">
-        ${[['slides', T('slidesF')], ['video', T('videoF')], ['audio', T('audioF')]].map(([k, l]) => chip('has', k, l, count((t) => materials(t).includes(k)))).join('\n        ')}
+        ${[['slides', T('slidesF')], ['video', T('videoF')], ['audio', T('audioF')]].filter(([k]) => count((t) => materials(t).includes(k))).map(([k, l]) => chip('has', k, l, count((t) => materials(t).includes(k)))).join('\n        ')}
       </div></div>
+      <button type="button" class="btn btn-primary filters-done" data-filters-done>${T('filters')}</button>
     </aside>
     <div class="results">
       <div class="toolbar">

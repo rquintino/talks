@@ -9,14 +9,16 @@
   var PT = (document.documentElement.lang || '').toLowerCase().indexOf('pt') === 0;
   var TXT = PT ? {
     dark: '☾ Escuro', light: '☀ Claro', switchTo: function (n) { return 'Mudar para o tema ' + (n === 'dark' ? 'escuro' : 'claro'); },
-    copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar ligação', share: 'Partilhar ligação',
+    copied: 'Copiado ✓', selected: 'Selecionado — prime Ctrl/⌘+C', copy: 'Copiar link', share: 'Partilhar link',
+    showN: function (n) { return 'Ver ' + n + (n === 1 ? ' sessão' : ' sessões'); },
     upcoming: 'Em breve', startingSoon: 'Começa em breve', onNow: 'A decorrer', thanks: 'Obrigado pela presença',
     latest: 'Última palestra', now: 'Agora', onStage: 'EM PALCO', today: 'Hoje', day: 'DIA', days: 'DIAS',
     session: 'sessão', sessions: 'sessões', newest: 'Mais recentes primeiro ↓', oldest: 'Mais antigas primeiro ↑',
-    remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com diapositivos', video: 'Com vídeo', audio: 'Com áudio' }
+    remove: 'Remover filtro: ', clear: 'Limpar tudo', has: { slides: 'Com slides', video: 'Com vídeo', audio: 'Com áudio' }
   } : {
     dark: '☾ Dark', light: '☀ Light', switchTo: function (n) { return 'Switch to ' + n + ' theme'; },
     copied: 'Copied ✓', selected: 'Selected — press Ctrl/⌘+C', copy: 'Copy link', share: 'Share link',
+    showN: function (n) { return 'Show ' + n + (n === 1 ? ' session' : ' sessions'); },
     upcoming: 'Upcoming', startingSoon: 'Starting soon', onNow: 'On now', thanks: 'Thanks for joining',
     latest: 'Latest talk', now: 'Now', onStage: 'ON STAGE', today: 'Today', day: 'DAY TO GO', days: 'DAYS TO GO',
     session: 'session', sessions: 'sessions', newest: 'Newest first ↓', oldest: 'Oldest first ↑',
@@ -146,9 +148,13 @@
     var num = $('[data-countdown-num]', next), unit = $('[data-countdown-unit]', next), lab = $('[data-next-label]', next);
     var dayOf = function (d) { return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); };
     var days = Math.round((dayOf(start) - dayOf(now)) / 864e5);
-    if (now > end) { lab.textContent = TXT.latest; }
-    else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.onStage; }
-    else if (days <= 0) { num.textContent = TXT.today; unit.textContent = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+    if (now > end) {
+      lab.textContent = TXT.latest;
+      $$('[data-ics], .pulse', next).forEach(function (e) { e.hidden = true; });
+      $$('.card.is-next').forEach(function (c) { c.classList.remove('is-next'); var b = $('.badge', c); if (b) b.remove(); });
+    }
+    else if (now >= start) { num.textContent = TXT.now; unit.textContent = TXT.onStage; lab.textContent = TXT.onNow; $$('[data-ics]', next).forEach(function (e) { e.hidden = true; }); }
+    else if (days <= 0) { num.textContent = TXT.today; unit.textContent = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Lisbon' }); }
     else { num.textContent = String(days); unit.textContent = days === 1 ? TXT.day : TXT.days; }
   }
 
@@ -187,7 +193,8 @@
   if (params.get('view')) state.view = params.get('view') === 'list' ? 'list' : 'grid';
   input.value = state.q;
 
-  var words = function () { return state.q.trim().toLowerCase().split(/\s+/).filter(Boolean); };
+  var fold = function (s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
+  var words = function () { return fold(state.q.trim()).split(/\s+/).filter(Boolean); };
   var match = function (it, skip) {
     var w = words();
     for (var i = 0; i < w.length; i++) if (it.text.indexOf(w[i]) === -1) return false;
@@ -209,6 +216,11 @@
     if (state.view === 'list') p.set('view', 'list');
     var qs = p.toString();
     try { history.replaceState(null, '', qs ? '?' + qs : window.location.pathname); } catch (e) { /* ignore */ }
+    $$('.lang-switch').forEach(function (a) {
+      var base = a.getAttribute('data-base') || a.getAttribute('href');
+      a.setAttribute('data-base', base);
+      a.setAttribute('href', base + (qs ? '?' + qs : ''));
+    });
   };
 
   var order = function () {
@@ -224,6 +236,17 @@
   };
 
   var activeBox = $('[data-active]');
+  var panel = $('#filters'), filtersBtn = $('[data-filters-toggle]'), doneBtn = $('[data-filters-done]'), filtersN = $('[data-filters-n]');
+  var narrow = window.matchMedia ? window.matchMedia('(max-width: 999px)') : { matches: false };
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var toResults = function () { if (narrow.matches) $('.results').scrollIntoView({ block: 'start', behavior: calm ? 'auto' : 'smooth' }); };
+  var setPanel = function (open) {
+    if (!panel || !filtersBtn) return;
+    panel.classList.toggle('is-open', open);
+    filtersBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+  if (filtersBtn) filtersBtn.addEventListener('click', function () { setPanel(!panel.classList.contains('is-open')); });
+  if (doneBtn) doneBtn.addEventListener('click', function () { setPanel(false); toResults(); });
   var toggle = function (g, v) {
     var i = state[g].indexOf(v);
     if (i === -1) state[g].push(v); else state[g].splice(i, 1);
@@ -247,6 +270,11 @@
     $$('.tag[data-tag]').forEach(function (t) { t.setAttribute('aria-pressed', state.tag.indexOf(t.getAttribute('data-tag')) !== -1 ? 'true' : 'false'); });
 
     $('[data-result-count]').textContent = n;
+    if (doneBtn) doneBtn.textContent = TXT.showN(n);
+    if (filtersN) {
+      var k = GROUPS.reduce(function (a, g) { return a + state[g].length; }, 0);
+      filtersN.textContent = k; filtersN.hidden = !k;
+    }
     $('[data-result-noun]').textContent = n === 1 ? TXT.session : TXT.sessions;
     $('[data-empty]').hidden = n !== 0;
 
@@ -287,7 +315,7 @@
   };
 
   chips.forEach(function (c) { c.addEventListener('click', function () { toggle(c.getAttribute('data-group'), c.getAttribute('data-value')); }); });
-  $$('.tag[data-tag]').forEach(function (t) { t.addEventListener('click', function () { toggle('tag', t.getAttribute('data-tag')); }); });
+  $$('.tag[data-tag]').forEach(function (t) { t.addEventListener('click', function () { toggle('tag', t.getAttribute('data-tag')); toResults(); }); });
   $$('[data-clear]').forEach(function (b) { b.addEventListener('click', clearAll); });
   $$('[data-view]').forEach(function (b) {
     b.addEventListener('click', function () { state.view = b.getAttribute('data-view'); store.set('view', state.view); render(); });

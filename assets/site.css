@@ -103,7 +103,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* explorer */
 .explore { display: flex; flex-direction: column; gap: 24px; padding-bottom: 80px; }
-.search-box { display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 18px; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--line-2); color: var(--muted); }
+.search { display: flex; gap: 10px; align-items: stretch; }
+.search-box { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 0 18px; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--line-2); color: var(--muted); }
 .search-box:focus-within { border-color: var(--focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 25%, transparent); }
 .search-box input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--fg); font: inherit; font-size: 18px; }
 .search-box input::placeholder { color: var(--muted); }
@@ -127,10 +128,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .chip:disabled { opacity: 0.45; cursor: default; }
 .chip-count { font-size: 14px; opacity: 0.8; }
 .chip-span { font-family: var(--mono); font-size: 14px; opacity: 0.75; margin-left: 4px; }
+.filters-btn, .filters-done { display: none; }
 @media (max-width: 999px) {
   .fstack { flex-direction: row; flex-wrap: wrap; }
-  .fstack .chip { border-radius: 999px; min-height: 38px; }
+  .fstack .chip { border-radius: 999px; min-height: 44px; }
+  .chip, .active-chip, .clear, .seg-btn { min-height: 44px; }
+  .filters-btn { display: inline-flex; gap: 8px; min-height: 58px; border-radius: 14px; }
+  .filters:not(.is-open) { display: none; }
+  .filters.is-open { padding: 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line-2); }
+  .filters-done { display: inline-flex; width: 100%; }
 }
+@media (hover: none) { .search-box kbd { display: none; } }
 
 .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
 .status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
@@ -176,9 +184,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tag { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface-2); color: var(--fg-2); font-size: 14px; text-decoration: none; }
 .tag:hover { border-color: var(--fg-2); color: var(--fg); }
 .tag[aria-pressed="true"] { background: var(--chip-on); color: var(--on-chip); border-color: var(--chip-on); }
-.links { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 16px; }
+.links { display: flex; flex-wrap: wrap; gap: 0 18px; font-size: 16px; }
+.links a { display: inline-flex; align-items: center; min-height: 44px; }
 .peek { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 4px; }
-.peek summary { cursor: pointer; color: var(--fg-2); font-size: 15px; font-weight: 500; list-style: none; display: inline-flex; gap: 6px; align-items: center; min-height: 32px; }
+.peek summary { cursor: pointer; color: var(--fg-2); font-size: 16px; font-weight: 500; list-style: none; display: inline-flex; gap: 6px; align-items: center; min-height: 44px; }
 .peek summary::-webkit-details-marker { display: none; }
 .peek summary::after { content: "+"; font-family: var(--mono); }
 .peek[open] summary::after { content: "−"; }
@@ -201,6 +210,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .row-sub { font-size: 15px; color: var(--fg-2); }
 .row-links { flex: 1 1 140px; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 15px; }
 @media (max-width: 560px) { .year { grid-template-columns: 1fr; gap: 8px; } }
+/* phones: compact next-talk banner and slim card covers, so more talks fit per screen */
+@media (max-width: 599px) {
+  .intro { padding-block: 16px 16px; }
+  .intro-title { font-size: 44px; }
+  .next-wrap { margin-block: 0 32px; }
+  .next { padding: 16px; gap: 12px; }
+  .next-count { width: auto; aspect-ratio: auto; flex-direction: row; align-items: baseline; gap: 8px; padding: 6px 14px; align-self: flex-start; }
+  .next-num { font-size: 26px; }
+  .next-title { font-size: 24px; }
+  .next-actions .btn { flex: 1 1 auto; }
+  .cover { aspect-ratio: auto; padding: 10px 16px; }
+  .cover-title, .cover::before, .cover::after { display: none; }
+}
 
 /* talk page */
 .talk { display: flex; flex-direction: column; gap: 48px; padding-bottom: 48px; }

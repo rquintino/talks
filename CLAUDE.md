@@ -117,8 +117,12 @@ exceptions for "popular", "official", "tiny" or "just for dev".
 - Two languages: English at `/talks/` and European Portuguese (pt-PT) at
   `/talks/pt/`, same slugs (`/talks/pt/pth26/`). Every page links to its
   counterpart (EN · PT switch) and declares `hreflang` alternates.
-  Portuguese must be pt-PT (ecrã, telemóvel, ligação, equipa, utilizador,
-  programador), never pt-BR.
+  Portuguese must be pt-PT (ecrã, telemóvel, equipa, utilizador,
+  programador), never pt-BR. Keep the tech terms Portuguese developers say
+  in English: loops (never "ciclos" for agent loops), slides, links, prompts,
+  coding agents, software factories, containers, feedback, context
+  engineering, spec-driven development, machine learning. "Fábrica de
+  software" means an outsourcing shop in Portuguese, so don't use it.
 
 ## How the site is built
 
