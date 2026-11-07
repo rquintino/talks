@@ -311,6 +311,13 @@ ${footer()}
 `;
 }
 
+function gcalUrl(t, url) {
+  const z = (iso) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: `${t.title} (${site.name})`, dates: `${z(t.start)}/${z(t.end)}`, details: url, location: where(t) });
+  // keep the slash between the two dates literal, as Google documents it
+  return `https://calendar.google.com/calendar/render?${q.toString().replace(/(dates=[0-9TZ]+)%2F/, "$1/")}`;
+}
+
 function talkPage(t) {
   const prefix = '../';
   const url = `${LANGBASE}${t.id}/`;
@@ -345,14 +352,15 @@ ${header(prefix)}
   <header class="talk-head"${timeAttrs}>
     <p class="eyebrow mono"><span data-status hidden><span class="pulse" aria-hidden="true">●</span> <span data-status-label>${T('upcoming')}</span> · </span>${t.eventUrl ? ext(t.eventUrl, esc(t.event), 'eyebrow-link') : esc(t.event)}</p>
     <h1 class="talk-title">${esc(t.title)}</h1>
-    ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · ${T('origTitle')}: <span lang="en">${esc(orig.title)}</span></p>` : ''}
+    ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · <span lang="en">${esc(orig.title)}</span></p>` : ''}
     <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
-    <nav class="quick" aria-label="${T('resources')}">
+    <nav class="quick" aria-label="${T('quickNav')}">
       ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before>${T('addCal')}</a>` : ''}
       ${primary}
       ${slidesBtn}
       <a class="btn" href="#res">${T('qRes')}${nres ? ` <span class="q-count mono">${nres}</span>` : ''}</a>
     </nav>
+    ${upcoming && t.start ? `<p class="cal-alt" data-before>${ext(gcalUrl(t, url), T('gcal'), 'lnk')}</p>` : ''}
   </header>
 
   <section class="talk-section" aria-labelledby="abs">
@@ -647,10 +655,10 @@ function ogTemplate({ eyebrow, title, sub, path }) {
 @font-face{font-family:JB;src:url(${f('jetbrains-mono.woff2')}) format('woff2');font-weight:100 800}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
 body{background:#0B1020;color:#F2F5FB;font-family:'DM Sans',sans-serif;position:relative}
-.ring{position:absolute;right:-120px;top:-150px;width:620px;height:620px}
+.ring{position:absolute;right:-230px;top:-170px;width:620px;height:620px}
 .box{position:absolute;inset:64px 72px;display:flex;flex-direction:column;justify-content:space-between}
 .eyebrow{font-family:JB,monospace;font-size:26px;letter-spacing:.04em;color:#9DB8FF}
-h1{margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:${title.length > 48 ? 64 : 76}px;line-height:1.04;letter-spacing:-.035em;max-width:900px}
+h1{margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:${title.length > 48 ? 64 : 76}px;line-height:1.04;letter-spacing:-.035em;max-width:780px}
 .sub{font-size:28px;color:#C3CCDD;margin-top:20px}
 .foot{display:flex;justify-content:space-between;align-items:flex-end;font-size:26px}
 .foot b{font-family:Sora,sans-serif;font-weight:700}

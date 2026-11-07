@@ -337,7 +337,9 @@ html[data-phase="before"] [data-fb-window], html[data-phase="live"] [data-fb-win
   width: min(440px, calc(100% - 32px)); display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 6px 6px 6px 16px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--next-ring);
   box-shadow: 0 10px 30px rgba(10, 15, 28, 0.28); animation: toast-in 0.25s ease-out; }
-.toast p { margin: 0; flex: 1 1 auto; min-width: 0; font-size: 16px; color: var(--fg); }
+.toast p { margin: 0; flex: 1 1 auto; min-width: 0; font-size: 16px; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-alt { margin: -4px 0 0; font-size: 16px; }
+.cal-alt a { display: inline-flex; align-items: center; min-height: 44px; }
 .toast-actions { flex: none; display: flex; align-items: center; gap: 4px; }
 .toast .btn { white-space: nowrap; }
 body.has-toast { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
@@ -380,7 +382,6 @@ body:has(.stage:target) { overflow: hidden; }
   .talk-title { font-size: 30px; }
   .talk-head { gap: 12px; }
   .talk-meta { font-size: 17px; }
-  .orig-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .orig-title { margin-top: -2px; }
 }
 
