@@ -13,7 +13,7 @@
     "eventUrl": "https://portotechhub.com/conference-2026/",
     "venue": "Alfândega do Porto",
     "city": "Porto",
-    "track": "AWS / Darede track",
+    "track": "AWS / Darede",
     "format": "Talk",
     "level": "Beginner",
     "categories": [
@@ -23,7 +23,6 @@
       "Generative AI"
     ],
     "tags": [
-      "Agentic AI",
       "AI Agents",
       "Agentic SDLC",
       "GenAI"
@@ -41,31 +40,31 @@
         "title": "ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al.)",
         "url": "https://arxiv.org/abs/2210.03629",
         "note": "The paper behind the Reason + Act loop.",
-        "note_pt": "O artigo por trás do ciclo Reason + Act."
+        "note_pt": "O artigo por trás do loop Reason + Act."
       },
       {
         "title": "Inner Monologue: Embodied Reasoning through Planning with Language Models (Huang et al.)",
         "url": "https://innermonologue.github.io/",
-        "note": "Closing the loop: feeding environment feedback back into the model.",
-        "note_pt": "Fechar o ciclo: devolver ao modelo o feedback do ambiente."
+        "note": "How the model gets feedback from its environment on every step.",
+        "note_pt": "Como o modelo recebe feedback do ambiente a cada passo."
       },
       {
         "title": "The Law of Leaky Abstractions (Joel Spolsky)",
         "url": "https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/",
         "note": "Why every abstraction, agents included, eventually leaks.",
-        "note_pt": "Porque é que todas as abstrações, incluindo os agentes, acabam por ter fugas."
+        "note_pt": "Porque é que todas as abstrações, incluindo os agentes, acabam por deixar escapar o que escondem."
       },
       {
         "title": "The Five Levels: from Spicy Autocomplete to the Dark Factory (Dan Shapiro)",
         "url": "https://www.danshapiro.com/blog/2026/01/the-five-levels-from-spicy-autocomplete-to-the-software-factory/",
         "note": "A ladder of AI coding autonomy, up to the lights-out software factory.",
-        "note_pt": "Uma escada de autonomia na programação com IA, até à fábrica de software às escuras."
+        "note_pt": "Uma escada de autonomia na programação com IA, até à dark software factory."
       },
       {
         "title": "Loop Engineering (Addy Osmani)",
         "url": "https://addyosmani.com/blog/loop-engineering/",
-        "note": "From writing prompts to designing the loops that prompt coding agents.",
-        "note_pt": "De escrever prompts a desenhar os ciclos que dão prompts aos agentes de programação."
+        "note": "Designing the loops that prompt coding agents.",
+        "note_pt": "Desenhar os loops que dão prompts aos coding agents."
       },
       {
         "title": "The Factory Model: How Coding Agents Changed Software Engineering (Addy Osmani)",
@@ -77,12 +76,12 @@
     "language": "EN",
     "feedback": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=3RrCHav0MkuqaBpocTNSjC5tqu1Ng7FHko5vGSfZQG9UN1EzSFM2MURHUFo4T1MxNlhOWVZOUklGTy4u",
     "pt": {
-      "title": "Os ciclos agênticos que todos os programadores devem conhecer",
-      "short": "Ciclos agênticos",
+      "title": "Os loops agênticos que todos os programadores devem conhecer",
+      "short": "Loops agênticos",
       "abstract": [
-        "Os ciclos (loops) são uma primitiva fundamental dos agentes de IA autónomos e do agora amplamente usado \"Agent Mode\".",
-        "Esta sessão percorre o caminho desde o ciclo base Reason + Act até à engenharia de ciclos (loop engineering) — a passagem de dar instruções aos agentes para desenhar os sistemas que lhes dão as instruções.",
-        "E enquanto os ciclos correm — e as luzes se apagam em Dark Software Factories totalmente automatizadas — em que nos devemos focar?"
+        "Os loops são uma primitiva fundamental dos agentes de IA autónomos e do agora amplamente usado \"Agent Mode\".",
+        "Esta sessão percorre o caminho desde o loop base Reason + Act até ao loop engineering — deixar de escrever prompts para os agentes e passar a desenhar os sistemas que os escrevem.",
+        "E enquanto os loops correm — e as luzes se apagam em Dark Software Factories totalmente automatizadas — em que nos devemos focar?"
       ],
       "abstractTranslated": true
     }
@@ -124,14 +123,14 @@
       "AI Agents"
     ],
     "venue": "ISEP – Instituto Superior de Engenharia do Porto",
-    "summary": "A two-hour session for ISEP's MSc software engineering students: what coding agents can do today, the path from machine learning to generative AI to agents, practical tips for working with coding agents, their limits and risks, and what software factories mean for the future of software engineering.",
+    "summary": "A two-hour session for ISEP's MSc software engineering students. It covers what coding agents can do today, how machine learning led to generative AI and then to agents, how to work with coding agents day to day, where they fail, and what software factories mean for software engineering.",
     "language": "EN",
     "slides": "https://learn.agentia.pt/public/talks/isep-genai-to-software-factories/",
     "pt": {
-      "title": "Da GenAI às fábricas de software",
-      "short": "Fábricas de software",
+      "title": "Da GenAI às software factories",
+      "short": "Software factories",
       "event": "ISEP · Mestrado em Engenharia Informática (MEI)",
-      "summary": "Uma sessão de duas horas para os alunos do mestrado em engenharia de software do ISEP: o que os agentes de programação já fazem hoje, o caminho do machine learning à IA generativa e aos agentes, dicas práticas para trabalhar com agentes de programação, os seus limites e riscos, e o que as fábricas de software significam para o futuro da engenharia de software."
+      "summary": "Uma sessão de duas horas para os alunos do mestrado em engenharia de software do ISEP. Mostra o que os coding agents já fazem hoje, como o machine learning levou à IA generativa e depois aos agentes, como trabalhar com coding agents no dia a dia, onde falham e o que as software factories significam para a engenharia de software."
     }
   },
   {
@@ -145,17 +144,16 @@
     "format": "Podcast",
     "language": "PT",
     "tags": [
-      "Agentic AI",
       "AI Agents",
       "GenAI"
     ],
     "audio": "https://podcast.digitalinside.pt/e/2%C2%AA-serie-episodio-10-com-rui-quintino-agentic-ai-ai-agents-trainer",
     "eventUrl": "https://digitalinside.pt/2-a-serie-episodio-10-com-rui-quintino-agentic-ai-ai-agents-trainer/",
-    "summary": "A conversation in Portuguese on generative AI and autonomous agents: as the human role shifts to architecture, requirements, validation and strategy, intentionality, critical thinking and constant relearning matter more than ever.",
+    "summary": "A conversation in Portuguese on generative AI and autonomous agents. As people move to architecture, requirements, validation and strategy, intent, critical thinking and constant relearning count for more.",
     "pt": {
       "title": "IA agêntica + agentes de IA",
       "event": "Podcast Dados à Conversa · T2 E10",
-      "summary": "Uma conversa sobre IA generativa e agentes autónomos: à medida que o papel humano passa para a arquitetura, os requisitos, a validação e a estratégia, a intencionalidade, o pensamento crítico e a reaprendizagem constante contam mais do que nunca."
+      "summary": "Uma conversa sobre IA generativa e agentes autónomos. À medida que as pessoas passam para a arquitetura, os requisitos, a validação e a estratégia, a intenção, o pensamento crítico e a reaprendizagem constante passam a contar mais."
     }
   },
   {
@@ -219,13 +217,13 @@
       "GenAI",
       "MCP"
     ],
-    "summary": "How to connect AI models to any data source: from generation to RAG and tool use, autonomous agents and the agentic loop (plan, act, observe), Model Context Protocol use cases, and security practices such as guarding against prompt injection and granting least privilege.",
+    "summary": "How to connect AI models to your data: RAG, tool use, autonomous agents and the plan-act-observe loop, Model Context Protocol use cases, and security practices such as prompt-injection defences and least privilege.",
     "slides": "https://learn.agentia.pt/public/talks/magmastudio-como-ligar-modelos-de-ia-a-qualquer-fo/",
     "pt": {
       "title": "Como ligar modelos de IA a qualquer fonte de dados",
       "short": "IA + qualquer fonte de dados",
       "event": "Magma Studio · Escola da Inteligência Artificial (Summer School 2026)",
-      "summary": "Como ligar modelos de IA a qualquer fonte de dados: da geração ao RAG e ao uso de ferramentas, agentes autónomos e o ciclo agêntico (planear, agir, observar), casos de uso do Model Context Protocol e boas práticas de segurança, como a proteção contra prompt injection e o princípio do mínimo privilégio."
+      "summary": "Como ligar modelos de IA aos teus dados: RAG, uso de ferramentas, agentes autónomos e o loop planear-agir-observar, casos de uso do Model Context Protocol e boas práticas de segurança, como defesas contra prompt injection e o princípio do mínimo privilégio."
     }
   },
   {
@@ -238,20 +236,19 @@
     "city": "Porto",
     "format": "Talk",
     "tags": [
-      "Agentic AI",
       "AI Agents",
       "Agentic SDLC",
       "Developer Productivity"
     ],
     "eventUrl": "https://events.swordhealth.tech/",
     "venue": "Sword Health office",
-    "summary": "Most AI coding is still single-turn autocomplete; agents loop. A tour of the two loops every developer should know, ReAct (the agent loop) and RALPH (plan, execute, verify, reset, repeat), with live demos, how agents fail, human gates, and a developer's playbook built on context and spec-driven engineering.",
+    "summary": "Most AI coding is still single-turn autocomplete. Agents work in loops. The session covers two of them, ReAct (the agent loop) and RALPH (plan, execute, verify, reset, repeat), with live demos, how agents fail, where humans approve, and a developer playbook built on context and spec-driven engineering.",
     "language": "EN",
     "slides": "https://learn.agentia.pt/public/talks/from-copilot-to-autopilot/",
     "pt": {
-      "title": "Do Copilot ao Autopilot: os dois ciclos de IA que todos os programadores devem conhecer",
+      "title": "Do Copilot ao Autopilot: os dois loops de IA que todos os programadores devem conhecer",
       "short": "Copilot → Autopilot",
-      "summary": "A maior parte da programação com IA ainda é autocomplete de um só passo; os agentes trabalham em ciclo. Uma visita aos dois ciclos que todos os programadores devem conhecer, o ReAct (o ciclo do agente) e o RALPH (planear, executar, verificar, recomeçar, repetir), com demos ao vivo, as formas como os agentes falham, pontos de aprovação humana e um guia prático assente em engenharia de contexto e desenvolvimento orientado por especificações."
+      "summary": "A maior parte da programação com IA ainda é autocomplete de um só passo. Os agentes trabalham em loops. A sessão mostra dois deles, o ReAct (o loop do agente) e o RALPH (planear, executar, verificar, recomeçar, repetir), com demos ao vivo, as formas como os agentes falham, onde entra a aprovação humana e um guia prático assente em context engineering e spec-driven development."
     }
   },
   {
@@ -270,11 +267,11 @@
     ],
     "eventUrl": "https://devscope.net/events/dspt-meetup-from-development-to-evaluations-all-about-ai-agents",
     "venue": "DevScope office",
-    "summary": "How agentic workflows and tools like Claude Code and GitHub Copilot are transforming software development.",
+    "summary": "How agentic workflows and tools such as Claude Code and GitHub Copilot change day-to-day software development.",
     "pt": {
       "title": "Programar na era dos agentes",
       "short": "Programar com agentes",
-      "summary": "Como os fluxos de trabalho agênticos e ferramentas como o Claude Code e o GitHub Copilot estão a transformar o desenvolvimento de software."
+      "summary": "Como os fluxos de trabalho agênticos e ferramentas como o Claude Code e o GitHub Copilot mudam o desenvolvimento de software no dia a dia."
     }
   },
   {
@@ -291,10 +288,10 @@
       "Developer Productivity"
     ],
     "verified": false,
-    "summary": "How to use OutSystems AI Mentor to accelerate value delivery on the OutSystems platform.",
+    "summary": "Using OutSystems AI Mentor to deliver faster on the OutSystems platform.",
     "pt": {
       "title": "Acelerar a entrega de valor com o OutSystems AI Mentor System",
-      "summary": "Como usar o OutSystems AI Mentor para acelerar a entrega de valor na plataforma OutSystems."
+      "summary": "Usar o OutSystems AI Mentor para entregar mais depressa na plataforma OutSystems."
     }
   },
   {
@@ -312,11 +309,11 @@
     "slides": "https://www.slideshare.net/rquintino/houston-we-have-a-model-introduction-to-mlops",
     "eventUrl": "https://dei.fe.up.pt/dsetalks/?p=1454",
     "city": "Online",
-    "summary": "A trained model is where the real work starts: deploying, monitoring, retraining and scaling machine learning in production, and why the model code is just the tip of the iceberg.",
+    "summary": "Training a model is the start. Deploying, monitoring, retraining and scaling machine learning in production is most of the work, and the model code is a small part of it.",
     "pt": {
       "title": "Houston, temos um modelo… Introdução ao MLOps",
       "short": "Introdução ao MLOps",
-      "summary": "Um modelo treinado é onde o trabalho a sério começa: implementar, monitorizar, retreinar e escalar machine learning em produção, e porque é que o código do modelo é só a ponta do icebergue."
+      "summary": "Treinar um modelo é só o início. Implementar, monitorizar, retreinar e escalar machine learning em produção é a maior parte do trabalho, e o código do modelo é uma pequena parte dele."
     }
   },
   {
@@ -377,10 +374,10 @@
       "Machine Learning"
     ],
     "slides": "https://www.slideshare.net/rquintino/empowering-you-power-bi-power-platform-ai-builder",
-    "summary": "How Power Apps, Power Automate and AI Builder can enrich your Power BI experience, with demos that combine them.",
+    "summary": "Using Power Apps, Power Automate and AI Builder together with Power BI, with demos that combine them.",
     "pt": {
       "event": "Webinar Microsoft Empowering You (DevScope)",
-      "summary": "Como o Power Apps, o Power Automate e o AI Builder podem enriquecer a tua experiência com o Power BI, com demos que os combinam."
+      "summary": "Usar o Power Apps, o Power Automate e o AI Builder em conjunto com o Power BI, com demos que os combinam."
     }
   },
   {
@@ -455,7 +452,7 @@
     ],
     "verified": false,
     "pt": {
-      "title": "Ciência de dados com o Azure Machine Learning Workbench e contentores Docker para a Data Platform",
+      "title": "Ciência de dados com o Azure Machine Learning Workbench e containers Docker para a Data Platform",
       "event": "SQLSaturday #685 Porto · workshop pré-conferência"
     }
   },
@@ -474,12 +471,12 @@
       "Data Science"
     ],
     "verified": false,
-    "summary": "A journey from reports and dashboards to applied artificial intelligence, from the DevScope data science team.",
+    "summary": "How the DevScope data science team went from reports and dashboards to applied artificial intelligence.",
     "pt": {
       "title": "Ciência de dados na DevScope: de relatórios e dashboards à inteligência artificial aplicada",
       "short": "Relatórios → IA aplicada",
       "event": "EPIA 2017 · Conferência de Inteligência Artificial",
-      "summary": "Um percurso de relatórios e dashboards até à inteligência artificial aplicada, pela equipa de ciência de dados da DevScope."
+      "summary": "Como a equipa de ciência de dados da DevScope passou dos relatórios e dashboards para a inteligência artificial aplicada."
     }
   },
   {
@@ -495,11 +492,11 @@
       "Data Science"
     ],
     "slides": "https://www.slideshare.net/slideshow/docker-containers-for-big-data-data-science-machine-learning-deep-learning/76380325",
-    "summary": "Hands-on Docker and containers for big data, data science, machine learning and deep learning, from GPU deep learning to Hadoop and Spark workbenches.",
+    "summary": "Hands-on Docker and containers for big data, data science, machine learning and deep learning, including GPU deep learning and Hadoop and Spark workbenches.",
     "pt": {
-      "title": "Docker e contentores para big data, ciência de dados, ML e deep learning",
-      "short": "Contentores para ML",
-      "summary": "Docker e contentores na prática para big data, ciência de dados, machine learning e deep learning, de deep learning em GPU a ambientes Hadoop e Spark.",
+      "title": "Docker e containers para big data, ciência de dados, ML e deep learning",
+      "short": "Containers para ML",
+      "summary": "Docker e containers na prática para big data, ciência de dados, machine learning e deep learning, incluindo deep learning em GPU e ambientes Hadoop e Spark.",
       "event": "Evento a confirmar"
     }
   },
@@ -601,11 +598,11 @@
     ],
     "eventUrl": "https://sqlsaturday.com/2016-10-01-SQLSat-0546/",
     "venue": "ISEP",
-    "summary": "Can you use R inside SQL Server 2016, Power BI, Azure ML or Visual Studio? A beginner's tour for BI developers, DBAs and analysts.",
+    "summary": "A beginner's tour of R inside SQL Server 2016, Power BI, Azure ML and Visual Studio, for BI developers, DBAs and analysts.",
     "pt": {
       "title": "Primeiros passos com R na Microsoft Data Platform",
       "short": "R na Data Platform",
-      "summary": "É possível usar R dentro do SQL Server 2016, do Power BI, do Azure ML ou do Visual Studio? Uma visita guiada para iniciantes, para programadores de BI, DBAs e analistas."
+      "summary": "Uma visita guiada para iniciantes ao R dentro do SQL Server 2016, do Power BI, do Azure ML e do Visual Studio, para programadores de BI, DBAs e analistas."
     }
   },
   {
@@ -620,11 +617,11 @@
     "tags": [
       "Machine Learning"
     ],
-    "summary": "Where machine learning meets the application features developers used to build by hand, with Azure Machine Learning.",
+    "summary": "Using Azure Machine Learning to add application features that developers used to build by hand.",
     "pt": {
       "title": "Aplicações que aprendem",
       "short": "Aplicações que aprendem",
-      "summary": "Onde o machine learning encontra as funcionalidades que os programadores costumavam construir à mão, com o Azure Machine Learning."
+      "summary": "Usar o Azure Machine Learning para criar funcionalidades que os programadores costumavam construir à mão."
     }
   },
   {
@@ -663,10 +660,10 @@
       "Data Storytelling"
     ],
     "verified": false,
-    "summary": "Stories of useful data, from basket analysis to Netflix's House of Cards, healthcare analytics and the quantified self, and the patterns behind them: big data, visualisation, data mining and statistics.",
+    "summary": "Stories of useful data, such as basket analysis, Netflix's House of Cards, healthcare analytics and the quantified self, and the techniques behind them: big data, visualisation, data mining and statistics.",
     "pt": {
       "title": "Data Intelligence: histórias de dados úteis",
-      "summary": "Histórias de dados úteis, da análise de cestos de compras ao House of Cards da Netflix, analytics na saúde e o quantified self, e os padrões por trás delas: big data, visualização, data mining e estatística."
+      "summary": "Histórias de dados úteis, como a análise de cestos de compras, o House of Cards da Netflix, analytics na saúde e o quantified self, e as técnicas por trás delas: big data, visualização, data mining e estatística."
     }
   },
   {
@@ -741,11 +738,11 @@
     ],
     "eventUrl": "https://sqlsaturday.com/2013-03-16-SQLSat-0188/",
     "venue": "Microsoft Lisbon Experience",
-    "summary": "What if insights from your business data were only seconds or a few clicks away? Faster self-service BI with Excel 2013, PowerPivot and Power View, without auxiliary tables or complex DAX modelling.",
+    "summary": "Faster self-service BI with Excel 2013, PowerPivot and Power View: insights from business data in a few clicks, without auxiliary tables or complex DAX modelling.",
     "pt": {
       "title": "Mais rápido do que a velocidade da luz… com #MSBI",
       "short": "Mais rápido do que a luz",
-      "summary": "E se os insights dos dados do teu negócio estivessem a poucos segundos ou cliques de distância? BI self-service mais rápido com Excel 2013, PowerPivot e Power View, sem tabelas auxiliares nem modelação DAX complexa."
+      "summary": "BI self-service mais rápido com Excel 2013, PowerPivot e Power View: insights dos dados do negócio em poucos cliques, sem tabelas auxiliares nem modelação DAX complexa."
     }
   },
   {

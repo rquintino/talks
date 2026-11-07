@@ -75,7 +75,9 @@ const isUpcoming = (t) => t.end ? new Date(t.end) > NOW : false;
 const sorted = [...talks].sort((a, b) => b.date.localeCompare(a.date));
 const materials = (t) => [t.slides && 'slides', t.video && 'video', t.audio && 'audio'].filter(Boolean);
 const mainHref = (t, prefix) => (t.page ? `${prefix}${t.id}/` : t.slides || t.audio || t.video || t.eventUrl || null);
-const where = (t) => [t.venue, t.city].filter(Boolean).join(', ');
+const CITY_PT = { Lisbon: 'Lisboa' };
+const city = (c) => (c && LANG === 'pt' && CITY_PT[c]) || c;
+const where = (t) => [t.venue, city(t.city)].filter(Boolean).join(', ');
 
 function linksHtml(t, prefix) {
   const out = [];
@@ -84,12 +86,13 @@ function linksHtml(t, prefix) {
   if (t.video) out.push(ext(t.video, T('video'), 'lnk'));
   if (t.audio) out.push(ext(t.audio, T('listen'), 'lnk'));
   if (t.eventUrl) out.push(ext(t.eventUrl, T('event'), 'lnk lnk-quiet'));
-  return out.length ? out.join('') : `<span class="muted">${T('soon')}</span>`;
+  const recent = t.end && NOW - new Date(t.end) < 30 * 864e5;
+  return out.length ? out.join('') : isUpcoming(t) || recent ? `<span class="muted">${T('soon')}</span>` : '';
 }
 
-function head({ title, description, prefix, canonical, og }) {
+function head({ title, description, prefix, canonical, og, htmlAttrs = '' }) {
   return `<!doctype html>
-<html lang="${T('htmlLang')}">
+<html lang="${T('htmlLang')}"${htmlAttrs}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -128,7 +131,7 @@ function header(prefix) {
   <nav class="top-nav" aria-label="${T('profiles')}">
     ${site.links.map((l) => ext(l.url, `${esc(l.label)} ↗`)).join('\n    ')}
     <a class="lang-switch" href="${SWITCH}" hreflang="${T('otherLang')}" lang="${T('otherLang')}" aria-label="${T('switchAria')}">${T('switchLabel')}</a>
-    <button class="theme-btn" type="button" data-theme-toggle hidden aria-label="${T('themeAria')}"><span data-theme-label>${T('theme')}</span></button>
+    <button class="theme-btn" type="button" data-theme-toggle hidden aria-label="${T('themeAria')}"><span class="theme-ico" data-theme-icon aria-hidden="true"></span><span class="theme-txt" data-theme-label>${T('theme')}</span></button>
   </nav>
 </header>`;
 }
@@ -145,14 +148,15 @@ function footer() {
 }
 
 function tagButtons(t) {
-  return t.tags.map((g) => `<button type="button" class="tag" data-tag="${esc(g)}">${esc(tagLabel(g))}</button>`).join('');
+  return t.tags.map((g) => `<span class="tag" data-tag="${esc(g)}">${esc(tagLabel(g))}</span>`).join('');
 }
 
 function dataAttrs(t) {
   const o = t._orig || t, p = o.pt || {};
-  const text = [o.title, o.event, o.city, o.venue, o.track, o.format, o.language, o.summary, ...(o.tags || []), ...(o.abstract || []),
+  const MAT_WORDS = { slides: 'slides diapositivos', video: 'video vídeo', audio: 'audio áudio podcast' };
+  const text = [o.id, o.title, o.event, o.city, CITY_PT[o.city], o.venue, ...materials(o).map((m) => MAT_WORDS[m]), o.track, o.format, o.language, o.summary, ...(o.tags || []), ...(o.abstract || []),
     p.title, p.event, p.summary, ...(p.abstract || []), fmtLabel(o.format), ...(o.tags || []).map(tagLabel)]
-    .filter(Boolean).join(' ').toLowerCase();
+    .filter(Boolean).join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   return `data-item data-id="${esc(t.id)}" data-date="${esc(t.date)}" data-era="${eraOf(t)}" data-format="${esc(t.format)}" data-tags="${esc(t.tags.join('|'))}" data-has="${materials(t).join(' ')}" data-text="${esc(text)}"`;
 }
 
@@ -160,28 +164,28 @@ function card(t, prefix) {
   const href = mainHref(t, prefix);
   const internal = t.page;
   const badge = isUpcoming(t) ? `<span class="badge">${T('nextBadge')}</span>` : t.first ? `<span class="badge">${T('first')}</span>` : '';
-  const cover = `<span class="cover-top"><span>${esc(fmtLabel(t.format))}${t.language ? ' · ' + esc(t.language) : ''}</span>${badge}</span><span class="cover-title">${esc(t.short || t.title)}</span>`;
+  const cover = `<span class="cover-top"><span>${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}</span>${badge}</span><span class="cover-title">${esc(t.short || t.title)}</span>`;
   const coverEl = href
     ? internal ? `<a class="cover tone-${eraOf(t)}" href="${href}" tabindex="-1" aria-hidden="true">${cover}</a>` : `<a class="cover tone-${eraOf(t)}" href="${esc(href)}" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">${cover}</a>`
     : `<div class="cover tone-${eraOf(t)}" aria-hidden="true">${cover}</div>`;
   const titleEl = href
-    ? internal ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}</a>`
+    ? internal ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}&nbsp;↗</a>`
     : esc(t.title);
-  const details = t.abstract || t.summary || t.venue || t.track
+  const details = t.abstract
     ? `<details class="peek"><summary>${T('details')}</summary>
         ${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('')}
         <dl>
           <dt>${T('when')}</dt><dd>${esc(dateLabel(t))}${t.time ? ' · ' + esc(t.time) : ''}</dd>
           ${where(t) ? `<dt>${T('where')}</dt><dd>${esc(where(t))}</dd>` : ''}
           ${t.track ? `<dt>${T('track')}</dt><dd>${esc(t.track)}</dd>` : ''}
-          ${t.level ? `<dt>${T('level')}</dt><dd>${esc(t.level)}</dd>` : ''}
+          ${t.level ? `<dt>${T('level')}</dt><dd>${esc((UI[LANG].levels || {})[t.level] || t.level)}</dd>` : ''}
         </dl>
       </details>`
     : '';
   return `<li class="card${isUpcoming(t) ? ' is-next' : ''}" ${dataAttrs(t)}>
     ${coverEl}
     <div class="card-body">
-      <p class="meta mono">${esc(dateLabel(t))}${t.city ? ' · ' + esc(t.city) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
+      <p class="meta mono"><span class="meta-fmt">${esc(fmtLabel(t.format))}${t.language && t.language.toLowerCase() !== LANG ? ' · ' + esc(langName(t.language)) : ''}${badge ? `<span class="badge-txt"> · ${badge.replace(/<[^>]+>/g, '')}</span>` : ''} · </span>${esc(dateLabel(t))}${t.city ? ' · ' + esc(city(t.city)) : ''}${t.verified ? '' : ` · <span class="unverified" title="${T('toConfirmTitle')}">${T('toConfirm')}</span>`}</p>
       <h3 class="card-title">${titleEl}</h3>
       <p class="card-event">${esc(t.event)}</p>
       ${t.summary ? `<p class="card-sum">${esc(t.summary)}</p>` : ''}
@@ -194,10 +198,10 @@ function card(t, prefix) {
 
 function row(t, prefix) {
   const href = mainHref(t, prefix);
-  const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}</a>`) : esc(t.title);
+  const title = href ? (t.page ? `<a href="${href}">${esc(t.title)}</a>` : `<a href="${esc(href)}" rel="noopener noreferrer">${esc(t.title)}&nbsp;↗</a>`) : esc(t.title);
   return `<li class="row" ${dataAttrs(t)}>
-      <span class="row-date mono">${esc(shortDate(t)) || '—'}</span>
-      <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(t.city) : ''} · ${esc(fmtLabel(t.format))}${t.verified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
+      <span class="row-date mono">${esc(shortDate(t))}</span>
+      <div class="row-main"><span class="row-title">${title}</span><span class="row-sub">${esc(t.event)}${t.city ? ' · ' + esc(city(t.city)) : ''} · ${esc(fmtLabel(t.format))}${t.verified ? '' : ` · <span class="unverified">${T('toConfirm')}</span>`}</span></div>
       <div class="row-links">${linksHtml(t, prefix)}</div>
     </li>`;
 }
@@ -223,21 +227,21 @@ function homePage() {
   const groups = [];
   sorted.forEach((t) => { const y = String(year(t)); let g = groups.find((x) => x.y === y); if (!g) groups.push((g = { y, items: [] })); g.items.push(t); });
 
-  const nextHtml = next ? `<div class="wrap next-wrap"><section class="next" aria-labelledby="next-title" data-next data-start="${esc(next.start || '')}" data-end="${esc(next.end || '')}">
+  const nextHtml = next ? `<div class="wrap next-wrap"><section class="next" aria-labelledby="next-title" data-next data-id="${esc(next.id)}" data-start="${esc(next.start || '')}" data-end="${esc(next.end || '')}">
   <div class="next-count tone-agentic" aria-hidden="true"><span class="next-num" data-countdown-num>${esc(shortDate(next))}</span><span class="next-unit mono" data-countdown-unit>${esc(next.date.slice(0, 4))}</span></div>
   <div class="next-main">
-    <p class="eyebrow mono"><span class="pulse" aria-hidden="true">●</span> <span data-next-label>${isUpcoming(next) ? T('nextTalk') : T('latestTalk')}</span> · ${esc(dateLabel(next))}${next.time ? ' · ' + esc(next.time) : ''}</p>
+    <p class="eyebrow mono"><span class="pulse" aria-hidden="true" hidden>●</span> <span data-next-label>${isUpcoming(next) ? T('nextTalk') : T('latestTalk')}</span> · <span class="nw d-long">${esc(dateLabel(next))}</span><span class="nw d-short">${esc(shortDate(next))}</span>${next.time ? ` · <span class="nw">${esc(next.time)}</span>` : ''}</p>
     <h2 id="next-title" class="next-title"><a href="${prefix}${next.id}/">${esc(next.title)}</a></h2>
     <p class="next-sub">${esc(next.event)} · ${esc(where(next))}${next.track ? ' · ' + esc(next.track) : ''}</p>
   </div>
   <div class="next-actions">
-    <a class="btn btn-primary" href="${prefix}${next.id}/">${T('talkPageBtn')}</a>
-    ${next.start && isUpcoming(next) ? `<a class="btn" href="${prefix}${next.id}/talk.ics" download>${T('addCal')}</a>` : ''}
+    <a class="btn btn-primary" href="${prefix}${next.id}/" data-live-text="${esc(T('liveBtn'))}">${T('talkPageBtn')}</a>
+    ${next.start && isUpcoming(next) ? `<a class="btn" href="${prefix}${next.id}/talk.ics" data-ics>${T('addCal')}</a>` : ''}
   </div>
   <a class="next-qr" href="${prefix}${next.id}/#stage" title="${T('qrFull')}">${qrSvg(`${LANGBASE}${next.id}/`, `${T('qrLabel')} ${next.title}`)}<span class="mono">${T('scanMe')}</span></a>
 </section></div>` : '';
 
-  return `${head({ title: `${T('titleHome')} · ${site.name}`, description: S.description, prefix, canonical: LANGBASE, og: `${site.baseUrl}og/home.png` })}
+  return `${head({ title: `${T('titleHome')} · ${site.name}`, description: S.description, prefix, canonical: LANGBASE, og: `${site.baseUrl}og/${LANG === 'pt' ? 'pt/' : ''}home.png` })}
 <body>
 ${header(prefix)}
 <main id="main">
@@ -255,9 +259,10 @@ ${nextHtml}
       <input id="q" type="search" placeholder="${T('searchPh')}" autocomplete="off" spellcheck="false">
       <kbd class="mono" aria-hidden="true">/</kbd>
     </label>
+    <button type="button" class="btn filters-btn" data-filters-toggle aria-expanded="false" aria-controls="filters">${T('filters')} <span class="q-count mono" data-filters-n hidden></span></button>
   </div>
   <div class="layout">
-    <aside class="filters" data-js-only hidden aria-label="${T('filters')}">
+    <aside class="filters" id="filters" data-js-only hidden aria-label="${T('filters')}">
       <div class="fgroup"><h2 class="fhead mono">${T('eraH')}</h2><div class="fstack">
         ${ERAS.map(([k, , span]) => chip('era', k, T('era_' + k), count((t) => eraOf(t) === k), '').replace(`${esc(T('era_' + k))}</span>`, `${esc(T('era_' + k))} <span class="chip-span">${span}</span></span>`)).join('\n        ')}
       </div></div>
@@ -268,12 +273,13 @@ ${nextHtml}
         ${formats.map((f) => chip('format', f, fmtLabel(f), count((t) => t.format === f))).join('\n        ')}
       </div></div>
       <div class="fgroup"><h2 class="fhead mono">${T('materialsH')}</h2><div class="fwrap">
-        ${[['slides', T('slidesF')], ['video', T('videoF')], ['audio', T('audioF')]].map(([k, l]) => chip('has', k, l, count((t) => materials(t).includes(k)))).join('\n        ')}
+        ${[['slides', T('slidesF')], ['video', T('videoF')], ['audio', T('audioF')]].filter(([k]) => count((t) => materials(t).includes(k))).map(([k, l]) => chip('has', k, l, count((t) => materials(t).includes(k)))).join('\n        ')}
       </div></div>
+      <button type="button" class="btn btn-primary filters-done" data-filters-done>${T('filters')}</button>
     </aside>
     <div class="results">
       <div class="toolbar">
-        <div class="status"><p class="count" aria-live="polite"><strong data-result-count>${talks.length}</strong> <span data-result-noun>${T('sessions')}</span></p><div class="active" data-active></div></div>
+        <div class="status"><p class="count" aria-live="polite" tabindex="-1"><strong data-result-count>${talks.length}</strong> <span data-result-noun>${T('sessions')}</span></p><div class="active" data-active></div></div>
         <div class="controls" data-js-only hidden>
           <button type="button" class="btn btn-small" data-sort>${T('newest')}</button>
           <div class="seg" role="group" aria-label="${T('layout')}">
@@ -305,90 +311,126 @@ ${footer()}
 `;
 }
 
+function gcalUrl(t, url) {
+  const z = (iso) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: `${t.title} (${site.name})`, dates: `${z(t.start)}/${z(t.end)}`, details: url, location: where(t) });
+  // keep the slash between the two dates literal, as Google documents it
+  return `https://calendar.google.com/calendar/render?${q.toString().replace(/(dates=[0-9TZ]+)%2F/, "$1/")}`;
+}
+
 function talkPage(t) {
   const prefix = '../';
   const url = `${LANGBASE}${t.id}/`;
-  const desc = t.abstract ? t.abstract.join(' ').slice(0, 200) : `${t.title} — ${t.event}`;
+  const clip = (s, n) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(' ', n)).replace(/[\s,;:.—–-]+$/, '') + '…');
+  const desc = t.abstract ? clip(t.abstract.join(' '), 155) : `${t.title} · ${t.event}`;
   const related = sorted.filter((o) => o.id !== t.id && o.tags.some((g) => t.tags.includes(g))).slice(0, 3).map(loc);
   const upcoming = isUpcoming(t);
   const shortUrl = url.replace('https://', '').replace(/\/$/, '');
   const qr = qrSvg(url, `${T('qrLabel')} ${shortUrl}`);
-  const facts = [
-    [T('when'), `${dateLabel(t)}${t.time ? ' · ' + t.time : ''}`],
-    [T('where'), where(t)],
-    [T('eventL'), t.event],
-    [T('track'), t.track],
+  const nres = (t.resources || []).length;
+  // One scannable line instead of seven boxes: date · time · venue · track.
+  const metaBits = [dateLabel(t), t.time, where(t), t.track && T('trackMeta').replace('{t}', t.track)].filter(Boolean).map((v) => `<span>${esc(v)}</span>`);
+  const details = [
     [T('level'), t.level ? (UI[LANG].levels || {})[t.level] || t.level : ''],
     [T('formatL'), fmtLabel(t.format)],
     [T('languageL'), t.language ? langName(t.language) : ''],
   ].filter(([, v]) => v);
-  return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${t.id}.png` })}
+  const orig = t._orig || t;
+  const showOrig = LANG === 'pt' && t.language && !/^pt/i.test(t.language) && orig.title !== t.title;
+  // Time-aware bits: rendered for the build moment, then corrected in the browser (site.js) from data-start/data-end.
+  const timeAttrs = t.start && t.end ? ` data-start="${esc(t.start)}" data-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 10}" data-id="${esc(t.id)}"` : '';
+  const primary = t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary q-fb').replace('<a ', '<a data-fb-window ')
+    : t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary q-fb') : '';
+  const slidesBtn = t.slides ? ext(t.slides, `${T('qSlides')} ↗`, 'btn') : `<a class="btn" href="#mat">${T('qSlides')}</a>`;
+  const relHref = (o) => mainHref(o, prefix);
+  return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${LANG === 'pt' ? 'pt/' : ''}${t.id}.png`, htmlAttrs: t.start && t.end ? ` data-talk-start="${esc(t.start)}" data-talk-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 10}"` : '' })}
 <body class="talk-page">
 ${header(prefix)}
 <main id="main" class="wrap talk-layout">
 <div class="talk">
   <p class="crumb"><a href="${prefix}">${T('crumb')}</a></p>
-  <header class="talk-head">
-    <p class="eyebrow mono">${upcoming ? `<span class="pulse" aria-hidden="true">●</span> ${T('upcoming')} · ` : ''}${esc(t.event)}</p>
+  <header class="talk-head"${timeAttrs}>
+    <p class="eyebrow mono"><span data-status hidden><span class="pulse" aria-hidden="true">●</span> <span data-status-label>${T('upcoming')}</span> · </span>${t.eventUrl ? ext(t.eventUrl, esc(t.event), 'eyebrow-link') : esc(t.event)}</p>
     <h1 class="talk-title">${esc(t.title)}</h1>
-    <dl class="facts">
-      ${facts.map(([k, v]) => `<div><dt class="mono">${k}</dt><dd>${esc(v)}</dd></div>`).join('\n      ')}
-    </dl>
-    <div class="tags">${t.tags.map((g) => `<a class="tag" href="${prefix}?tag=${encodeURIComponent(g)}">${esc(tagLabel(g))}</a>`).join('')}</div>
-    ${upcoming && t.start ? `<div class="talk-actions"><a class="btn btn-primary" href="talk.ics" download>${T('addCal')}</a>${t.eventUrl ? ext(t.eventUrl, T('eventPage'), 'btn') : ''}</div>` : (t.eventUrl ? `<div class="talk-actions">${ext(t.eventUrl, T('eventPage'), 'btn')}</div>` : '')}
+    ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · <span lang="en">${esc(orig.title)}</span></p>` : ''}
+    <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
+    <nav class="quick" aria-label="${T('quickNav')}">
+      ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before>${T('addCal')}</a>${ext(gcalUrl(t, url), T('gcal'), 'lnk q-alt').replace('<a ', '<a data-before ')}` : ''}
+      ${primary}
+      ${slidesBtn}
+      <a class="btn" href="#res">${T('qRes')}${nres ? ` <span class="q-count mono">${nres}</span>` : ''}</a>
+    </nav>
   </header>
 
   <section class="talk-section" aria-labelledby="abs">
     <h2 id="abs" class="section-title">${t.abstract ? T('abstract') : T('summary')}</h2>
     <div class="prose">${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('\n      ')}</div>
+    ${LANG === 'pt' && t.abstractTranslated ? `<p class="note">${T('translated')}</p>` : ''}
   </section>
 
-  <section class="talk-section materials" aria-labelledby="mat">
-    <h2 id="mat" class="section-title">${T('slidesRec')}</h2>
+  <section class="talk-section materials" id="mat" aria-labelledby="mat-h">
+    <h2 id="mat-h" class="section-title" data-only-slides="${esc(T('slidesF'))}">${T('slidesRec')}</h2>
     <div class="mat-grid">
       <div class="mat">
         <p class="mat-k mono">${T('slidesF')}</p>
-        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p>`}
+        ${t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary') : `<p class="muted" data-slides-note data-after-text="${esc(T('slidesSoon'))}">${upcoming ? T('slidesAfter') : T('slidesSoon')}</p><p class="muted save-hint">${T('saveHint')}</p><button type="button" class="btn btn-small" data-copy="${esc(url)}" data-share-title="${esc(t.title)}" hidden>${T('copy')}</button>`}
       </div>
-      <div class="mat">
+      <div class="mat"${t.video ? '' : ' data-rec'}>
         <p class="mat-k mono">${T('recording')}</p>
         ${t.video ? ext(t.video, T('watch'), 'btn') : `<p class="muted">${T('recNote')}</p>`}
       </div>
     </div>
   </section>
 
-  <section class="talk-section" aria-labelledby="res">
-    <h2 id="res" class="section-title">${T('resources')}</h2>
-    ${(t.resources || []).length ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)} ↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
+  <section class="talk-section" id="res" aria-labelledby="res-h">
+    <h2 id="res-h" class="section-title">${T('resources')}</h2>
+    ${nres ? `<ul class="res">${t.resources.map((r) => `<li>${ext(r.url, `${esc(r.title)}&nbsp;↗`)}${r.note ? `<span>${esc(r.note)}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${T('resAfter')}</p>`}
   </section>
 
-  <section class="talk-section feedback" aria-labelledby="fb">
-    <h2 id="fb" class="section-title">${T('fbH')}</h2>
-    <p>${T('fbP')} ${t.feedback ? ext(t.feedback, T('fbLink'), 'lnk') : ext(site.links[0].url, T('liLink'), 'lnk')}</p>
+  <section class="talk-section feedback" id="fb" aria-labelledby="fb-h"${t.feedback ? ' data-fb-window' : ''}>
+    <div class="fb-card">
+      <h2 id="fb-h" class="section-title">${T('fbH')}</h2>
+      <p>${T('fbP')}</p>
+      ${t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary') : ext(site.links[0].url, T('liLink'), 'btn')}
+    </div>
+  </section>
+
+  <section class="talk-section" aria-labelledby="about-h">
+    <h2 id="about-h" class="section-title">${T('aboutTalk')}</h2>
+    ${details.length ? `<dl class="kv">${details.map(([k, v]) => `<div><dt class="mono">${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+    <div class="tags">${t.tags.map((g) => `<a class="tag" href="${prefix}?tag=${encodeURIComponent(g)}">${esc(tagLabel(g))}</a>`).join('')}</div>
+    ${t.eventUrl ? `<p class="talk-actions">${ext(t.eventUrl, T('eventPage'), 'btn btn-small')}</p>` : ''}
   </section>
 
   ${related.length ? `<section class="talk-section" aria-labelledby="rel">
     <h2 id="rel" class="section-title">${T('related')}</h2>
-    <ul class="grid grid-3">${related.map((o) => card(o, prefix)).join('')}</ul>
+    <ul class="rel">${related.map((o) => {
+      const h = relHref(o);
+      const a = h ? (o.page ? `<a href="${h}">${esc(o.title)}</a>` : `<a href="${esc(h)}" rel="noopener noreferrer">${esc(o.title)}&nbsp;↗</a>`) : esc(o.title);
+      return `<li><span class="rel-title">${a}</span><span class="rel-sub">${esc(o.event)} · ${esc(dateLabel(o))}</span></li>`;
+    }).join('')}</ul>
   </section>` : ''}
 </div>
 <aside class="qr-rail" aria-label="${T('qrAside')}">
   <div class="qr-card">
-    <p class="qr-k mono">${T('qrK')}</p>
+    <p class="qr-k mono"><span class="qr-k-desk">${T('qrK')}</span><span class="qr-k-mob">${T('qrKMob')}</span></p>
     <a class="qr-link" href="#stage" title="${T('showFull')}">${qr}</a>
     <p class="qr-url mono" data-copy-src>${wbr(shortUrl)}</p>
     <div class="qr-actions">
-      <a class="btn btn-small btn-primary" href="#stage">${T('stage')}</a>
-      ${t.feedback ? ext(t.feedback, T('giveFb'), 'btn btn-small') : ''}
-      <button type="button" class="btn btn-small" data-copy="${esc(url)}" hidden>${T('copy')}</button>
+      <a class="btn btn-small btn-primary stage-open" href="#stage">${T('stage')}</a>
+      <button type="button" class="btn btn-small" data-copy="${esc(url)}" data-share-title="${esc(t.title)}" hidden>${T('copy')}</button>
     </div>
   </div>
 </aside>
 </main>
+${t.feedback && t.start ? `<div class="toast" data-fb-toast hidden role="status" aria-live="polite">
+  <p>${T('toastP')}</p>
+  <div class="toast-actions">${ext(t.feedback, T('toastBtn'), 'btn btn-small btn-primary').replace('<a ', '<a data-toast-done ')}<button type="button" class="toast-x" data-toast-done aria-label="${T('dismiss')}">✕</button></div>
+</div>` : ''}
 <div id="stage" class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title">
   <div class="stage-bar">
     <button type="button" class="btn btn-small" data-fullscreen hidden>${T('fullscreen')}</button>
-    <a class="btn btn-small" href="#main">${T('close')}</a>
+    <a class="btn btn-small" href="#main" data-stage-close>${T('close')}</a>
   </div>
   <div class="stage-inner">
     <div class="stage-qr">${qr}</div>
@@ -408,6 +450,7 @@ ${footer()}
 
 function notFound() {
   const prefix = '/talks/';
+  const latestPage = sorted.find((t) => t.page);
   ASSET = prefix; SWITCH = '/talks/pt/';
   return `${head({ title: `Not found · ${site.name}`, description: S.description, prefix, canonical: site.baseUrl, og: `${site.baseUrl}og/home.png` })}
 <body>
@@ -416,6 +459,7 @@ ${header(prefix)}
   <h1 class="intro-title">Lost in the loop</h1>
   <p>That page doesn’t exist. <a class="lnk" href="${prefix}">Browse all talks →</a></p>
   <p lang="pt-PT">Esta página não existe. <a class="lnk" href="${prefix}pt/">Ver todas as palestras →</a></p>
+  ${latestPage ? `<p>Latest talk: <a class="lnk" href="${prefix}${latestPage.id}/">${esc(latestPage.title)} →</a></p>` : ''}
 </main>
 ${footer()}
 </body>
@@ -425,7 +469,17 @@ ${footer()}
 
 function ics(t) {
   const fmt = (iso) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  const fold = (s) => s.replace(/[\\;,]/g, (m) => '\\' + m);
+  const escTxt = (s) => String(s).replace(/[\\;,]/g, (m) => '\\' + m);
+  const fold = (line) => {
+    const out = []; let cur = '', bytes = 0;
+    for (const ch of line) {
+      const n = Buffer.byteLength(ch);
+      if (bytes + n > (out.length ? 74 : 75)) { out.push(cur); cur = ''; bytes = 0; }
+      cur += ch; bytes += n;
+    }
+    out.push(cur);
+    return out.join('\r\n ');
+  };
   return [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//rquintino//talks//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT',
@@ -433,12 +487,12 @@ function ics(t) {
     `DTSTAMP:${fmt(t.updated || t.start)}`, // stable: no churn on rebuild
     `DTSTART:${fmt(t.start)}`,
     `DTEND:${fmt(t.end)}`,
-    `SUMMARY:${fold(t.title)} (${fold(site.name)})`,
-    `LOCATION:${fold([t.venue, t.city].filter(Boolean).join(', '))}`,
-    `DESCRIPTION:${fold(`${t.event}${t.track ? ' · ' + t.track : ''}\\n${LANGBASE}${t.id}/`)}`,
+    `SUMMARY:${escTxt(t.title)} (${escTxt(site.name)})`,
+    `LOCATION:${escTxt([t.venue, t.city].filter(Boolean).join(', '))}`,
+    `DESCRIPTION:${escTxt(`${t.event}${t.track ? ' · ' + T('trackMeta').replace('{t}', t.track) : ''}`)}\\n${escTxt(`${LANGBASE}${t.id}/`)}`,
     `URL:${LANGBASE}${t.id}/`,
-    'END:VEVENT', 'END:VCALENDAR', '',
-  ].join('\r\n');
+    'END:VEVENT', 'END:VCALENDAR',
+  ].map(fold).join('\r\n') + '\r\n';
 }
 
 function sitemap() {
@@ -600,10 +654,10 @@ function ogTemplate({ eyebrow, title, sub, path }) {
 @font-face{font-family:JB;src:url(${f('jetbrains-mono.woff2')}) format('woff2');font-weight:100 800}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
 body{background:#0B1020;color:#F2F5FB;font-family:'DM Sans',sans-serif;position:relative}
-.ring{position:absolute;right:-120px;top:-150px;width:620px;height:620px}
+.ring{position:absolute;right:-230px;top:-170px;width:620px;height:620px}
 .box{position:absolute;inset:64px 72px;display:flex;flex-direction:column;justify-content:space-between}
 .eyebrow{font-family:JB,monospace;font-size:26px;letter-spacing:.04em;color:#9DB8FF}
-h1{margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:${title.length > 48 ? 64 : 76}px;line-height:1.04;letter-spacing:-.035em;max-width:900px}
+h1{margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:${title.length > 48 ? 64 : 76}px;line-height:1.04;letter-spacing:-.035em;max-width:780px}
 .sub{font-size:28px;color:#C3CCDD;margin-top:20px}
 .foot{display:flex;justify-content:space-between;align-items:flex-end;font-size:26px}
 .foot b{font-family:Sora,sans-serif;font-weight:700}
@@ -622,13 +676,19 @@ function renderOg() {
   if (!chrome) { console.warn('! --og: no Chrome found, set CHROME_PATH'); return; }
   const tmp = join(tmpdir(), `talks-og-${process.pid}`);
   mkdirSync(tmp, { recursive: true });
-  mkdirSync(join(ROOT, 'og'), { recursive: true });
-  const cards = [
-    { id: 'home', eyebrow: 'TALKS · SLIDES · RESOURCES', title: 'Agentic AI, AI agents and the agentic SDLC', sub: site.tagline, path: 'rquintino.github.io/talks' },
-    ...talks.filter((t) => t.page).map((t) => ({ id: t.id, eyebrow: `${t.event.toUpperCase()} · ${dateLabel(t).toUpperCase()}`, title: t.title, sub: [where(t), t.track].filter(Boolean).join(' · '), path: `rquintino.github.io/talks/${t.id}` })),
-  ];
+  mkdirSync(join(ROOT, 'og', 'pt'), { recursive: true });
+  const cards = [];
+  for (const L of ['en', 'pt']) {
+    setLang(L);
+    const d = L === 'pt' ? 'pt/' : '';
+    cards.push({ id: `${d}home`, eyebrow: L === 'pt' ? 'PALESTRAS · SLIDES · RECURSOS' : 'TALKS · SLIDES · RESOURCES', title: L === 'pt' ? 'IA agêntica, agentes de IA e o SDLC agêntico' : 'Agentic AI, AI agents and the agentic SDLC', sub: S.tagline, path: `rquintino.github.io/talks${L === 'pt' ? '/pt' : ''}` });
+    for (const raw of talks.filter((x) => x.page)) {
+      const t = loc(raw);
+      cards.push({ id: `${d}${t.id}`, eyebrow: `${t.event.toUpperCase()} · ${dateLabel(t).toUpperCase()}`, title: t.title, sub: [where(t), t.track && T('trackMeta').replace('{t}', t.track)].filter(Boolean).join(' · '), path: `rquintino.github.io/talks/${d}${t.id}` });
+    }
+  }
   for (const c of cards) {
-    const tpl = join(tmp, `${c.id}.html`);
+    const tpl = join(tmp, `${c.id.replace('/', '-')}.html`);
     writeFileSync(tpl, ogTemplate(c));
     const out = join(ROOT, 'og', `${c.id}.png`);
     execFileSync(chrome, ['--headless=new', '--no-sandbox', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', '--window-size=1200,630', '--virtual-time-budget=2000', `--screenshot=${out}`, pathToFileURL(tpl).href], { stdio: 'ignore' });
