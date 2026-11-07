@@ -13,7 +13,7 @@ Slides, resources and a QR code for every talk.<br>
 
 ### The loop
 
-Talks here ship the way agents work: in a loop.
+Each talk ships in a loop, the way agents work.
 
 ```
 observe   a talk happens          → its URL is already on the last slide

@@ -2,7 +2,7 @@
   "name": "Rui Quintino",
   "baseUrl": "https://rquintino.github.io/talks/",
   "tagline": "Agentic SDLC + AI Agents Trainer | Dr Claude Mr Copilot | Product Engineer | Author & Speaker",
-  "description": "Talks, slides and resources by Rui Quintino on agentic AI, AI agents and the agentic SDLC.",
+  "description": "Rui Quintino's talks on AI agents and agentic software development, with slides and links.",
   "links": [
     {
       "label": "LinkedIn",
@@ -20,7 +20,7 @@
   },
   "pt": {
     "tagline": "Formador em Agentic SDLC + agentes de IA | Dr Claude Mr Copilot | Product Engineer | Autor e orador",
-    "description": "Palestras, diapositivos e recursos de Rui Quintino sobre IA agêntica, agentes de IA e o SDLC agêntico.",
+    "description": "Palestras de Rui Quintino sobre agentes de IA e desenvolvimento de software agêntico, com diapositivos e ligações.",
     "quietLink": {
       "text": "Palestras e workshops para equipas:"
     }
