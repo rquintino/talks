@@ -4,6 +4,7 @@
     var t = localStorage.getItem('theme');
     if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
   } catch (e) { /* storage blocked: follow the system setting */ }
+  document.documentElement.classList.add('js'); // CSS: clamp summaries only when the script can expand them
   // Talk pages: pick the phase before first paint so buttons never flash or jump.
   // before: > 30 min to start · live: until N min before the end · fb: feedback window · over: after the end
   var h = document.documentElement, s = h.getAttribute('data-talk-start'), e = h.getAttribute('data-talk-end');
