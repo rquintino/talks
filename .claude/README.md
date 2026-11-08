@@ -1,8 +1,11 @@
 # `.claude/settings.json`: block claude.ai connectors (mitigation)
 
-> **This is a mitigation, not a fix.** It worked in our tests on 8 Nov 2026
-> (Claude Code 2.1.319, cloud sessions on claude.ai/code). It may stop working,
-> or may not cover your setup. Test it yourself before relying on it.
+> **This is a mitigation, not a fix, and far from perfect.** It worked in our
+> tests on 8 Nov 2026 (Claude Code 2.1.319, cloud sessions on claude.ai/code).
+> It is **not a security boundary**: anyone who can edit Claude Code's settings
+> can switch it off, **including the agent itself** (see
+> [Not a security boundary](#not-a-security-boundary)). It may stop working, or
+> may not cover your setup. Test it yourself before relying on it.
 
 ## The problem
 
@@ -51,6 +54,38 @@ To allow another server, add its name to the alternation, e.g.
   [Configure cloud environments](https://code.claude.com/docs/en/cloud-environments)).
   Admin-managed settings can also override it.
 - **It has to be committed to each repository** where you want it.
+
+## Not a security boundary
+
+The hook lives in files the agent can write. Anyone who can edit Claude Code's
+settings can switch it off, and that includes the agent. An agent could do it
+after a **prompt injection** (hostile text in a web page, issue, file or tool
+result) or simply by **going rogue**. Settings reload mid-session, so a change
+takes effect at once. Ways to switch it off:
+
+- Edit or delete `.claude/settings.json`.
+- Add `"disableAllHooks": true` to `.claude/settings.local.json`, which outranks
+  the project file. It also works from `~/.claude/settings.json`, unless the
+  project file sets `"disableAllHooks": false`.
+- In a cloud container the agent runs as root. It could likely write a managed
+  settings file, which outranks everything. This is untested.
+- Commit and push a change, so that every future session loads it.
+
+What stands in the way:
+
+- `.claude/` is a protected path. In the default permission mode, Claude Code
+  asks you before each write there. In auto mode, an automated classifier
+  decides instead. In our tests it allowed edits made on request, and
+  refused to start a session meant to test switching the hook off. That's a judgement call, not a
+  guarantee.
+- Review every change to `.claude/` before it reaches `main`, e.g. with a branch
+  rule that requires pull requests. The committed file is what new sessions
+  load, so that review is the control that lasts.
+
+If connector access must be impossible rather than discouraged, disconnect the
+connectors from the claude.ai account. On Team or Enterprise plans, an admin can
+block them with managed settings. Nothing in the repository or the container can
+undo either.
 
 For an account-wide switch, turn connectors off in the **+ → Connectors** menu
 at claude.ai/code. It's documented for Projects threads
