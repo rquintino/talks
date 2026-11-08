@@ -1,4 +1,48 @@
-# `.claude/settings.json`: block claude.ai connectors (mitigation)
+# `.claude/settings.json`: coding-only tools, skills and plugins
+
+This repo's sessions are for coding. The settings keep only what that needs,
+to cut context cost and keep personal connectors and data out.
+
+| What | Setting | Effect (tested 8 Nov 2026, Claude Code 2.1.319) |
+| --- | --- | --- |
+| claude.ai plugins (`engineering`, `pdf-viewer`, `cowork-plugin-management`) | `enabledPlugins: false` | Not loaded: their skills **and** MCP servers (the `engineering` plugin alone brings 10, Gmail and Google Calendar among them) are gone. |
+| Bundled skills not needed here | `skillOverrides: "off"` | Hidden from the listing and from `/name`. |
+| Web search | `permissions.deny: ["WebSearch"]` | Tool removed from the session. |
+| Claude Docs connector | `permissions.deny: ["mcp__Claude_Docs"]` | Tools removed on settings reload, also mid-session. |
+| Other MCP servers | `PreToolUse` hook on `mcp__*` | **Allowlist**: only `github` and `claude-code-remote` calls run (details below). |
+| Skills | `.claude/skill-allowlist.txt` + `.claude/hooks/skill-allowlist.sh` | **Allowlist**, see below. |
+
+## Skill allowlist
+
+`.claude/skill-allowlist.txt` names the skills Claude may use here, one per
+line. Nothing else needs listing: whatever is not named is off, including
+skills added later. `.claude/hooks/skill-allowlist.sh` (bash, grep and sed
+only) enforces it in two ways:
+
+- **`check`** (`PreToolUse` on `Skill`): Claude's call to any skill not on the
+  list is refused. You can still type `/name` yourself.
+- **`sync`** (`SessionStart`): it reads which claude.ai skills and plugins are
+  installed, and writes `"off"` / `false` for every one not on the list to
+  `.claude/settings.local.json`. That file is git-ignored, so the names of
+  hidden skills never reach this public repo.
+
+To allow a skill, add its name to the list (`plugin:<name>` keeps a claude.ai
+plugin). Bundled Claude Code skills aren't on disk, so the ones not needed
+are hidden by the static `skillOverrides` in `settings.json`.
+
+**Limit, tested:** Claude Code builds the skill listing before the `sync`
+hook's file exists and doesn't rebuild it mid-session. So in a **fresh
+container (every cloud session)** the hidden skills still appear in the
+listing and still cost context; they only can't be run. The listing shrinks
+from the second launch in the same folder, e.g. on your own machine. To save
+that context in cloud sessions too, turn unneeded skills off at claude.ai
+(this affects chat as well).
+
+`syncClaudeAiSkills` / `syncClaudeAiPlugins` (turn off all claude.ai skills or
+plugins) are not read from project settings, only from user, local,
+`--settings` or managed settings.
+
+## Connector call blocking (mitigation)
 
 > **This is a mitigation, not a fix, and far from perfect.** It worked in our
 > tests on 8 Nov 2026 (Claude Code 2.1.319, cloud sessions on claude.ai/code).
@@ -7,7 +51,7 @@
 > [Not a security boundary](#not-a-security-boundary)). It may stop working, or
 > may not cover your setup. Test it yourself before relying on it.
 
-## The problem
+### The problem
 
 Connectors added to a claude.ai account (Microsoft 365, Gmail, Google Calendar,
 Drive, Claude Docs and others) show up in every Claude Code **cloud session**.
@@ -27,7 +71,7 @@ session:
 - `ENABLE_CLAUDEAI_MCP_SERVERS=false` as a cloud environment variable. The
   variable reached the session, and the connectors loaded anyway.
 
-## The mitigation
+### The mitigation
 
 A `PreToolUse` hook refuses every MCP tool call except the `github` and
 `claude-code-remote` servers:
@@ -43,7 +87,7 @@ It uses no scripts or packages, only `echo` and `exit`.
 To allow another server, add its name to the alternation, e.g.
 `(?!github__|claude-code-remote__|myserver__)`.
 
-## Limits
+### Limits
 
 - **Calls are blocked, not hidden.** Connector tools still load and still use
   context. Claude can see them but can't run them.
@@ -58,7 +102,7 @@ To allow another server, add its name to the alternation, e.g.
   Admin-managed settings can also override it.
 - **It has to be committed to each repository** where you want it.
 
-## Not a security boundary
+### Not a security boundary
 
 The hook lives in files the agent can write. Anyone who can edit Claude Code's
 settings can switch it off, and that includes the agent. An agent could do it
@@ -95,7 +139,7 @@ at claude.ai/code. It's documented for Projects threads
 ([Projects](https://code.claude.com/docs/en/claude-projects)), and the change
 also turns them off in claude.ai chats.
 
-## Related issues (anthropics/claude-code)
+### Related issues (anthropics/claude-code)
 
 Requests for a proper control:
 
