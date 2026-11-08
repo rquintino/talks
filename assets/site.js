@@ -96,6 +96,39 @@
     if (toast) { toast.hidden = true; document.body.classList.toggle('has-toast', false); }
   };
   $$('a[data-fb-window], [data-fb-window] a, [data-toast-done]').forEach(function (a) { a.addEventListener('click', retireToast); });
+  // ---- live notes: plain text Rui edits in the repo (live/<id>.txt), shown as text only ----
+  var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0;
+  var linkify = function (el, txt) {
+    txt.split(/(https?:\/\/[^\s<>"']+)/).forEach(function (part, i) {
+      if (i % 2 === 0) { if (part) el.appendChild(document.createTextNode(part)); return; }
+      var tail = (part.match(/[.,;:!?)\]]+$/) || [''])[0];
+      var url = tail ? part.slice(0, -tail.length) : part;
+      var a = document.createElement('a');
+      a.href = url; a.rel = 'noopener noreferrer'; a.textContent = url;
+      el.appendChild(a);
+      if (tail) el.appendChild(document.createTextNode(tail));
+    });
+  };
+  var liveRender = function (txt, modified) {
+    txt = txt.replace(/\r/g, '').trim().slice(0, 4000);
+    if (txt === liveText) return;
+    liveText = txt;
+    var body = $('[data-live-body]', liveSec), upd = $('[data-live-upd]', liveSec);
+    body.textContent = '';
+    txt.split(/\n\s*\n/).forEach(function (para) { var p = document.createElement('p'); linkify(p, para); body.appendChild(p); });
+    var d = modified ? new Date(modified) : null;
+    upd.hidden = !d || isNaN(d);
+    if (!upd.hidden) upd.textContent = liveSec.getAttribute('data-upd').replace('{t}', d.toLocaleTimeString(PT ? 'pt-PT' : 'en-GB', { hour: '2-digit', minute: '2-digit' }));
+    liveSec.hidden = !txt;
+  };
+  var liveFetch = function () {
+    if (!window.fetch || Date.now() - liveLast < 30000) return; // load + pageshow fire together
+    liveLast = Date.now();
+    // the minute stamp sidesteps cached copies; no-store skips the browser cache
+    fetch(liveSec.getAttribute('data-live') + '?v=' + Math.floor(Date.now() / 60000), { cache: 'no-store', credentials: 'omit' })
+      .then(function (r) { return r.ok ? r.text().then(function (t) { liveRender(t, r.headers.get('Last-Modified')); }) : null; })
+      .catch(function () {});
+  };
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
     var tNow = new Date();
@@ -114,6 +147,9 @@
     var fbWin = tNow >= new Date(tEnd.getTime() - lead * 60000);
     document.documentElement.setAttribute('data-phase', !soon ? 'before' : !fbWin ? 'live' : over ? 'over' : 'fb');
     if (openedEarly === null) openedEarly = !fbWin;
+    // live notes: read the talk's same-origin text file from the feedback window on.
+    // Poll each minute (this runs every 60s) until 2h after the end, then once per visit.
+    if (liveSec && fbWin && !document.hidden && (tNow - tEnd < 2 * 36e5 || !liveTried)) { liveTried = true; liveFetch(); }
     // toast only once the session has ended: nothing pulls attention to the phone during the talk
     if (toast) {
       toast.hidden = !(openedEarly && over && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));

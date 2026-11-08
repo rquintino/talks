@@ -83,9 +83,11 @@ exceptions for "popular", "official", "tiny" or "just for dev".
 
 - Every page carries a strict Content-Security-Policy `<meta>` tag:
   `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;
-  font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none';
+  font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none';
   base-uri 'none'; form-action 'none'`.
-  Never loosen it. No inline `<script>` or `on*=` handlers.
+  Never loosen it further. `connect-src 'self'` (same origin only) was approved
+  by Rui for the live notes file; nothing cross-origin. No inline `<script>` or
+  `on*=` handlers.
 - `<meta name="referrer" content="strict-origin-when-cross-origin">`;
   external links use `rel="noopener noreferrer"`.
 - `.nojekyll` at the repo root so GitHub Pages serves files as they are,
@@ -144,6 +146,12 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   so the live status, feedback window (`feedbackLead`, default 10 minutes
   before the end) and toast happen at the same moment for every visitor;
   `time` is the venue-local text shown on the page.
+- Live notes: a talk with `"live": true` gets a hidden "Live notes" card
+  that reads `live/<id>.txt` (same origin, plain text, links auto-linked,
+  never parsed as HTML). It appears once the feedback window opens and the
+  file is non-empty, polls every minute until 2h after the end, then loads
+  once per visit. Rui edits the file on GitHub; each edit is a public commit
+  (Rule 1), and Pages takes a few minutes to publish it.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
   cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,

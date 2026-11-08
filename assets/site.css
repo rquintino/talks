@@ -307,6 +307,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (hover: hover) { .res li:hover { border-color: var(--line-2); } }
 .res span { color: var(--fg-2); font-size: 16px; }
 .feedback p { margin: 0; color: var(--fg-2); }
+.live-notes .section-title .pulse { color: var(--accent); font-size: 0.6em; vertical-align: 0.25em; }
+.live-card { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: var(--radius); background: var(--surface); border: 2px solid var(--accent); max-width: 80ch; }
+.live-body p { margin: 0 0 0.8em; font-size: clamp(18px, 1.6vw, 20px); line-height: 1.6; color: var(--fg); white-space: pre-line; overflow-wrap: anywhere; }
+.live-body p:last-child { margin-bottom: 0; }
+.live-body a { color: var(--accent); font-weight: 500; text-underline-offset: 3px; }
+.live-upd { margin: 0; font-size: 14px; color: var(--muted); }
 .share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .share > span { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .share code { font-family: var(--mono); font-size: 15px; padding: 6px 10px; border-radius: 8px; background: var(--surface-2); color: var(--fg); word-break: break-all; }

@@ -21,7 +21,7 @@ const site = JSON.parse(readFileSync(join(ROOT, 'data/site.json'), 'utf8'));
 const talks = JSON.parse(readFileSync(join(ROOT, 'data/talks.json'), 'utf8'));
 const NOW = new Date();
 
-const CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
+const CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
@@ -367,7 +367,12 @@ ${header(prefix)}
     </nav>
   </header>
 
-  <section class="talk-section" aria-labelledby="abs">
+  ${t.live && t.start && t.end ? `<section class="talk-section live-notes" id="live" aria-labelledby="live-h" data-live="${esc(new URL(site.baseUrl).pathname)}live/${esc(t.id)}.txt" data-upd="${esc(T('liveUpd'))}" hidden>
+    <h2 id="live-h" class="section-title"><span class="pulse" aria-hidden="true">●</span> ${T('liveH')}</h2>
+    <div class="live-card"><div class="live-body" data-live-body aria-live="polite"></div><p class="live-upd mono" data-live-upd hidden></p></div>
+  </section>
+
+  ` : ''}<section class="talk-section" aria-labelledby="abs">
     <h2 id="abs" class="section-title">${t.abstract ? T('abstract') : T('summary')}</h2>
     <div class="prose">${(t.abstract || (t.summary ? [t.summary] : [])).map((p) => `<p>${esc(p)}</p>`).join('\n      ')}</div>
     ${LANG === 'pt' && t.abstractTranslated ? `<p class="note">${T('translated')}</p>` : ''}
