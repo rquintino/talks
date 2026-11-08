@@ -8,7 +8,7 @@ to cut context cost and keep personal connectors and data out.
 | claude.ai plugins (`engineering`, `pdf-viewer`, `cowork-plugin-management`) | `enabledPlugins: false` | Not loaded: their skills **and** MCP servers (the `engineering` plugin alone brings 10, Gmail and Google Calendar among them) are gone. |
 | Bundled skills not needed here | `skillOverrides: "off"` | Hidden from the listing and from `/name`. |
 | Web search | `permissions.deny: ["WebSearch"]` | Tool removed from the session. |
-| Claude Docs connector | `permissions.deny: ["mcp__Claude_Docs"]` | Tools removed on settings reload, also mid-session. |
+| Claude Docs connector | `permissions.deny: ["mcp__Claude_Docs"]` | Removes the tools only where the connector loads as `Claude_Docs`. In a fresh cloud session it loaded under an ID-style name, so the rule missed it; the `mcp__*` hook below still blocks its calls. |
 | Other MCP servers | `PreToolUse` hook on `mcp__*` | **Allowlist**: only `github` and `claude-code-remote` calls run (details below). |
 | Skills | `.claude/skill-allowlist.txt` + `.claude/hooks/skill-allowlist.sh` | **Allowlist**, see below. |
 
@@ -30,10 +30,12 @@ To allow a skill, add its name to the list (`plugin:<name>` keeps a claude.ai
 plugin). Bundled Claude Code skills aren't on disk, so the ones not needed
 are hidden by the static `skillOverrides` in `settings.json`.
 
-**Limit, tested:** Claude Code builds the skill listing before the `sync`
-hook's file exists and doesn't rebuild it mid-session. So in a **fresh
-container (every cloud session)** the hidden skills still appear in the
-listing and still cost context; they only can't be run. The listing shrinks
+**Limit, tested in a fresh cloud session:** at `SessionStart` the claude.ai
+skills hadn't been downloaded yet, so `sync` found nothing to hide and wrote
+empty overrides. Claude Code also builds the skill listing before the hook's
+file exists and doesn't rebuild it mid-session. So in **cloud sessions** the
+other claude.ai skills still appear in the listing and still cost context;
+they only can't be run (`check` refused them in the test). The listing shrinks
 from the second launch in the same folder, e.g. on your own machine. To save
 that context in cloud sessions too, turn unneeded skills off at claude.ai
 (this affects chat as well).
