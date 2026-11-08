@@ -8,8 +8,7 @@ to cut context cost and keep personal connectors and data out.
 | claude.ai plugins (`engineering`, `pdf-viewer`, `cowork-plugin-management`) | `enabledPlugins: false` | Not loaded: their skills **and** MCP servers (the `engineering` plugin alone brings 10, Gmail and Google Calendar among them) are gone. |
 | Bundled skills not needed here | `skillOverrides: "off"` | Hidden from the listing and from `/name`. |
 | Web search | `permissions.deny: ["WebSearch"]` | Tool removed from the session. |
-| Claude Docs connector | `permissions.deny: ["mcp__Claude_Docs"]` | Removes the tools only where the connector loads as `Claude_Docs`. In a fresh cloud session it loaded under an ID-style name, so the rule missed it; the `mcp__*` hook below still blocks its calls. |
-| Other MCP servers | `PreToolUse` hook on `mcp__*` | **Allowlist**: only `github` and `claude-code-remote` calls run (details below). |
+| MCP servers | `.claude/mcp-allowlist.txt` + `.claude/hooks/mcp-allowlist.sh` | **Allowlist**: only `github`, `claude-code-remote` and Claude Docs calls run, see below. |
 | Skills | `.claude/skill-allowlist.txt` + `.claude/hooks/skill-allowlist.sh` | **Allowlist**, see below. |
 
 ## Skill allowlist
@@ -44,7 +43,22 @@ that context in cloud sessions too, turn unneeded skills off at claude.ai
 plugins) are not read from project settings, only from user, local,
 `--settings` or managed settings.
 
-## Connector call blocking (mitigation)
+## MCP allowlist
+
+`.claude/mcp-allowlist.txt` names the MCP servers Claude may call:
+`github`, `claude-code-remote` and `Claude_Docs`. A `PreToolUse` hook on
+`mcp__*` refuses a call to any other server, including connectors added later.
+
+In fresh cloud sessions a claude.ai connector can load under an ID-style name
+(`mcp__<uuid>__…`) instead of its display name. Those IDs are account
+identifiers, so they stay out of this public repo: they go, space-separated,
+in the cloud environment variable `CLAUDE_MCP_ALLOW_EXTRA` (Settings → the
+`talks` environment), which the hook also reads.
+
+The hook blocks calls; it doesn't hide tools. Connectors not on the list still
+load and still cost context. Only turning them off at claude.ai removes them.
+
+## Connector call blocking (background)
 
 > **This is a mitigation, not a fix, and far from perfect.** It worked in our
 > tests on 8 Nov 2026 (Claude Code 2.1.319, cloud sessions on claude.ai/code).
@@ -75,27 +89,18 @@ session:
 
 ### The mitigation
 
-A `PreToolUse` hook refuses every MCP tool call except the `github` and
-`claude-code-remote` servers:
-
-```json
-"matcher": "^mcp__(?!github__|claude-code-remote__)"
-```
-
-The hook prints a "Blocked:" message and exits with code 2, which cancels the
-call. It doesn't name any connector, so connectors added later are blocked too.
-It uses no scripts or packages, only `echo` and `exit`.
-
-To allow another server, add its name to the alternation, e.g.
-`(?!github__|claude-code-remote__|myserver__)`.
+The `PreToolUse` hook described in [MCP allowlist](#mcp-allowlist) prints a
+"Blocked:" message and exits with code 2, which cancels the call. Connectors
+added later are blocked too, since only allowed servers are named. To allow
+another server, add its name to `.claude/mcp-allowlist.txt`.
 
 ### Limits
 
 - **Calls are blocked, not hidden.** Connector tools still load and still use
   context. Claude can see them but can't run them.
 - **It applies everywhere Claude Code reads this repo's settings**, including
-  your own machine, where every MCP server except `github` and
-  `claude-code-remote` is blocked.
+  your own machine, where every MCP server not in `.claude/mcp-allowlist.txt`
+  is blocked.
 - **It depends on the server names.** A connector that loads as `github` would
   get through. If the GitHub server is renamed, it gets blocked.
 - **It needs the repo's hooks to load.** In a cloud session with several
