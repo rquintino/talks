@@ -13,8 +13,6 @@ fewer-permission-prompts
 session-start-hook
 loop
 
-# claude.ai skills, development only
-anthropic-skills:headless-browser-testing
-anthropic-skills:claim-check-loop
+# claude.ai skills: none. List one as anthropic-skills:<name> to allow it.
 
 # claude.ai plugins: list as plugin:<name> to keep one (none needed for coding)
