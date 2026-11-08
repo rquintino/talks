@@ -367,7 +367,7 @@ ${header(prefix)}
     </nav>
   </header>
 
-  ${t.live && t.start && t.end ? `<section class="talk-section live-notes" id="live" aria-labelledby="live-h" data-live="${esc(new URL(site.baseUrl).pathname)}live/${esc(t.id)}.txt" data-upd="${esc(T('liveUpd'))}" hidden>
+  ${t.live && t.start && t.end ? `<section class="talk-section live-notes" id="live" aria-labelledby="live-h" data-live="${esc(new URL(site.baseUrl).pathname)}live/${esc(t.id)}.md" data-upd="${esc(T('liveUpd'))}" hidden>
     <h2 id="live-h" class="section-title"><span class="pulse" aria-hidden="true">●</span> ${T('liveH')}</h2>
     <div class="live-card"><div class="live-body" data-live-body aria-live="polite"></div><p class="live-upd mono" data-live-upd hidden></p></div>
   </section>

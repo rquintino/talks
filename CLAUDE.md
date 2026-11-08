@@ -150,7 +150,7 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   before the end) and toast happen at the same moment for every visitor;
   `time` is the venue-local text shown on the page.
 - Live notes: a talk with `"live": true` gets a hidden "Live notes" card
-  that reads `live/<id>.txt` (same origin; basic Markdown: `#` headings,
+  that reads `live/<id>.md` (same origin; basic Markdown: `#` headings,
   `-`/`1.` lists, `**bold**`, `*italic*`, `` `code` ``, `[text](https://…)` and
   bare links, built as DOM nodes and never parsed as HTML). It appears once the feedback window opens and the
   file is non-empty, polls every 15s until 2h after the end, then loads once

@@ -96,7 +96,7 @@
     if (toast) { toast.hidden = true; document.body.classList.toggle('has-toast', false); }
   };
   $$('a[data-fb-window], [data-fb-window] a, [data-toast-done]').forEach(function (a) { a.addEventListener('click', retireToast); });
-  // ---- live notes: plain text Rui edits in the repo (live/<id>.txt), shown as text only ----
+  // ---- live notes: plain text Rui edits in the repo (live/<id>.md), rendered as basic Markdown ----
   var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0, liveHot = false;
   // Basic Markdown, built with DOM nodes only (never innerHTML): # headings, - / 1. lists,
   // **bold**, *italic*, `code`, [text](https://…) and bare https:// links. Anything else stays text.
