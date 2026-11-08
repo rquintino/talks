@@ -1,0 +1,23 @@
+# Skills Claude may use in this repository. One name per line; # starts a comment.
+# Read by .claude/hooks/skill-allowlist.sh. Everything not listed is hidden
+# (claude.ai skills and plugins) and refused when invoked (all skills).
+
+# Claude Code built-ins for coding
+code-review
+simplify
+security-review
+run
+init
+update-config
+fewer-permission-prompts
+session-start-hook
+loop
+
+# Rui's claude.ai skills used while coding
+anthropic-skills:headless-browser-testing
+anthropic-skills:lisa-loop-v2
+anthropic-skills:reasoning-loop
+anthropic-skills:claim-check-loop
+anthropic-skills:fact-check-sourcer
+
+# claude.ai plugins: list as plugin:<name> to keep one (none needed for coding)
