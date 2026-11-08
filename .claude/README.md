@@ -16,13 +16,16 @@ This repo is public and needs none of them.
 In cloud sessions, the host passes the connectors to Claude Code. Claude Code
 doesn't fetch them itself, so the usual opt-outs don't reach them. See
 [How connectors reach Claude Code](https://code.claude.com/docs/en/mcp#how-connectors-reach-claude-code).
-We tried each of these in the repo's `.claude/settings.json`. None of them
-removed the connectors from a cloud session:
+We tried each of these. None of them removed the connectors from a cloud
+session:
 
-- `"disableClaudeAiConnectors": true`
-- `deniedMcpServers` with `serverUrl` patterns
-- `deniedMcpServers` with `serverName` entries. In cloud sessions, connectors
-  can load under ID-style names, so display names don't match.
+- `"disableClaudeAiConnectors": true` in `.claude/settings.json`
+- `deniedMcpServers` with `serverUrl` patterns in `.claude/settings.json`
+- `deniedMcpServers` with `serverName` entries in `.claude/settings.json`. In
+  cloud sessions, connectors can load under ID-style names, so display names
+  don't match.
+- `ENABLE_CLAUDEAI_MCP_SERVERS=false` as a cloud environment variable. The
+  variable reached the session, and the connectors loaded anyway.
 
 ## The mitigation
 
