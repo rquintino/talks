@@ -1,6 +1,7 @@
 {
   "deniedMcpServers": [
-    { "serverUrl": "https://api.anthropic.com/v1/code/mcp/*" },
-    { "serverUrl": "https://mcp-proxy.anthropic.com/*" }
+    { "serverName": "claude.ai Microsoft 365" },
+    { "serverName": "Microsoft_365" },
+    { "serverName": "Microsoft 365" }
   ]
 }
