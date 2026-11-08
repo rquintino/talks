@@ -52,7 +52,7 @@ plugins) are not read from project settings, only from user, local,
 In fresh cloud sessions a claude.ai connector can load under an ID-style name
 (`mcp__<uuid>__…`) instead of its display name. Those IDs are account
 identifiers, so they stay out of this public repo: they go, space-separated,
-in the cloud environment variable `CLAUDE_MCP_ALLOW_EXTRA` (Settings → the
+in the cloud environment variable `TALKS_MCP_ALLOW` (Settings → the
 `talks` environment), which the hook also reads.
 
 The hook blocks calls; it doesn't hide tools. Connectors not on the list still

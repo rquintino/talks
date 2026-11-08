@@ -3,7 +3,7 @@
 #
 # In cloud sessions claude.ai connectors can load under ID-style names
 # (mcp__<uuid>__...). Those IDs stay out of this public repo: put them,
-# space-separated, in the cloud environment variable CLAUDE_MCP_ALLOW_EXTRA.
+# space-separated, in the cloud environment variable TALKS_MCP_ALLOW.
 
 github
 claude-code-remote
