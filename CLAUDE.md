@@ -156,7 +156,8 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   per visit. Rui edits the file on GitHub; each edit is a public commit
   (Rule 1). The GitHub Pages CDN ignores query strings and caches 200s and
   404s, so cache-busting from the page does nothing; freshness depends on the
-  Pages deploy.
+  Pages deploy, which purges the CDN. Measured Nov 2026: 21–26s from push to
+  the edge, so about 45s worst case on attendees' screens with 15s polling.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
   cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,
