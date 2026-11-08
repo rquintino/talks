@@ -8,6 +8,7 @@ to cut context cost and keep personal connectors and data out.
 | claude.ai plugins (`engineering`, `pdf-viewer`, `cowork-plugin-management`) | `enabledPlugins: false` | Not loaded: their skills **and** MCP servers (the `engineering` plugin alone brings 10, Gmail and Google Calendar among them) are gone. |
 | Bundled skills not needed here | `skillOverrides: "off"` | Hidden from the listing and from `/name`. |
 | Web search | `permissions.deny: ["WebSearch"]` | Tool removed from the session. |
+| Workflows (multi-agent orchestration) | `disableWorkflows: true` + `permissions.deny: ["Workflow"]` | Tool removed from the session; the deny rule also applies mid-session. |
 | MCP servers | `.claude/mcp-allowlist.txt` + `.claude/hooks/mcp-allowlist.sh` | **Allowlist**: only `github`, `claude-code-remote` and Claude Docs calls run, see below. |
 | Skills | `.claude/skill-allowlist.txt` + `.claude/hooks/skill-allowlist.sh` | **Allowlist**, see below. |
 

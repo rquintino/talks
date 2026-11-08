@@ -4,6 +4,7 @@
     "pdf-viewer@synced": false,
     "cowork-plugin-management@synced": false
   },
+  "disableWorkflows": true,
   "skillOverrides": {
     "dataviz": "off",
     "artifact-design": "off",
@@ -16,7 +17,8 @@
   },
   "permissions": {
     "deny": [
-      "WebSearch"
+      "WebSearch",
+      "Workflow"
     ]
   },
   "hooks": {
