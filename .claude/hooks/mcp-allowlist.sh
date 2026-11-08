@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MCP allowlist for this repository. Hand-written; uses only bash, grep, sed.
 # PreToolUse hook on mcp__*: refuses a call unless its server is named in
-# .claude/mcp-allowlist.txt or in $CLAUDE_MCP_ALLOW_EXTRA (space-separated,
+# .claude/mcp-allowlist.txt or in $TALKS_MCP_ALLOW (space-separated,
 # set in the cloud environment so connector IDs never reach the repo).
 set -u
 
@@ -13,7 +13,7 @@ s=${s%%__*}
 
 if [ -n "$s" ]; then
   if [ -f "$list" ] && sed 's/#.*//; s/[[:space:]]//g' "$list" | grep -qxF -- "$s"; then exit 0; fi
-  for x in ${CLAUDE_MCP_ALLOW_EXTRA:-}; do
+  for x in ${TALKS_MCP_ALLOW:-}; do
     [ "$x" = "$s" ] && exit 0
   done
 fi
