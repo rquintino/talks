@@ -97,7 +97,7 @@
   };
   $$('a[data-fb-window], [data-fb-window] a, [data-toast-done]').forEach(function (a) { a.addEventListener('click', retireToast); });
   // ---- live notes: plain text Rui edits in the repo (live/<id>.txt), shown as text only ----
-  var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0;
+  var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0, liveHot = false;
   var linkify = function (el, txt) {
     txt.split(/(https?:\/\/[^\s<>"']+)/).forEach(function (part, i) {
       if (i % 2 === 0) { if (part) el.appendChild(document.createTextNode(part)); return; }
@@ -122,10 +122,11 @@
     liveSec.hidden = !txt;
   };
   var liveFetch = function () {
-    if (!window.fetch || Date.now() - liveLast < 30000) return; // load + pageshow fire together
+    if (!window.fetch || Date.now() - liveLast < 10000) return; // load + pageshow fire together
     liveLast = Date.now();
-    // the minute stamp sidesteps cached copies; no-store skips the browser cache
-    fetch(liveSec.getAttribute('data-live') + '?v=' + Math.floor(Date.now() / 60000), { cache: 'no-store', credentials: 'omit' })
+    // no-store skips the browser cache (Pages says max-age=600); the GitHub CDN ignores query strings,
+    // so freshness at the edge depends on the deploy, not on anything sent from here
+    fetch(liveSec.getAttribute('data-live'), { cache: 'no-store', credentials: 'omit' })
       .then(function (r) { return r.ok ? r.text().then(function (t) { liveRender(t, r.headers.get('Last-Modified')); }) : null; })
       .catch(function () {});
   };
@@ -147,9 +148,9 @@
     var fbWin = tNow >= new Date(tEnd.getTime() - lead * 60000);
     document.documentElement.setAttribute('data-phase', !soon ? 'before' : !fbWin ? 'live' : over ? 'over' : 'fb');
     if (openedEarly === null) openedEarly = !fbWin;
-    // live notes: read the talk's same-origin text file from the feedback window on.
-    // Poll each minute (this runs every 60s) until 2h after the end, then once per visit.
-    if (liveSec && fbWin && !document.hidden && (tNow - tEnd < 2 * 36e5 || !liveTried)) { liveTried = true; liveFetch(); }
+    // live notes: from the feedback window on, poll every 15s until 2h after the end, then once per visit
+    liveHot = fbWin && tNow - tEnd < 2 * 36e5;
+    if (liveSec && fbWin && !document.hidden && (liveHot || !liveTried)) { liveTried = true; liveFetch(); }
     // toast only once the session has ended: nothing pulls attention to the phone during the talk
     if (toast) {
       toast.hidden = !(openedEarly && over && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
@@ -168,6 +169,7 @@
   if (head) {
     applyPhase();
     setInterval(applyPhase, 60000);
+    if (liveSec) setInterval(function () { if (liveHot && !document.hidden) liveFetch(); }, 15000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) applyPhase(); });
     window.addEventListener('pageshow', applyPhase);
   }

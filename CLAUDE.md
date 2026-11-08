@@ -149,9 +149,11 @@ exceptions for "popular", "official", "tiny" or "just for dev".
 - Live notes: a talk with `"live": true` gets a hidden "Live notes" card
   that reads `live/<id>.txt` (same origin, plain text, links auto-linked,
   never parsed as HTML). It appears once the feedback window opens and the
-  file is non-empty, polls every minute until 2h after the end, then loads
-  once per visit. Rui edits the file on GitHub; each edit is a public commit
-  (Rule 1), and Pages takes a few minutes to publish it.
+  file is non-empty, polls every 15s until 2h after the end, then loads once
+  per visit. Rui edits the file on GitHub; each edit is a public commit
+  (Rule 1). The GitHub Pages CDN ignores query strings and caches 200s and
+  404s, so cache-busting from the page does nothing; freshness depends on the
+  Pages deploy.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
   cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,
