@@ -19,5 +19,6 @@ anthropic-skills:lisa-loop-v2
 anthropic-skills:reasoning-loop
 anthropic-skills:claim-check-loop
 anthropic-skills:fact-check-sourcer
+anthropic-skills:docs
 
 # claude.ai plugins: list as plugin:<name> to keep one (none needed for coding)

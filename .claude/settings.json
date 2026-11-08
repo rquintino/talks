@@ -16,18 +16,17 @@
   },
   "permissions": {
     "deny": [
-      "WebSearch",
-      "mcp__Claude_Docs"
+      "WebSearch"
     ]
   },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__(?!github__|claude-code-remote__)",
+        "matcher": "^mcp__",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Blocked: in this repository only the github and claude-code-remote MCP servers may be used. claude.ai connectors (mail, calendar, files, docs) are off here.' >&2; exit 2"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-allowlist.sh\""
           }
         ]
       },
