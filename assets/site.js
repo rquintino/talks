@@ -98,15 +98,54 @@
   $$('a[data-fb-window], [data-fb-window] a, [data-toast-done]').forEach(function (a) { a.addEventListener('click', retireToast); });
   // ---- live notes: plain text Rui edits in the repo (live/<id>.txt), shown as text only ----
   var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0, liveHot = false;
-  var linkify = function (el, txt) {
-    txt.split(/(https?:\/\/[^\s<>"']+)/).forEach(function (part, i) {
-      if (i % 2 === 0) { if (part) el.appendChild(document.createTextNode(part)); return; }
-      var tail = (part.match(/[.,;:!?)\]]+$/) || [''])[0];
-      var url = tail ? part.slice(0, -tail.length) : part;
-      var a = document.createElement('a');
-      a.href = url; a.rel = 'noopener noreferrer'; a.textContent = url;
-      el.appendChild(a);
-      if (tail) el.appendChild(document.createTextNode(tail));
+  // Basic Markdown, built with DOM nodes only (never innerHTML): # headings, - / 1. lists,
+  // **bold**, *italic*, `code`, [text](https://…) and bare https:// links. Anything else stays text.
+  var link = function (el, url) {
+    var a = document.createElement('a');
+    a.href = url; a.rel = 'noopener noreferrer';
+    return el.appendChild(a);
+  };
+  var inline = function (el, s) {
+    var re = /\*\*([^*]+)\*\*|\*([^*\s](?:[^*]*[^*\s])?)\*|`([^`]+)`|\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<>"'`]+)/g, m, last = 0;
+    while ((m = re.exec(s))) {
+      if (m.index > last) el.appendChild(document.createTextNode(s.slice(last, m.index)));
+      last = re.lastIndex;
+      if (m[1] != null) inline(el.appendChild(document.createElement('strong')), m[1]);
+      else if (m[2] != null) inline(el.appendChild(document.createElement('em')), m[2]);
+      else if (m[3] != null) el.appendChild(document.createElement('code')).textContent = m[3];
+      else if (m[4] != null) link(el, m[5]).textContent = m[4];
+      else {
+        var url = m[6], tail = (url.match(/[.,;:!?)\]]+$/) || [''])[0];
+        if (tail) { url = url.slice(0, -tail.length); last -= tail.length; } // trailing punctuation stays text
+        link(el, url).textContent = url;
+      }
+    }
+    if (last < s.length) el.appendChild(document.createTextNode(s.slice(last)));
+  };
+  var markdown = function (root, txt) {
+    var para = null, list = null;
+    txt.split('\n').forEach(function (line) {
+      var m;
+      if (!line.trim()) { para = list = null; return; }
+      if ((m = line.match(/^\s*(#{1,3})\s+(.+)$/))) {
+        para = list = null;
+        inline(root.appendChild(document.createElement(m[1].length < 3 ? 'h3' : 'h4')), m[2]);
+        return;
+      }
+      if ((m = line.match(/^\s*([-*+]|(\d{1,3})[.)])\s+(.+)$/))) {
+        var tag = m[2] ? 'ol' : 'ul';
+        if (!list || list.tagName.toLowerCase() !== tag) {
+          list = root.appendChild(document.createElement(tag));
+          if (m[2] && m[2] !== '1') list.start = parseInt(m[2], 10);
+        }
+        para = null;
+        inline(list.appendChild(document.createElement('li')), m[3]);
+        return;
+      }
+      list = null;
+      if (para) para.appendChild(document.createElement('br'));
+      else para = root.appendChild(document.createElement('p'));
+      inline(para, line.trim());
     });
   };
   var liveRender = function (txt, modified) {
@@ -115,7 +154,7 @@
     liveText = txt;
     var body = $('[data-live-body]', liveSec), upd = $('[data-live-upd]', liveSec);
     body.textContent = '';
-    txt.split(/\n\s*\n/).forEach(function (para) { var p = document.createElement('p'); linkify(p, para); body.appendChild(p); });
+    markdown(body, txt);
     var d = modified ? new Date(modified) : null;
     upd.hidden = !d || isNaN(d);
     if (!upd.hidden) upd.textContent = liveSec.getAttribute('data-upd').replace('{t}', d.toLocaleTimeString(PT ? 'pt-PT' : 'en-GB', { hour: '2-digit', minute: '2-digit' }));
