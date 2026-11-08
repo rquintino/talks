@@ -29,7 +29,10 @@ metadata:**
 - Third parties' personal data: attendee lists, emails, photos of people
   who haven't consented.
 - Local or environment details: machine names, absolute local paths,
-  usernames, internal hostnames, session or tool identifiers.
+  usernames, internal hostnames, session or tool identifiers. This includes
+  the `Claude-Session: https://claude.ai/code/session_…` trailer that Claude
+  Code adds to commit messages and PR descriptions by default: leave it out.
+  Keep only `Co-Authored-By: Claude …` in commits.
 - Image metadata: strip EXIF/GPS from every photo before committing.
 
 **Allowed:** only information that is already public and that Rui approved

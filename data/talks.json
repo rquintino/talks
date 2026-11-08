@@ -44,6 +44,12 @@
         "note_pt": "O artigo por trás do loop Reason + Act."
       },
       {
+        "title": "Behavior, Purpose and Teleology (Rosenblueth, Wiener & Bigelow, Philosophy of Science, 1943)",
+        "url": "https://courses.media.mit.edu/2004spring/mas966/rosenblueth_1943.pdf",
+        "note": "The 1943 paper that explained purposeful behavior as negative feedback, the root of cybernetics.",
+        "note_pt": "O artigo de 1943 que explicou o comportamento com propósito como feedback negativo, a raiz da cibernética."
+      },
+      {
         "title": "Inner Monologue: Embodied Reasoning through Planning with Language Models (Huang et al.)",
         "url": "https://innermonologue.github.io/",
         "note": "How the model gets feedback from its environment on every step.",

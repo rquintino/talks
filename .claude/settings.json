@@ -1,12 +1,67 @@
 {
+  "enabledPlugins": {
+    "engineering@synced": false,
+    "pdf-viewer@synced": false,
+    "cowork-plugin-management@synced": false
+  },
+  "disableWorkflows": true,
+  "attribution": {
+    "sessionUrl": false
+  },
+  "skillOverrides": {
+    "dataviz": "off",
+    "artifact-design": "off",
+    "artifact-diagramming": "off",
+    "artifact-capabilities": "off",
+    "keybindings-help": "off",
+    "claude-api": "off",
+    "workflow-authoring": "off",
+    "plugin-authoring": "off"
+  },
+  "permissions": {
+    "deny": [
+      "WebSearch",
+      "Workflow"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__(?!github__|claude-code-remote__)",
+        "matcher": "^mcp__",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Blocked: in this repository only the github and claude-code-remote MCP servers may be used. claude.ai connectors (mail, calendar, files, docs) are off here.' >&2; exit 2"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-allowlist.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "^Skill$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-allowlist.sh\" check"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-allowlist.sh\" sync"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^mcp__github__(create_pull_request|update_pull_request|add_issue_comment|update_issue_comment|add_reply_to_pull_request_comment|add_comment_to_pending_review|pull_request_review_write|issue_write)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/github-footer-check.sh\""
           }
         ]
       }
