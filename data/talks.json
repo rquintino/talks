@@ -74,6 +74,14 @@
         "note_pt": "Desenhar os loops que dão prompts aos coding agents."
       },
       {
+        "title": "Getting started with loops (Anthropic, claude.com)",
+        "url": "https://claude.com/resources/articles/getting-started-with-loops"
+      },
+      {
+        "title": "What is loop engineering? (The Pragmatic Engineer)",
+        "url": "https://newsletter.pragmaticengineer.com/p/what-is-loop-engineering"
+      },
+      {
         "title": "The Factory Model: How Coding Agents Changed Software Engineering (Addy Osmani)",
         "url": "https://addyosmani.com/blog/factory-model/",
         "note": "Building the factory that builds your software.",
