@@ -152,9 +152,13 @@ exceptions for "popular", "official", "tiny" or "just for dev".
 - Live notes: a talk with `"live": true` gets a hidden "Live notes" card
   that reads `live/<id>.md` (same origin; basic Markdown: `#` headings,
   `-`/`1.` lists, `**bold**`, `*italic*`, `` `code` ``, `[text](https://…)` and
-  bare links, built as DOM nodes and never parsed as HTML). It appears once the feedback window opens and the
+  bare links, and ``` fenced blocks shown verbatim with a copy button; built as DOM
+  nodes and never parsed as HTML). It appears once the feedback window opens and the
   file is non-empty, polls every 15s until 2h after the end, then loads once
-  per visit. Rui edits the file on GitHub; each edit is a public commit
+  per visit. With `"liveFrom": "start"` it appears from 30 minutes before the
+  start instead. Pieces added by a later version are marked "New", and a pill
+  tells readers further down the page that a note arrived. If the host answers
+  429 or 5xx, polling halves its pace (up to 2 minutes) until it succeeds again. Rui edits the file on GitHub; each edit is a public commit
   (Rule 1). The GitHub Pages CDN ignores query strings and caches 200s and
   404s, so cache-busting from the page does nothing; freshness depends on the
   Pages deploy, which purges the CDN. Measured Nov 2026: 21–26s from push to

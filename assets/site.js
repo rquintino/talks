@@ -97,7 +97,7 @@
   };
   $$('a[data-fb-window], [data-fb-window] a, [data-toast-done]').forEach(function (a) { a.addEventListener('click', retireToast); });
   // ---- live notes: plain text Rui edits in the repo (live/<id>.md), rendered as basic Markdown ----
-  var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0, liveHot = false;
+  var liveSec = $('[data-live]'), liveText = null, liveTried = false, liveLast = 0, liveHot = false, liveWait = 10000;
   // Basic Markdown, built with DOM nodes only (never innerHTML): # headings, - / 1. lists,
   // **bold**, *italic*, `code`, [text](https://…) and bare https:// links. Anything else stays text.
   var link = function (el, url) {
@@ -211,13 +211,17 @@
     else select();
   });
   var liveFetch = function () {
-    if (!window.fetch || Date.now() - liveLast < 10000) return; // load + pageshow fire together
+    if (!window.fetch || Date.now() - liveLast < liveWait) return; // load + pageshow fire together
     liveLast = Date.now();
     // no-store skips the browser cache (Pages says max-age=600); the GitHub CDN ignores query strings,
     // so freshness at the edge depends on the deploy, not on anything sent from here
     fetch(liveSec.getAttribute('data-live'), { cache: 'no-store', credentials: 'omit' })
-      .then(function (r) { return r.ok ? r.text().then(function (t) { liveRender(t, r.headers.get('Last-Modified')); }) : null; })
-      .catch(function () {});
+      .then(function (r) {
+        // a full room polls from one Wi-Fi address: if the host pushes back (429, 5xx), ask half as often, up to 2 min
+        liveWait = r.ok || r.status === 404 ? 10000 : Math.min(liveWait * 2, 120000);
+        return r.ok ? r.text().then(function (t) { liveRender(t, r.headers.get('Last-Modified')); }) : null;
+      })
+      .catch(function () { liveWait = Math.min(liveWait * 2, 120000); });
   };
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
