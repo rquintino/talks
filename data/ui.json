@@ -26,6 +26,7 @@
     "related": "Related talks", "qrAside": "Open this talk on your phone", "qrK": "Scan to open this talk on your phone",
     "showFull": "Show full screen", "stage": "Stage mode ⤢", "giveFb": "Give feedback ↗", "copy": "Copy page link", "share": "Share this page", "trackMeta": "{t} track", "liveBtn": "Slides, links and feedback →", "saveHint": "Save this page to come back for them.", "toastP": "Thanks!", "quickNav": "Quick links", "gcal": "Google Calendar ↗", "sessionIn": "Session in {l}", "toastBtn": "Feedback ↗", "dismiss": "Dismiss", "onNow": "On now", "thanks": "Thanks for joining", "qSlides": "Slides", "qRes": "Links", "fbBtn": "Give feedback · 2 min ↗", "aboutTalk": "About this session", "qrKMob": "Let the person next to you scan this.", "origTitle": "Original title", "translated": "Translated from the original English abstract.", "liveH": "Live notes", "liveUpd": "Updated {t}",
     "fullscreen": "Full screen", "close": "Close ✕", "stageSub": "Slides, links and feedback",
+    "stageFaces": "QR code shown", "stageFacePage": "Page", "stageFaceFb": "Feedback", "stageFbK": "Feedback · 2 min", "stageFbQr": "QR code for the feedback form", "stageFbAlt": "No scanner? The button is on", "stageStarts": "Starts in {n} min", "stageLeft": "{n} min left",
     "languages": { "EN": "English", "PT": "Portuguese" }
   },
   "pt": {
@@ -55,6 +56,7 @@
     "related": "Palestras relacionadas", "qrAside": "Abrir esta palestra no telemóvel", "qrK": "Lê o código para abrir esta palestra no telemóvel",
     "showFull": "Mostrar em ecrã inteiro", "stage": "Modo apresentação ⤢", "giveFb": "Dar feedback ↗", "copy": "Copiar link da página", "share": "Partilhar esta página", "trackMeta": "track {t}", "liveBtn": "Slides, links e feedback →", "saveHint": "Guarda esta página para voltares a eles.", "toastP": "Obrigado!", "quickNav": "Atalhos", "gcal": "Google Calendar ↗", "sessionIn": "Sessão em {l}", "toastBtn": "Feedback ↗", "dismiss": "Fechar", "onNow": "A decorrer", "thanks": "Obrigado pela presença", "qSlides": "Slides", "qRes": "Links", "fbBtn": "Dar feedback · 2 min ↗", "aboutTalk": "Sobre esta sessão", "qrKMob": "Mostra este código a quem está ao teu lado.", "origTitle": "Título original", "translated": "Tradução do resumo original em inglês.", "liveH": "Notas ao vivo", "liveUpd": "Atualizado às {t}",
     "fullscreen": "Ecrã inteiro", "close": "Fechar ✕", "stageSub": "Slides, links e feedback",
+    "stageFaces": "Código QR mostrado", "stageFacePage": "Página", "stageFaceFb": "Feedback", "stageFbK": "Feedback · 2 min", "stageFbQr": "Código QR do formulário de feedback", "stageFbAlt": "Sem leitor de QR? O botão está em", "stageStarts": "Começa em {n} min", "stageLeft": "Fim em {n} min",
     "languages": { "EN": "Inglês", "PT": "Português" },
     "levels": { "Beginner": "Iniciante", "Intermediate": "Intermédio", "Advanced": "Avançado" },
     "formats": { "Talk": "Palestra", "Panel": "Painel", "Podcast": "Podcast", "Webinar": "Webinar", "Workshop": "Workshop", "Lightning": "Lightning talk" },

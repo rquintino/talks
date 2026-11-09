@@ -214,21 +214,90 @@
   }
 
   // ---- stage mode (full-screen QR): Esc/Close return to where you were ----
+  // Two faces (page QR / feedback QR), a session clock for the speaker, and the screen kept awake.
   var stage = $('#stage');
   if (stage) {
     var fsBtn = $('[data-fullscreen]', stage);
-    if (fsBtn && document.documentElement.requestFullscreen) {
+    var canFs = !!document.documentElement.requestFullscreen;
+    var toggleFs = function () {
+      if (!canFs) return;
+      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      else document.documentElement.requestFullscreen().catch(function () {});
+    };
+    if (fsBtn && canFs) {
       fsBtn.hidden = false;
-      fsBtn.addEventListener('click', function () {
-        if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
-        else document.documentElement.requestFullscreen().catch(function () {});
-      });
+      fsBtn.addEventListener('click', toggleFs);
     }
+    var stageOpen = function () { return location.hash === '#stage'; };
+
+    // faces: the feedback QR takes over from the feedback window until 3h after the end;
+    // a manual choice wins until the stage is closed
+    var stageHead = $('.talk-head[data-start]');
+    var tS = stageHead ? new Date(stageHead.getAttribute('data-start')).getTime() : NaN;
+    var tE = stageHead ? new Date(stageHead.getAttribute('data-end')).getTime() : NaN;
+    var fbLead = stageHead ? parseInt(stageHead.getAttribute('data-fb-lead'), 10) || 10 : 10;
+    var timed = !isNaN(tS) && !isNaN(tE);
+    var hasFb = !!$('[data-face-panel="fb"]', stage);
+    var faceBtns = $$('[data-face-btn]', stage);
+    var facesBox = $('[data-stage-faces]', stage);
+    var clock = $('[data-stage-clock]', stage);
+    var manualFace = null;
+    var autoFace = function (now) {
+      return hasFb && timed && now >= tE - fbLead * 60000 && now < tE + 3 * 36e5 ? 'fb' : 'page';
+    };
+    var paintStage = function () {
+      var now = Date.now();
+      var f = hasFb ? manualFace || autoFace(now) : 'page';
+      stage.setAttribute('data-face', f);
+      stage.setAttribute('aria-labelledby', f === 'fb' ? 'stage-fb-title' : 'stage-title');
+      faceBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-face-btn') === f ? 'true' : 'false'); });
+      if (!clock) return;
+      var txt = '', ending = false;
+      if (timed && now < tS && tS - now <= 60 * 60000) {
+        txt = clock.getAttribute('data-starts').replace('{n}', Math.ceil((tS - now) / 60000));
+      } else if (timed && now >= tS && now < tE) {
+        txt = clock.getAttribute('data-left').replace('{n}', Math.ceil((tE - now) / 60000));
+        ending = tE - now <= 5 * 60000;
+      }
+      if (clock.textContent !== txt) clock.textContent = txt;
+      clock.hidden = !txt;
+      clock.classList.toggle('is-ending', ending);
+    };
+    var setFace = function (f) { if (hasFb) { manualFace = f; paintStage(); } };
+    if (hasFb && facesBox) {
+      facesBox.hidden = false;
+      faceBtns.forEach(function (b) { b.addEventListener('click', function () { setFace(b.getAttribute('data-face-btn')); }); });
+    }
+    setInterval(function () { if (stageOpen() && !document.hidden) paintStage(); }, 15000);
+
+    // keep the projector awake while the stage is up (released on close and when the tab is hidden)
+    var wake = null, wakeBusy = false;
+    var wakeOff = function () { if (wake) { var w = wake; wake = null; w.release().catch(function () {}); } };
+    var wakeOn = function () {
+      if (!navigator.wakeLock || wake || wakeBusy || document.hidden || !stageOpen()) return;
+      wakeBusy = true;
+      try {
+        navigator.wakeLock.request('screen').then(function (w) {
+          wakeBusy = false;
+          if (!stageOpen()) { w.release().catch(function () {}); return; }
+          wake = w;
+          w.addEventListener('release', function () { if (wake === w) wake = null; });
+        }, function () { wakeBusy = false; });
+      } catch (e) { wakeBusy = false; }
+    };
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden || !stageOpen()) return;
+      paintStage(); wakeOn();
+    });
+
     var savedY = null, openedHere = false, opener = null;
     var bg = function () { return $$('body > :not(#stage)'); };
     var syncStage = function () {
-      var open = location.hash === '#stage';
+      var open = stageOpen();
       bg().forEach(function (e) { if (open) e.setAttribute('inert', ''); else e.removeAttribute('inert'); });
+      if (!open) manualFace = null;
+      paintStage();
+      if (open) wakeOn(); else wakeOff();
       if (open) { var c = $('[data-stage-close]', stage); if (c) c.focus(); }
       else if (opener) { opener.focus({ preventScroll: true }); opener = null; }
     };
@@ -248,7 +317,12 @@
     var closer = $('[data-stage-close]', stage);
     if (closer) closer.addEventListener('click', function (e) { e.preventDefault(); closeStage(); });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && window.location.hash === '#stage') closeStage();
+      if (!stageOpen()) return;
+      if (e.key === 'Escape') { closeStage(); return; }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFs(); }
+      else if (e.key === 'ArrowLeft' && hasFb) { e.preventDefault(); setFace('page'); }
+      else if (e.key === 'ArrowRight' && hasFb) { e.preventDefault(); setFace('fb'); }
     });
   }
 

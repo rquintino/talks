@@ -382,7 +382,7 @@ body.has-toast { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); 
   padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px));
   flex-direction: column; overflow: auto; }
 .stage:target { display: flex; }
-.stage-bar { display: flex; justify-content: flex-end; gap: 8px; }
+.stage-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
 .stage-inner { flex: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(24px, 5vw, 80px); }
 .stage-qr { width: min(72vh, 80vw, 640px); padding: 12px; border-radius: 24px; background: #FFFFFF; line-height: 0; }
 .stage-qr .qr-svg { width: 100%; height: auto; display: block; }
@@ -390,6 +390,16 @@ body.has-toast { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); 
 .stage-title { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(32px, 4.6vw, 64px); line-height: 1.05; letter-spacing: -0.035em; text-wrap: balance; }
 .stage-url { margin: 0; font-size: clamp(20px, 2.4vw, 32px); color: var(--accent); overflow-wrap: anywhere; }
 .stage-sub { margin: 0; font-size: clamp(18px, 1.8vw, 24px); color: var(--fg-2); }
+/* two faces (page QR / feedback QR); without JS the page face is the only one shown */
+.stage[data-face="page"] [data-face-panel="fb"], .stage[data-face="fb"] [data-face-panel="page"] { display: none; }
+.stage-alt { margin: 0; font-size: clamp(16px, 1.5vw, 20px); color: var(--muted); overflow-wrap: anywhere; }
+.stage-alt .mono { color: var(--accent); }
+.stage-text .eyebrow { font-size: clamp(14px, 1.3vw, 18px); }
+/* session clock for the speaker: left of the bar, readable from the lectern */
+.stage-clock { margin: 0 auto 0 0; font-size: clamp(20px, 2vw, 28px); font-weight: 500; line-height: 44px; color: var(--fg-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stage-clock.is-ending { color: var(--accent); font-weight: 700; }
+.stage-faces { border-color: var(--btn-line); }
+.stage-faces .seg-btn { min-height: 44px; font-size: 15px; }
 body:has(.stage:target) { overflow: hidden; }
 
 /* footer */

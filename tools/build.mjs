@@ -332,6 +332,8 @@ function talkPage(t) {
   const upcoming = isUpcoming(t);
   const shortUrl = url.replace('https://', '').replace(/\/$/, '');
   const qr = qrSvg(url, `${T('qrLabel')} ${shortUrl}`);
+  // Stage mode's second face: the feedback form's own QR (a longer URL, so a denser code)
+  const fbQr = t.feedback ? qrSvg(t.feedback, T('stageFbQr')) : '';
   const nres = (t.resources || []).length;
   // One scannable line instead of seven boxes: date · time · venue · track.
   const metaBits = [dateLabel(t), t.time, where(t), t.track && T('trackMeta').replace('{t}', t.track)].filter(Boolean).map((v) => `<span>${esc(v)}</span>`);
@@ -437,12 +439,17 @@ ${t.feedback && t.start ? `<div class="toast" data-fb-toast hidden role="status"
   <p>${T('toastP')}</p>
   <div class="toast-actions">${ext(t.feedback, T('toastBtn'), 'btn btn-small btn-primary').replace('<a ', '<a data-toast-done ')}<button type="button" class="toast-x" data-toast-done aria-label="${T('dismiss')}">✕</button></div>
 </div>` : ''}
-<div id="stage" class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title">
+<div id="stage" class="stage" role="dialog" aria-modal="true" aria-labelledby="stage-title" data-face="page">
   <div class="stage-bar">
+    <p class="stage-clock mono" role="timer" data-stage-clock data-starts="${esc(T('stageStarts'))}" data-left="${esc(T('stageLeft'))}" hidden></p>
+    ${fbQr ? `<div class="seg stage-faces" role="group" aria-label="${esc(T('stageFaces'))}" data-stage-faces hidden>
+      <button type="button" class="seg-btn" data-face-btn="page" aria-pressed="true">${T('stageFacePage')}</button>
+      <button type="button" class="seg-btn" data-face-btn="fb" aria-pressed="false">${T('stageFaceFb')}</button>
+    </div>` : ''}
     <button type="button" class="btn btn-small" data-fullscreen hidden>${T('fullscreen')}</button>
     <a class="btn btn-small" href="#main" data-stage-close>${T('close')}</a>
   </div>
-  <div class="stage-inner">
+  <div class="stage-inner" data-face-panel="page">
     <div class="stage-qr">${qr}</div>
     <div class="stage-text">
       <p class="eyebrow mono">${esc(t.event)} · ${esc(dateLabel(t))}</p>
@@ -451,6 +458,15 @@ ${t.feedback && t.start ? `<div class="toast" data-fb-toast hidden role="status"
       <p class="stage-sub">${T('stageSub')}</p>
     </div>
   </div>
+  ${fbQr ? `<div class="stage-inner" data-face-panel="fb">
+    <div class="stage-qr">${fbQr}</div>
+    <div class="stage-text">
+      <p class="eyebrow mono">${T('stageFbK')}</p>
+      <h2 id="stage-fb-title" class="stage-title">${T('fbH')}</h2>
+      <p class="stage-sub">${T('fbP')}</p>
+      <p class="stage-alt">${T('stageFbAlt')} <span class="mono">${wbr(shortUrl)}</span></p>
+    </div>
+  </div>` : ''}
 </div>
 ${footer()}
 </body>
