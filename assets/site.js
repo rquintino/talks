@@ -389,7 +389,13 @@
       if (!open) manualFace = null;
       paintStage();
       if (open) wakeOn(); else wakeOff();
-      if (open) { var c = $('[data-stage-close]', stage); if (c) c.focus(); }
+      // closed with the browser's Back button: leave full screen too
+      if (!open && document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      if (open) {
+        var c = $('[data-stage-close]', stage);
+        // opened straight from a "#stage" URL, the stage isn't displayed yet when this runs: focus again next frame
+        if (c) { c.focus(); if (document.activeElement !== c && window.requestAnimationFrame) requestAnimationFrame(function () { if (stageOpen()) c.focus(); }); }
+      }
       else if (opener) { opener.focus({ preventScroll: true }); opener = null; }
     };
     $$('a[href="#stage"]').forEach(function (a) {

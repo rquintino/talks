@@ -148,14 +148,23 @@
   text.addEventListener('input', changed);
   who.addEventListener('input', changed);
   dlBtn.addEventListener('click', function () { if (one(text.value)) snapshot(save); });
+  // have the image ready before the tap lands, so share() runs inside the tap (iOS asks for that)
+  var bakeNow = function () { clearTimeout(timer); if (one(text.value)) snapshot(function () {}); };
+  shareBtn.addEventListener('pointerdown', bakeNow);
+  text.addEventListener('blur', bakeNow);
+  who.addEventListener('blur', bakeNow);
+  var sharing = false;
   shareBtn.addEventListener('click', function () {
-    if (!one(text.value)) return;
+    if (sharing || !one(text.value)) return;
     snapshot(function (blob) {
       var f = blob && asFile(blob);
       if (!f) { save(blob); return; }
+      sharing = true;
       // the image only: with a link next to it, some share targets send the link and drop the image
-      navigator.share({ files: [f], title: D('share-title') }).catch(function (e) {
-        if (!e || e.name !== 'AbortError') save(blob);
+      navigator.share({ files: [f], title: D('share-title') }).then(function () { sharing = false; }, function (e) {
+        sharing = false;
+        // closing the sheet, or a second tap while it is open, is not a failure
+        if (!e || (e.name !== 'AbortError' && e.name !== 'InvalidStateError')) save(blob);
       });
     });
   });
