@@ -16,7 +16,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // GitHub Pages lets browsers cache assets for ~10 minutes; a content hash in the URL
 // makes a new page always load the CSS/JS it was built with.
 const v = (rel) => createHash('sha256').update(readFileSync(join(ROOT, rel))).digest('hex').slice(0, 10);
-const VER = { css: v('assets/site.css'), theme: v('assets/theme.js'), js: v('assets/site.js'), photo: v('assets/rui.webp') };
+const VER = { css: v('assets/site.css'), theme: v('assets/theme.js'), js: v('assets/site.js'), card: v('assets/card.js'), photo: v('assets/rui.webp') };
 const site = JSON.parse(readFileSync(join(ROOT, 'data/site.json'), 'utf8'));
 const talks = JSON.parse(readFileSync(join(ROOT, 'data/talks.json'), 'utf8'));
 const NOW = new Date();
@@ -95,7 +95,7 @@ function linksHtml(t, prefix) {
   return out.length ? out.join('') : isUpcoming(t) || recent ? `<span class="muted">${T('soon')}</span>` : '';
 }
 
-function head({ title, description, prefix, canonical, og, htmlAttrs = '' }) {
+function head({ title, description, prefix, canonical, og, htmlAttrs = '', card = false }) {
   return `<!doctype html>
 <html lang="${T('htmlLang')}"${htmlAttrs}>
 <head>
@@ -125,7 +125,7 @@ function head({ title, description, prefix, canonical, og, htmlAttrs = '' }) {
 <link rel="preload" href="${ASSET}assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${ASSET}assets/site.css?v=${VER.css}">
 <script src="${ASSET}assets/theme.js?v=${VER.theme}"></script>
-<script src="${ASSET}assets/site.js?v=${VER.js}" defer></script>
+<script src="${ASSET}assets/site.js?v=${VER.js}" defer></script>${card ? `\n<script src="${ASSET}assets/card.js?v=${VER.card}" defer></script>` : ''}
 </head>`;
 }
 
@@ -348,7 +348,10 @@ function talkPage(t) {
     : t.slides ? ext(t.slides, T('openSlides'), 'btn btn-primary q-fb') : '';
   const slidesBtn = t.slides ? ext(t.slides, `${T('qSlides')} ↗`, 'btn') : `<a class="btn" href="#mat">${T('qSlides')}</a>`;
   const relHref = (o) => mainHref(o, prefix);
-  return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${LANG === 'pt' ? 'pt/' : ''}${t.id}.png`, htmlAttrs: t.start && t.end ? ` data-talk-start="${esc(t.start)}" data-talk-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 10}"` : '' })}
+  // Takeaway card (assets/card.js): drawn on the visitor's device from these data attributes; shown from the feedback window on.
+  const hasCard = !!(t.start && t.end);
+  const cardAttrs = hasCard ? ` data-id="${esc(t.id)}" data-eyebrow="${esc(`${t.event} · ${dateLabel(t)}`.toUpperCase())}" data-title="${esc(t.title)}" data-url="${esc(shortUrl)}" data-file="takeaway-${esc(t.id)}.png" data-empty="${esc(T('cardEmpty'))}" data-share-title="${esc(t.title)}"` : '';
+  return `${head({ title: `${t.title} · ${site.name}`, description: desc, prefix, canonical: url, og: `${site.baseUrl}og/${LANG === 'pt' ? 'pt/' : ''}${t.id}.png`, htmlAttrs: t.start && t.end ? ` data-talk-start="${esc(t.start)}" data-talk-end="${esc(t.end)}" data-fb-lead="${t.feedbackLead ?? 10}"` : '', card: hasCard })}
 <body class="talk-page">
 ${header(prefix)}
 <main id="main" class="wrap talk-layout">
@@ -404,7 +407,25 @@ ${header(prefix)}
       ${t.feedback ? ext(t.feedback, T('fbBtn'), 'btn btn-primary') : ext(site.links[0].url, T('liLink'), 'btn')}
     </div>
   </section>
-
+${hasCard ? `
+  <section class="talk-section takeaway" id="card" aria-labelledby="card-h" data-fb-window data-card${cardAttrs} hidden>
+    <div class="tk-card">
+      <h2 id="card-h" class="section-title">${T('cardH')}</h2>
+      <p>${T('cardP')}</p>
+      <div class="tk-field">
+        <label for="tk-text">${T('cardLabel')}</label>
+        <textarea id="tk-text" rows="3" maxlength="140" placeholder="${esc(T('cardPh'))}" data-card-text></textarea>
+        <span class="tk-count mono" data-card-count aria-hidden="true">0/140</span>
+      </div>
+      <div class="tk-field">
+        <label for="tk-name">${T('cardName')}</label>
+        <input id="tk-name" type="text" maxlength="40" autocomplete="name" data-card-name>
+      </div>
+      <canvas class="tk-canvas" width="1200" height="630" role="img" aria-label="${esc(T('cardAlt'))}" data-card-canvas></canvas>
+      <div class="tk-actions"><button type="button" class="btn btn-primary" data-card-share hidden disabled>${T('cardShare')}</button><button type="button" class="btn" data-card-download disabled>${T('cardDownload')}</button></div>
+    </div>
+  </section>
+` : ''}
   <section class="talk-section" aria-labelledby="about-h">
     <h2 id="about-h" class="section-title">${T('aboutTalk')}</h2>
     ${details.length ? `<dl class="kv">${details.map(([k, v]) => `<div><dt class="mono">${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
