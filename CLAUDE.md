@@ -163,12 +163,23 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   404s, so cache-busting from the page does nothing; freshness depends on the
   Pages deploy, which purges the CDN. Measured Nov 2026: 21–26s from push to
   the edge, so about 45s worst case on attendees' screens with 15s polling.
+- Live session mode (talk pages with `start`/`end`, all clock-driven, no backend):
+  the talk head shows an on-air strip (minutes to the start, then minutes left
+  with a progress bar). Stage mode has a session clock, keeps the screen awake
+  and, when the talk has a `feedback` link, a second QR for the form: it takes
+  over from the feedback window until 3 hours after the end (Page | Feedback
+  switch or ←/→ to override, `F` for full screen). The feedback QR is a larger
+  version than the page QR: scan it once after changing a feedback link.
+  From the feedback window on, a takeaway card (`assets/card.js`) lets a visitor
+  type one idea and get a 1200×630 image drawn on their device with canvas;
+  nothing is uploaded, the draft stays in their `localStorage`.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
   cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,
   `<id>/talk.ics`, `404.html`, `sitemap.xml`, `og/*.png`).
 - Front end: `assets/site.css`, `assets/site.js` (search, filters, sort,
-  view, countdown, copy-link; vanilla JS) and `assets/theme.js` (applies the
+  view, countdown, copy-link, live notes, stage mode; vanilla JS), `assets/card.js`
+  (takeaway card, loaded only on talk pages that show it) and `assets/theme.js` (applies the
   saved theme before paint). Fonts in `assets/fonts/` are Sora, DM Sans and
   JetBrains Mono (latin subsets, OFL, licences alongside), downloaded once from
   the npm registry tarballs with their sha512 integrity hashes checked.

@@ -26,9 +26,10 @@
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/site.css?v=2af7940bd9">
+<link rel="stylesheet" href="../assets/site.css?v=a82d2141c7">
 <script src="../assets/theme.js?v=9be3e08572"></script>
 <script src="../assets/site.js?v=321debcddf" defer></script>
+<script src="../assets/card.js?v=8aee989845" defer></script>
 </head>
 <body class="talk-page">
 <a class="skip" href="#main">Skip to content</a>
@@ -96,6 +97,24 @@
       <h2 id="fb-h" class="section-title">Your two-minute take</h2>
       <p>Rate the session and share the one idea you’re taking with you.</p>
       <a class="btn btn-primary" href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=3RrCHav0MkuqaBpocTNSjC5tqu1Ng7FHko5vGSfZQG9UN1EzSFM2MURHUFo4T1MxNlhOWVZOUklGTy4u" rel="noopener noreferrer">Give feedback · 2 min ↗</a>
+    </div>
+  </section>
+
+  <section class="talk-section takeaway" id="card" aria-labelledby="card-h" data-fb-window data-card data-id="pth26" data-eyebrow="PORTO TECH HUB CONFERENCE 2026 · TUE 10 NOV 2026" data-title="The Agentic Loops Every Developer Should Know" data-url="rquintino.github.io/talks/pth26" data-file="takeaway-pth26.png" data-empty="Type your one idea to make the card" data-share-title="The Agentic Loops Every Developer Should Know" hidden>
+    <div class="tk-card">
+      <h2 id="card-h" class="section-title">Your takeaway card</h2>
+      <p>Turn the one idea you’re taking with you into an image to share. It is made on your device; nothing is uploaded.</p>
+      <div class="tk-field">
+        <label for="tk-text">Your one idea</label>
+        <textarea id="tk-text" rows="3" maxlength="140" placeholder="The one idea I’m taking with me…" data-card-text></textarea>
+        <span class="tk-count mono" data-card-count aria-hidden="true">0/140</span>
+      </div>
+      <div class="tk-field">
+        <label for="tk-name">Your name (optional)</label>
+        <input id="tk-name" type="text" maxlength="40" autocomplete="name" data-card-name>
+      </div>
+      <canvas class="tk-canvas" width="1200" height="630" role="img" aria-label="Preview of your takeaway card" data-card-canvas></canvas>
+      <div class="tk-actions"><button type="button" class="btn btn-primary" data-card-share hidden disabled>Share card</button><button type="button" class="btn" data-card-download disabled>Download PNG</button></div>
     </div>
   </section>
 
