@@ -136,7 +136,8 @@
     };
     txt.split('\n').forEach(function (line) {
       var m;
-      if (/^\s*```/.test(line)) { if (code) endCode(); else { code = []; para = list = null; } return; }
+      if (!code && (m = line.match(/^\s*```(.+)```\s*$/))) { code = [m[1].trim()]; endCode(); para = list = null; return; }
+      if (code ? /^\s*```\s*$/.test(line) : /^\s*```/.test(line)) { if (code) endCode(); else { code = []; para = list = null; } return; }
       if (code) { code.push(line); return; }
       if (!line.trim()) { para = list = null; return; }
       if ((m = line.match(/^\s*(#{1,3})\s+(.+)$/))) {
@@ -167,35 +168,41 @@
       return { el: el.parentNode.className === 'live-code' ? el.parentNode : el, key: el.tagName + '|' + el.textContent };
     });
   };
-  var liveSeen = {}, liveHad = false, liveRenders = 0;
+  var liveSeen = {}, liveHad = false, liveAnswered = false;
   var livePill = $('[data-live-pill]');
-  var liveInView = function () { var r = liveSec.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; };
+  // the pill points up: only for a reader who has scrolled past the card
+  var livePast = function () { return liveSec.getBoundingClientRect().bottom <= 0; };
+  var liveSay = $('[data-live-say]');
   var liveRender = function (txt, modified) {
-    txt = txt.replace(/\r/g, '').trim().slice(0, 4000);
+    txt = txt.replace(/\r/g, '').trim();
+    if (txt.length > 20000) txt = txt.slice(0, txt.lastIndexOf('\n', 20000) + 1 || 20000).trim(); // cut at a line, never mid-line
     if (txt === liveText) return;
     liveText = txt;
     var body = $('[data-live-body]', liveSec), upd = $('[data-live-upd]', liveSec);
     body.textContent = '';
     markdown(body, txt);
     // once there are notes on screen, mark the pieces a later version adds
-    var pieces = livePieces(body), fresh = 0;
-    if (liveHad) pieces.forEach(function (p) {
-      if (liveSeen[p.key]) return;
-      p.el.classList.add('is-new'); p.el.setAttribute('data-new', liveSec.getAttribute('data-new')); fresh++;
+    var pieces = livePieces(body), fresh = [], seen = {};
+    pieces.forEach(function (p) {
+      seen[p.key] = (seen[p.key] || 0) + 1; // counted, so a repeated line is still new the second time
+      if (!liveHad || seen[p.key] <= (liveSeen[p.key] || 0)) return;
+      p.el.classList.add('is-new'); p.el.setAttribute('data-new', liveSec.getAttribute('data-new')); fresh.push(p);
     });
-    var first = !!txt && !liveHad && liveRenders > 0; // notes just started on a page that was already open
-    liveSeen = {}; liveHad = !!txt; liveRenders++;
-    pieces.forEach(function (p) { liveSeen[p.key] = 1; });
+    var first = !!txt && !liveHad && liveAnswered; // notes just started on a page that was already open
+    liveSeen = seen; liveHad = !!txt;
+    // screen readers hear only what was added, not the whole card again
+    if (liveSay && (fresh.length || first)) liveSay.textContent = (first ? pieces : fresh).map(function (p) { return p.key.slice(p.key.indexOf('|') + 1); }).join('. ');
+    fresh = fresh.length;
     var d = modified ? new Date(modified) : null;
     upd.hidden = !d || isNaN(d);
     if (!upd.hidden) upd.textContent = liveSec.getAttribute('data-upd').replace('{t}', d.toLocaleTimeString(PT ? 'pt-PT' : 'en-GB', { hour: '2-digit', minute: '2-digit' }));
     liveSec.hidden = !txt;
     // reading further down the page: a small pill says there is something new up top
-    if (livePill) livePill.hidden = !((fresh || first) && txt && !liveInView());
+    if (livePill) livePill.hidden = !((fresh || first) && txt && livePast());
   };
   if (livePill) {
     livePill.addEventListener('click', function () { livePill.hidden = true; });
-    window.addEventListener('scroll', function () { if (!livePill.hidden && liveInView()) livePill.hidden = true; }, { passive: true });
+    window.addEventListener('scroll', function () { if (!livePill.hidden && !livePast()) livePill.hidden = true; }, { passive: true });
   }
   if (liveSec) liveSec.addEventListener('click', function (e) {
     var b = e.target && e.target.closest ? e.target.closest('[data-code-copy]') : null;
@@ -219,9 +226,9 @@
       .then(function (r) {
         // a full room polls from one Wi-Fi address: if the host pushes back (429, 5xx), ask half as often, up to 2 min
         liveWait = r.ok || r.status === 404 ? 10000 : Math.min(liveWait * 2, 120000);
-        return r.ok ? r.text().then(function (t) { liveRender(t, r.headers.get('Last-Modified')); }) : null;
-      })
-      .catch(function () { liveWait = Math.min(liveWait * 2, 120000); });
+        if (!r.ok) { liveAnswered = true; return null; }
+        return r.text().then(function (t) { liveRender(t, r.headers.get('Last-Modified')); liveAnswered = true; });
+      }, function () { liveWait = Math.min(liveWait * 2, 120000); }); // network failure only: a rendering bug must stay visible
   };
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));

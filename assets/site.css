@@ -336,7 +336,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .live-code pre { margin: 0; flex: 1 1 100%; min-width: 0; padding: 14px 16px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); font-family: var(--mono); font-size: 16px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
 .live-code pre code { padding: 0; border-radius: 0; background: none; font-size: inherit; }
 .live-body .is-new { animation: live-new 2.4s ease-out; }
-.live-body .is-new::after { content: attr(data-new); display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: var(--accent); color: var(--bg); font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.5; vertical-align: 0.1em; }
+.live-body .is-new::after { content: attr(data-new); display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: var(--accent); color: var(--bg); font-family: var(--mono); font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.4; vertical-align: 0.1em; }
 .live-body .live-code.is-new::after { margin-left: 0; }
 @keyframes live-new { from { background-color: color-mix(in srgb, var(--accent) 22%, transparent); } to { background-color: transparent; } }
 .live-pill { position: fixed; z-index: 40; top: calc(12px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; min-height: 44px; padding: 8px 18px; border-radius: 999px; background: var(--accent); color: var(--bg); font-size: 16px; font-weight: 600; text-decoration: none; white-space: nowrap; box-shadow: 0 10px 30px rgba(10, 15, 28, 0.28); }

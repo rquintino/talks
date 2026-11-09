@@ -375,7 +375,7 @@ ${header(prefix)}
 
   ${t.live && t.start && t.end ? `<section class="talk-section live-notes" id="live" aria-labelledby="live-h" data-live="${esc(new URL(site.baseUrl).pathname)}live/${esc(t.id)}.md" data-live-from="${t.liveFrom === 'start' ? 'start' : 'fb'}" data-upd="${esc(T('liveUpd'))}" data-new="${esc(T('liveNew'))}" data-copy-l="${esc(T('liveCopy'))}" data-copied-l="${esc(T('liveCopied'))}" hidden>
     <h2 id="live-h" class="section-title"><span class="pulse" aria-hidden="true">●</span> ${T('liveH')}</h2>
-    <div class="live-card"><div class="live-body" data-live-body aria-live="polite"></div><p class="live-upd mono" data-live-upd hidden></p></div>
+    <div class="live-card"><div class="live-body" data-live-body></div><p class="sr-only" data-live-say role="status"></p><p class="live-upd mono" data-live-upd hidden></p></div>
     <a class="live-pill" href="#live" data-live-pill hidden>${T('livePill')}</a>
   </section>
 
