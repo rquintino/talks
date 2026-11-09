@@ -87,6 +87,23 @@
   var toast = $('[data-fb-toast]');
   var openedEarly = null; // page opened before the feedback window: those visitors get the toast
   var toastKey = head ? 'fb-toast:' + head.getAttribute('data-id') : '';
+  // ---- dry run: ?at=11:55 shows this page as it will be at that venue time on the talk day ----
+  // The clock keeps running from there, so the speaker can rehearse every phase on a real phone.
+  var SHIFT = 0;
+  (function () {
+    var at = head && window.URLSearchParams ? new URLSearchParams(location.search).get('at') : null;
+    var m = at && /^(\d{1,2})[:h.](\d{2})$/.exec(at), iso = head ? head.getAttribute('data-start') : '';
+    if (!m || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d/.test(iso)) return;
+    var hhmm = ('0' + m[1]).slice(-2) + ':' + m[2];
+    var t = new Date(iso.slice(0, 11) + hhmm + ':00' + iso.slice(19));
+    if (isNaN(t)) return;
+    SHIFT = t.getTime() - Date.now();
+    toastKey += ':dry'; // a rehearsal must not use up the real toast
+    var chip = document.createElement('a');
+    chip.className = 'dry-run mono'; chip.href = location.pathname;
+    chip.textContent = (head.getAttribute('data-dry') || '{t}').replace('{t}', hhmm);
+    document.body.appendChild(chip);
+  })();
   if (toast) $$('[data-toast-done]', toast).forEach(function (b) {
     b.addEventListener('click', function () { toast.hidden = true; document.body.classList.remove('has-toast'); store.set(toastKey, '1'); });
   });
@@ -232,7 +249,7 @@
   };
   var applyPhase = function () {
     var tStart = new Date(head.getAttribute('data-start')), tEnd = new Date(head.getAttribute('data-end'));
-    var tNow = new Date();
+    var tNow = new Date(Date.now() + SHIFT);
     var status = $('[data-status]', head), statusLabel = $('[data-status-label]', head);
     var soon = tNow >= new Date(tStart.getTime() - 30 * 60000);
     var over = tNow > tEnd;
@@ -320,7 +337,7 @@
       return hasFb && timed && now >= tE - fbLead * 60000 && now < tE + 3 * 36e5 ? 'fb' : 'page';
     };
     var paintStage = function () {
-      var now = Date.now();
+      var now = Date.now() + SHIFT;
       var f = hasFb ? manualFace || autoFace(now) : 'page';
       stage.setAttribute('data-face', f);
       stage.setAttribute('aria-labelledby', f === 'fb' ? 'stage-fb-title' : 'stage-title');

@@ -173,6 +173,9 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   From the feedback window on, a takeaway card (`assets/card.js`) lets a visitor
   type one idea and get a 1200×630 image drawn on their device with canvas;
   nothing is uploaded, the draft stays in their `localStorage`.
+  Dry run: add `?at=11:55` to a talk URL to see the page as it will be at that
+  venue time on the talk day (the clock keeps running from there; a chip shows
+  the preview time and exits). It only changes that visitor's view.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
   cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,
