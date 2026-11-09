@@ -359,6 +359,7 @@ ${header(prefix)}
     <h1 class="talk-title">${esc(t.title)}</h1>
     ${showOrig ? `<p class="orig-title"><strong>${T('sessionIn').replace('{l}', langName(t.language).toLowerCase())}</strong> · <span lang="en">${esc(orig.title)}</span></p>` : ''}
     <p class="talk-meta">${metaBits.join('<span class="sep" aria-hidden="true"> · </span>')}</p>
+    ${t.start && t.end ? `<div class="onair" data-onair data-in="${esc(T('onairIn'))}" data-left="${esc(T('onairLeft'))}" hidden><p class="onair-txt mono"><span class="pulse" aria-hidden="true">●</span> <span data-onair-txt></span></p><progress class="onair-bar" max="100" value="0" aria-label="${esc(T('onairBar'))}" hidden></progress></div>` : ''}
     <nav class="quick" aria-label="${T('quickNav')}">
       ${upcoming && t.start ? `<a class="btn btn-primary q-fb" href="talk.ics" data-before>${T('addCal')}</a>${ext(gcalUrl(t, url), T('gcal'), 'lnk q-alt').replace('<a ', '<a data-before ')}` : ''}
       ${primary}
@@ -367,9 +368,10 @@ ${header(prefix)}
     </nav>
   </header>
 
-  ${t.live && t.start && t.end ? `<section class="talk-section live-notes" id="live" aria-labelledby="live-h" data-live="${esc(new URL(site.baseUrl).pathname)}live/${esc(t.id)}.md" data-upd="${esc(T('liveUpd'))}" hidden>
+  ${t.live && t.start && t.end ? `<section class="talk-section live-notes" id="live" aria-labelledby="live-h" data-live="${esc(new URL(site.baseUrl).pathname)}live/${esc(t.id)}.md" data-live-from="${t.liveFrom === 'start' ? 'start' : 'fb'}" data-upd="${esc(T('liveUpd'))}" data-new="${esc(T('liveNew'))}" data-copy-l="${esc(T('liveCopy'))}" data-copied-l="${esc(T('liveCopied'))}" hidden>
     <h2 id="live-h" class="section-title"><span class="pulse" aria-hidden="true">●</span> ${T('liveH')}</h2>
     <div class="live-card"><div class="live-body" data-live-body aria-live="polite"></div><p class="live-upd mono" data-live-upd hidden></p></div>
+    <a class="live-pill" href="#live" data-live-pill hidden>${T('livePill')}</a>
   </section>
 
   ` : ''}<section class="talk-section" aria-labelledby="abs">

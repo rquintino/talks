@@ -123,9 +123,21 @@
     if (last < s.length) el.appendChild(document.createTextNode(s.slice(last)));
   };
   var markdown = function (root, txt) {
-    var para = null, list = null;
+    var para = null, list = null, code = null;
+    // ``` fenced block: kept verbatim (prompts, commands), with a copy button
+    var endCode = function () {
+      var box = root.appendChild(document.createElement('div')), btn = document.createElement('button');
+      box.className = 'live-code';
+      box.appendChild(document.createElement('pre')).appendChild(document.createElement('code')).textContent = code.join('\n');
+      btn.type = 'button'; btn.className = 'btn btn-small'; btn.setAttribute('data-code-copy', '');
+      btn.textContent = liveSec.getAttribute('data-copy-l');
+      box.appendChild(btn);
+      code = null;
+    };
     txt.split('\n').forEach(function (line) {
       var m;
+      if (/^\s*```/.test(line)) { if (code) endCode(); else { code = []; para = list = null; } return; }
+      if (code) { code.push(line); return; }
       if (!line.trim()) { para = list = null; return; }
       if ((m = line.match(/^\s*(#{1,3})\s+(.+)$/))) {
         para = list = null;
@@ -147,7 +159,17 @@
       else para = root.appendChild(document.createElement('p'));
       inline(para, line.trim());
     });
+    if (code) endCode(); // a fence left open still shows
   };
+  // what is on the card, piece by piece: lets the next render mark what was added
+  var livePieces = function (body) {
+    return $$('h3, h4, p, li, .live-code > pre', body).map(function (el) {
+      return { el: el.parentNode.className === 'live-code' ? el.parentNode : el, key: el.tagName + '|' + el.textContent };
+    });
+  };
+  var liveSeen = {}, liveHad = false, liveRenders = 0;
+  var livePill = $('[data-live-pill]');
+  var liveInView = function () { var r = liveSec.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; };
   var liveRender = function (txt, modified) {
     txt = txt.replace(/\r/g, '').trim().slice(0, 4000);
     if (txt === liveText) return;
@@ -155,11 +177,39 @@
     var body = $('[data-live-body]', liveSec), upd = $('[data-live-upd]', liveSec);
     body.textContent = '';
     markdown(body, txt);
+    // once there are notes on screen, mark the pieces a later version adds
+    var pieces = livePieces(body), fresh = 0;
+    if (liveHad) pieces.forEach(function (p) {
+      if (liveSeen[p.key]) return;
+      p.el.classList.add('is-new'); p.el.setAttribute('data-new', liveSec.getAttribute('data-new')); fresh++;
+    });
+    var first = !!txt && !liveHad && liveRenders > 0; // notes just started on a page that was already open
+    liveSeen = {}; liveHad = !!txt; liveRenders++;
+    pieces.forEach(function (p) { liveSeen[p.key] = 1; });
     var d = modified ? new Date(modified) : null;
     upd.hidden = !d || isNaN(d);
     if (!upd.hidden) upd.textContent = liveSec.getAttribute('data-upd').replace('{t}', d.toLocaleTimeString(PT ? 'pt-PT' : 'en-GB', { hour: '2-digit', minute: '2-digit' }));
     liveSec.hidden = !txt;
+    // reading further down the page: a small pill says there is something new up top
+    if (livePill) livePill.hidden = !((fresh || first) && txt && !liveInView());
   };
+  if (livePill) {
+    livePill.addEventListener('click', function () { livePill.hidden = true; });
+    window.addEventListener('scroll', function () { if (!livePill.hidden && liveInView()) livePill.hidden = true; }, { passive: true });
+  }
+  if (liveSec) liveSec.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('[data-code-copy]') : null;
+    if (!b) return;
+    var src = $('code', b.parentNode), label = liveSec.getAttribute('data-copy-l');
+    var done = function (t) { b.textContent = t; setTimeout(function () { b.textContent = label; }, 2000); };
+    var select = function () {
+      var rg = document.createRange(); rg.selectNodeContents(src);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rg);
+      done(TXT.selected);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(src.textContent).then(function () { done(liveSec.getAttribute('data-copied-l')); }, select);
+    else select();
+  });
   var liveFetch = function () {
     if (!window.fetch || Date.now() - liveLast < 10000) return; // load + pageshow fire together
     liveLast = Date.now();
@@ -183,13 +233,26 @@
       var dot = $('.pulse', status);
       if (dot) dot.hidden = over || !soon;
     }
+    // on-air strip: minutes to the start, then minutes left with a progress bar
+    var onair = $('[data-onair]', head);
+    if (onair) {
+      onair.hidden = !soon || over;
+      if (!onair.hidden) {
+        var mins = Math.max(1, Math.ceil((live ? tEnd - tNow : tStart - tNow) / 60000));
+        $('[data-onair-txt]', onair).textContent = onair.getAttribute(live ? 'data-left' : 'data-in').replace('{n}', mins);
+        var bar = $('progress', onair);
+        bar.hidden = !live; bar.max = tEnd - tStart; bar.value = Math.max(0, tNow - tStart);
+      }
+    }
     var lead = parseInt(head.getAttribute('data-fb-lead'), 10) || 10;
     var fbWin = tNow >= new Date(tEnd.getTime() - lead * 60000);
     document.documentElement.setAttribute('data-phase', !soon ? 'before' : !fbWin ? 'live' : over ? 'over' : 'fb');
     if (openedEarly === null) openedEarly = !fbWin;
-    // live notes: from the feedback window on, poll every 15s until 2h after the end, then once per visit
-    liveHot = fbWin && tNow - tEnd < 2 * 36e5;
-    if (liveSec && fbWin && !document.hidden && (liveHot || !liveTried)) { liveTried = true; liveFetch(); }
+    // live notes: from the feedback window on (or from 30 min before the start, with "liveFrom": "start"),
+    // poll every 15s until 2h after the end, then once per visit
+    var liveOpen = liveSec && (liveSec.getAttribute('data-live-from') === 'start' ? soon : fbWin);
+    liveHot = liveOpen && tNow - tEnd < 2 * 36e5;
+    if (liveOpen && !document.hidden && (liveHot || !liveTried)) { liveTried = true; liveFetch(); }
     // toast only once the session has ended: nothing pulls attention to the phone during the talk
     if (toast) {
       toast.hidden = !(openedEarly && over && tNow - tEnd < 3 * 36e5 && !store.get(toastKey));
@@ -207,7 +270,7 @@
   };
   if (head) {
     applyPhase();
-    setInterval(applyPhase, 60000);
+    setInterval(applyPhase, 30000);
     if (liveSec) setInterval(function () { if (liveHot && !document.hidden) liveFetch(); }, 15000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) applyPhase(); });
     window.addEventListener('pageshow', applyPhase);
