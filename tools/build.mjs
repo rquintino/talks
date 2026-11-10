@@ -692,7 +692,8 @@ function renderOg() {
     setLang(L);
     const d = L === 'pt' ? 'pt/' : '';
     cards.push({ id: `${d}home`, eyebrow: L === 'pt' ? 'PALESTRAS · SLIDES · RECURSOS' : 'TALKS · SLIDES · RESOURCES', title: L === 'pt' ? 'IA agêntica, agentes de IA e o SDLC agêntico' : 'Agentic AI, AI agents and the agentic SDLC', sub: S.tagline, path: `rquintino.github.io/talks${L === 'pt' ? '/pt' : ''}` });
-    for (const raw of talks.filter((x) => x.page)) {
+    // ogCover: the talk's own cover slide is committed as og/<id>.png (EN); don't overwrite it
+    for (const raw of talks.filter((x) => x.page && !(L === 'en' && x.ogCover))) {
       const t = loc(raw);
       cards.push({ id: `${d}${t.id}`, eyebrow: `${t.event.toUpperCase()} · ${dateLabel(t).toUpperCase()}`, title: t.title, sub: [where(t), t.track && T('trackMeta').replace('{t}', t.track)].filter(Boolean).join(' · '), path: `rquintino.github.io/talks/${d}${t.id}` });
     }
