@@ -16,6 +16,13 @@ great UX for deck author and while presenting for audience
 
 **WARNING: it may send sensitive information to your agent AI provider**
 
+confirm you can see and use the application as a user with different desktop/mobile views
+confirm no acess to package managers
+confirm web search is working
+confirm no access except for allowed domains
+audit any sensitive info on this agent sandbox (don't read into your context, signal candidates for me to check)
+what do you know about me? where does it come from?
+
 
 
 # Vela Slides Weekly Vuln Scan
