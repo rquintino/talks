@@ -160,7 +160,9 @@ exceptions for "popular", "official", "tiny" or "just for dev".
   Pages deploy, which purges the CDN. Measured Nov 2026: 21–26s from push to
   the edge, so about 45s worst case on attendees' screens with 15s polling.
 - Build: `node tools/build.mjs` (add `--og` to re-render the 1200×630 social
-  cards with a local Chrome; set `CHROME_PATH` if needed). The script uses only
+  cards with a local Chrome; set `CHROME_PATH` if needed; a talk with
+  `"ogCover": true` keeps its committed cover slide as the English
+  `og/<id>.png`, metadata stripped). The script uses only
   `node:*` modules. Commit its output (`index.html`, `<id>/index.html`,
   `<id>/talk.ics`, `404.html`, `sitemap.xml`, `og/*.png`).
 - Front end: `assets/site.css`, `assets/site.js` (search, filters, sort,
